@@ -1068,10 +1068,19 @@
             justify-content: space-between;
         }
         
-        .update-notification a {
+        .update-notification .update-btn {
             color: #64ffda;
-            text-decoration: underline;
+            background: rgba(100, 255, 218, 0.15);
+            border: 1px solid #64ffda;
+            padding: 4px 14px;
+            border-radius: 4px;
             font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .update-notification .update-btn:hover {
+            background: rgba(100, 255, 218, 0.3);
         }
         
         .pro-badge {
@@ -1193,7 +1202,7 @@
         <!-- Update Notification -->
         <div id="updateNotification" class="update-notification">
             <span>🚀 New version available! <span id="updateVersion"></span></span>
-            <a href="#" id="updateLink" target="_blank">Download</a>
+            <button id="updateLink" class="update-btn">Download</button>
         </div>
 
         <div class="header">
