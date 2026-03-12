@@ -2165,20 +2165,63 @@ if (btnSignOut) {
         
         updateStatsDashboard(); // Initial load of stats
         
-        // Check for updates (non-blocking)
-        ipcRenderer.invoke('check-for-updates').then(update => {
-            if (update.updateAvailable) {
-                const notification = document.getElementById('updateNotification');
-                const version = document.getElementById('updateVersion');
-                const link = document.getElementById('updateLink');
-                
-                if (notification && version && link) {
-                    version.textContent = `(${update.latestVersion})`;
-                    link.href = update.releaseUrl;
-                    notification.style.display = 'flex';
-                }
+        // Listen for auto-update events from electron-updater (via main process)
+        ipcRenderer.on('update-available', (event, info) => {
+            const notification = document.getElementById('updateNotification');
+            const version = document.getElementById('updateVersion');
+            const btn = document.getElementById('updateLink');
+
+            if (notification && version && btn) {
+                version.textContent = `(v${info.version})`;
+                btn.textContent = 'Download';
+                notification.style.display = 'flex';
+
+                btn.onclick = async (e) => {
+                    e.preventDefault();
+                    btn.textContent = 'Downloading...';
+                    btn.style.pointerEvents = 'none';
+                    btn.style.opacity = '0.6';
+                    const result = await ipcRenderer.invoke('trigger-update-download');
+                    if (!result.success) {
+                        btn.textContent = 'Retry Download';
+                        btn.style.pointerEvents = '';
+                        btn.style.opacity = '';
+                    }
+                };
             }
-        }).catch(err => console.error('Update check failed:', err));
+        });
+
+        ipcRenderer.on('update-download-progress', (event, progress) => {
+            const btn = document.getElementById('updateLink');
+            if (btn) {
+                btn.textContent = `Downloading... ${progress.percent}%`;
+            }
+        });
+
+        ipcRenderer.on('update-downloaded', (event, info) => {
+            const notification = document.getElementById('updateNotification');
+            const btn = document.getElementById('updateLink');
+            if (notification && btn) {
+                notification.querySelector('span').innerHTML = `✅ Update v${info.version} ready!`;
+                btn.textContent = 'Restart Now';
+                btn.style.pointerEvents = '';
+                btn.style.opacity = '';
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    ipcRenderer.invoke('trigger-update-install');
+                };
+            }
+        });
+
+        ipcRenderer.on('update-error', (event, err) => {
+            const btn = document.getElementById('updateLink');
+            if (btn) {
+                btn.textContent = 'Retry Download';
+                btn.style.pointerEvents = '';
+                btn.style.opacity = '';
+            }
+            console.error('Update error:', err.message);
+        });
         
     } catch (e) {
         console.error('Failed to load settings:', e);
