@@ -16,8 +16,19 @@ process.on('uncaughtException', (err) => {
 function setupAutoUpdater() {
     const { autoUpdater } = require('electron-updater');
     autoUpdater.autoDownload = false; // Don't auto-download — let user click "Download" first
+    // autoUpdater.forceDevUpdateConfig = true; // Uncomment for dev-mode testing with dev-app-update.yml
+    console.log('[AutoUpdater] Initializing...');
+
+    autoUpdater.on('checking-for-update', () => {
+        console.log('[AutoUpdater] Checking for update...');
+    });
+
+    autoUpdater.on('update-not-available', (info) => {
+        console.log('[AutoUpdater] No update available. Current:', info.version);
+    });
 
     autoUpdater.on('update-available', (info) => {
+        console.log('[AutoUpdater] Update available:', info.version);
         // Send update info to renderer so it can show the green banner
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('update-available', {
@@ -28,6 +39,7 @@ function setupAutoUpdater() {
     });
 
     autoUpdater.on('download-progress', (progress) => {
+        console.log(`[AutoUpdater] Download progress: ${Math.round(progress.percent)}%`);
         // Send download progress to renderer for progress display
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('update-download-progress', {
@@ -39,6 +51,7 @@ function setupAutoUpdater() {
     });
 
     autoUpdater.on('update-downloaded', (info) => {
+        console.log('[AutoUpdater] Download complete:', info.version);
         // Notify renderer that download is complete
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('update-downloaded', { version: info.version });
@@ -56,7 +69,7 @@ function setupAutoUpdater() {
         });
     });
     autoUpdater.on('error', (err) => {
-        console.error('Auto-updater error:', err);
+        console.error('[AutoUpdater] Error:', err.message);
         // Notify renderer of error so it can reset the button
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('update-error', { message: err.message });
@@ -830,11 +843,15 @@ app.whenReady().then(() => {
     // Start persistent Python server for fast PDF processing
     startPythonServer();
 
-    // Auto-update check (if enabled in settings) - only in packaged app
+    // Auto-update check (if enabled in settings)
     const checkForUpdates = settingsStore.get('settings.check_for_updates', true);
-    if (checkForUpdates && app.isPackaged) {
-        const autoUpdater = setupAutoUpdater();
-        autoUpdater.checkForUpdates(); // Check only — don't download yet (user clicks "Download" in banner)
+    if (checkForUpdates) {
+        try {
+            const autoUpdater = setupAutoUpdater();
+            autoUpdater.checkForUpdates(); // Check only — don't download yet (user clicks "Download" in banner)
+        } catch (err) {
+            console.error('Auto-updater init failed:', err.message);
+        }
     }
     
     // Create application menu
@@ -1058,7 +1075,7 @@ ipcMain.handle('trigger-update-download', async () => {
             await sharedAutoUpdater.downloadUpdate();
             return { success: true };
         } catch (err) {
-            console.error('Failed to download update:', err);
+            console.error('[AutoUpdater] Failed to download update:', err.message);
             return { success: false, error: err.message };
         }
     }
