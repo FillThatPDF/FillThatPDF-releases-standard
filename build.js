@@ -99,8 +99,8 @@ try {
         execSync('npx electron-builder --win nsis --x64', { stdio: 'inherit' });
         console.log(`\n🎉 Build complete! Check the dist/ folder for your ${versionLabel} Windows installer.\n`);
     } else {
-        execSync('npx electron-builder --mac dmg --universal', { stdio: 'inherit' });
-        console.log(`\n🎉 Build complete! Check the dist/ folder for your ${versionLabel} DMG.\n`);
+        execSync('npx electron-builder --mac dmg zip --universal', { stdio: 'inherit' });
+        console.log(`\n🎉 Build complete! Check the dist/ folder for your ${versionLabel} DMG + ZIP.\n`);
     }
 } catch (error) {
     console.error('❌ Build failed:', error.message);
