@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+
+# Python virtual environments
+venv*/
+pyenv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller build artifacts
+python_dist/dist/
+python_dist/dist_arm64/
+python_dist/dist_x64/
+python_dist/dist_win/
+python_dist/build/
+python_dist/build_*/
+
+# Electron build output
+dist/
+
+# macOS build artifacts
+*.dmg
+*.blockmap
+
+# PDFs (test files, not source)
+*.pdf
+
+# Debug/log files
+*.log
+*_debug_*.txt
+*_final_*.txt
+*_p*_full.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Credentials / secrets (never commit these)
+*.env
+.env.*
+credentials.json
+*.p12
+*.pem
+*.key
+
+# Temporary files
+*.tmp
+*.bak
+
+# Markdown docs generated during development
+BUG_FIXES_SUMMARY.md
+DIAGNOSIS_REPORT.md
+CHANGELOG*.md
+
+# Ads folder (marketing assets, not source)
+ads/
+
+# Misc test artifacts
+poppler_bin/
