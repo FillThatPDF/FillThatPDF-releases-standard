@@ -5,6 +5,7 @@ const fs = require('fs');
 const Store = require('electron-store');
 // Defer electron-updater require until app is ready (avoids getVersion crash in dev)
 const appConfig = require('./config');
+let sharedAutoUpdater = null; // Shared reference so renderer can trigger download
 
 // Suppress EPIPE errors (harmless pipe errors from child process communication)
 process.on('uncaughtException', (err) => {
@@ -14,16 +15,34 @@ process.on('uncaughtException', (err) => {
 
 function setupAutoUpdater() {
     const { autoUpdater } = require('electron-updater');
+    autoUpdater.autoDownload = false; // Don't auto-download — let user click "Download" first
+
     autoUpdater.on('update-available', (info) => {
-        dialog.showMessageBox({
-            type: 'info',
-            title: 'Update Available',
-            message: `A new version (${info.version}) is available!`,
-            detail: 'It will be downloaded in the background. You will be notified when it is ready to install.',
-            buttons: ['OK']
-        });
+        // Send update info to renderer so it can show the green banner
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('update-available', {
+                version: info.version,
+                releaseNotes: info.releaseNotes
+            });
+        }
     });
+
+    autoUpdater.on('download-progress', (progress) => {
+        // Send download progress to renderer for progress display
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('update-download-progress', {
+                percent: Math.round(progress.percent),
+                transferred: progress.transferred,
+                total: progress.total
+            });
+        }
+    });
+
     autoUpdater.on('update-downloaded', (info) => {
+        // Notify renderer that download is complete
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('update-downloaded', { version: info.version });
+        }
         dialog.showMessageBox({
             type: 'info',
             title: 'Update Ready',
@@ -38,7 +57,13 @@ function setupAutoUpdater() {
     });
     autoUpdater.on('error', (err) => {
         console.error('Auto-updater error:', err);
+        // Notify renderer of error so it can reset the button
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('update-error', { message: err.message });
+        }
     });
+
+    sharedAutoUpdater = autoUpdater;
     return autoUpdater;
 }
 
@@ -809,7 +834,7 @@ app.whenReady().then(() => {
     const checkForUpdates = settingsStore.get('settings.check_for_updates', true);
     if (checkForUpdates && app.isPackaged) {
         const autoUpdater = setupAutoUpdater();
-        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.checkForUpdates(); // Check only — don't download yet (user clicks "Download" in banner)
     }
     
     // Create application menu
@@ -1026,81 +1051,27 @@ ipcMain.handle('delete-template', async (event, name) => {
     return false;
 });
 
-// Update Checker IPC Handler
-ipcMain.handle('check-for-updates', async () => {
-    try {
-        const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-        // Replace with actual repo details or configuration
-        // For now, we'll try to get it from package.json or use a placeholder logic
-        const pkg = require('./package.json');
-        
-        // Check if repository URL exists and is a GitHub URL
-        if (!pkg.repository || !pkg.repository.url || !pkg.repository.url.includes('github.com')) {
-            return { updateAvailable: false, reason: 'No GitHub repository configured' };
+// Update Download IPC Handler — triggered when user clicks "Download" in the update banner
+ipcMain.handle('trigger-update-download', async () => {
+    if (sharedAutoUpdater) {
+        try {
+            await sharedAutoUpdater.downloadUpdate();
+            return { success: true };
+        } catch (err) {
+            console.error('Failed to download update:', err);
+            return { success: false, error: err.message };
         }
-        
-        // Extract owner/repo from URL (e.g., https://github.com/owner/repo.git)
-        const match = pkg.repository.url.match(/github\.com\/([^/]+)\/([^/.]+)/);
-        if (!match) {
-            return { updateAvailable: false, reason: 'Invalid GitHub URL' };
-        }
-        
-        const owner = match[1];
-        const repo = match[2];
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
-        
-        // Note: This requires internet access
-        // Using electron 'net' module or fetch if available in Node environment
-        // Since we are in Main process, we can use built-in fetch in Electron 28+ or dynamic import node-fetch
-        // Or just use net module
-        
-        const { net } = require('electron');
-        
-        return new Promise((resolve) => {
-            const request = net.request(apiUrl);
-            
-            request.on('response', (response) => {
-                let data = '';
-                response.on('data', (chunk) => {
-                    data += chunk;
-                });
-                
-                response.on('end', () => {
-                    if (response.statusCode === 200) {
-                        try {
-                            const release = JSON.parse(data);
-                            const latestVersion = release.tag_name.replace('v', '');
-                            const currentVersion = pkg.version;
-                            
-                            // Simple version comparison (semver is better but let's keep it simple)
-                            const updateAvailable = latestVersion !== currentVersion; // Naive check
-                            
-                            resolve({
-                                updateAvailable,
-                                currentVersion,
-                                latestVersion,
-                                releaseUrl: release.html_url,
-                                releaseNotes: release.body
-                            });
-                        } catch (e) {
-                            resolve({ updateAvailable: false, error: 'Failed to parse response' });
-                        }
-                    } else {
-                        resolve({ updateAvailable: false, error: `GitHub API error: ${response.statusCode}` });
-                    }
-                });
-            });
-            
-            request.on('error', (error) => {
-                resolve({ updateAvailable: false, error: error.message });
-            });
-            
-            request.end();
-        });
-        
-    } catch (error) {
-        return { updateAvailable: false, error: error.message };
     }
+    return { success: false, error: 'Auto-updater not initialized' };
+});
+
+// Restart & Install IPC Handler — triggered when user clicks "Restart Now" in the banner
+ipcMain.handle('trigger-update-install', async () => {
+    if (sharedAutoUpdater) {
+        sharedAutoUpdater.quitAndInstall();
+        return { success: true };
+    }
+    return { success: false, error: 'Auto-updater not initialized' };
 });
 
 // Show error dialog
