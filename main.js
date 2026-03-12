@@ -2520,7 +2520,6 @@ ipcMain.handle('auto-name-field', async (event, pdfPath, pageNum, rect) => {
                         console.error('Failed to set permissions:', e);
                     }
                 }
-                }
                 childProcess = spawn(bundledExe, rectArgs);
             } else {
                 const pythonExec = getPythonPath();

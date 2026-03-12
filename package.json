@@ -1,6 +1,6 @@
 {
   "name": "fill-that-pdf",
-  "productName": "Fill That PDF! PRO",
+  "productName": "Fill That PDF!",
   "isPro": true,
   "version": "1.0.0",
   "description": "Create fillable PDFs and test fill them with dummy data",
@@ -35,8 +35,8 @@
     "pdf-lib": "^1.17.1"
   },
   "build": {
-    "appId": "com.fillthatpdf.pro",
-    "productName": "Fill That PDF! PRO",
+    "appId": "com.fillthatpdf.standard",
+    "productName": "Fill That PDF!",
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "assets/icon.png",
@@ -61,7 +61,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -76,7 +78,7 @@
     "publish": {
       "provider": "github",
       "owner": "FillThatPDF",
-      "repo": "FillThatPDF-releases-pro"
+      "repo": "FillThatPDF-releases-standard"
     },
     "dmg": {
       "title": "Fill That PDF!",
@@ -112,10 +114,6 @@
       {
         "from": "python_dist/dist_x64",
         "to": "python_dist/dist_x64"
-      },
-      {
-        "from": "python_dist/dist_win",
-        "to": "python_dist/dist_win"
       },
       {
         "from": "python_dist/smart_fillable_v24.py",

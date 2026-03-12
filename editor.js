@@ -5333,13 +5333,30 @@ function makeElementDraggable(headerEl, modalEl) {
     function drag(e) {
         if (!isDragging) return;
         e.preventDefault();
-        
+
         const currentX = e.clientX - startX;
         const currentY = e.clientY - startY;
-        
-        const x = initialTranslateX + currentX;
-        const y = initialTranslateY + currentY;
-        
+
+        let x = initialTranslateX + currentX;
+        let y = initialTranslateY + currentY;
+
+        // Clamp to viewport so the modal can't escape the window
+        const rect = modalEl.getBoundingClientRect();
+        const curMatrix = new WebKitCSSMatrix(window.getComputedStyle(modalEl).transform);
+        const dx = x - curMatrix.m41;
+        const dy = y - curMatrix.m42;
+
+        const newTop = rect.top + dy;
+        const newLeft = rect.left + dx;
+        const newRight = rect.right + dx;
+        const newBottom = rect.bottom + dy;
+
+        // Hard clamp all 4 edges — modal stays fully inside the window
+        if (newTop < 0) y -= newTop;
+        if (newBottom > window.innerHeight) y -= (newBottom - window.innerHeight);
+        if (newLeft < 0) x -= newLeft;
+        if (newRight > window.innerWidth) x -= (newRight - window.innerWidth);
+
         modalEl.style.transform = `translate(${x}px, ${y}px)`;
     }
 
