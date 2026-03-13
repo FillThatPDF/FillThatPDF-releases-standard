@@ -81,9 +81,6 @@ const MAX_UNDO = 50;
 // Preview mode
 let isPreviewMode = false;
 
-// Field templates
-let fieldTemplates = [];
-
 // Input modal callback
 let inputModalResolve = null;
 
@@ -763,20 +760,6 @@ function setupEventListeners() {
     const modalUnits = document.getElementById('modalPropUnits');
     if (modalUnits) {
         modalUnits.addEventListener('change', updatePositionUnits);
-    }
-    
-    // Validation Rule change
-    const valRule = document.getElementById('modalValidationRule');
-    if (valRule) {
-        valRule.addEventListener('change', updateValidationOptions);
-    }
-    
-    // Regex testing
-    const valRegexTest = document.getElementById('valRegexTest');
-    const valRegexPattern = document.getElementById('valRegexPattern');
-    if (valRegexTest && valRegexPattern) {
-        valRegexTest.addEventListener('input', testRegex);
-        valRegexPattern.addEventListener('input', testRegex);
     }
     
     // Batch editing
@@ -4097,10 +4080,6 @@ function switchPropertiesTab(tabName) {
         content.classList.toggle('active', content.id === `tab-${tabName}`);
     });
 
-    // Load data for specific tabs that need dynamic population
-    if (tabName === 'rules' && modalField) {
-        loadRulesForField(modalField);
-    }
 }
 
 function updateFormatOptions() {
@@ -4216,20 +4195,6 @@ function _applyPropertiesFromForm() {
         noResizeOnMove: document.getElementById('modalPropNoResize')?.checked || false,
         positionLocked: document.getElementById('modalPropPositionLocked')?.checked || false
     };
-
-    // Validation
-    const valRule = document.getElementById('modalValidationRule').value;
-    if (valRule !== 'none') {
-        props.validation = {
-            rule: valRule,
-            minVal: document.getElementById('valMinVal').value,
-            maxVal: document.getElementById('valMaxVal').value,
-            minChars: document.getElementById('valMinChars').value,
-            maxChars: document.getElementById('valMaxChars').value,
-            regex: document.getElementById('valRegexPattern').value,
-            errorMsg: document.getElementById('valErrorMsg').value
-        };
-    }
 
     // Font properties — only include if user actually changed them
     if (fontDirty) {
@@ -4862,168 +4827,8 @@ function handleDragEnd(e) {
         item.classList.remove('drag-over');
     });
 }
-// ============ Field Templates ============
-function loadTemplates() {
-    try {
-        const stored = localStorage.getItem('fillThatPDF_templates');
-        if (stored) {
-            fieldTemplates = JSON.parse(stored);
-        } else {
-            // Default templates
-            fieldTemplates = [
-                {
-                    name: "Required Red",
-                    properties: {
-                        required: true,
-                        borderColor: "#ff0000",
-                        fillColor: "#ffe6e6"
-                    }
-                },
-                {
-                    name: "Blue Highlight",
-                    properties: {
-                        fillColor: "#e6f7ff",
-                        borderColor: "#1890ff"
-                    }
-                }
-            ];
-            saveTemplatesToStorage();
-        }
-    } catch (e) {
-        console.error("Error loading templates:", e);
-        fieldTemplates = [];
-    }
-}
-
-function saveTemplatesToStorage() {
-    localStorage.setItem('fillThatPDF_templates', JSON.stringify(fieldTemplates));
-}
-
-function renderTemplateList() {
-    const list = document.getElementById('templateList');
-    if (!list) return;
-    
-    list.innerHTML = '';
-    
-    if (fieldTemplates.length === 0) {
-        list.innerHTML = '<div class="template-item empty">No templates saved yet.</div>';
-        return;
-    }
-    
-    fieldTemplates.forEach((template, index) => {
-        const item = document.createElement('div');
-        item.className = 'template-item';
-        item.innerHTML = `
-            <span class="template-name">${template.name}</span>
-            <span class="template-delete" onclick="event.stopPropagation(); deleteTemplate(${index})">Delete</span>
-        `;
-        item.onclick = () => applyTemplate(index);
-        list.appendChild(item);
-    });
-}
-
-function saveCurrentAsTemplate() {
-    const nameInput = document.getElementById('newTemplateName');
-    const name = nameInput.value.trim();
-    if (!name) {
-        showAlert('Please enter a template name.', '⚠️ Missing Name');
-        return;
-    }
-    
-    // Capture properties from current modal state
-    // We reuse savePropertiesModal logic but return object instead of applying
-    const templateProps = {};
-    
-    // General
-    templateProps.required = document.getElementById('modalRequired').checked;
-    templateProps.readOnly = document.getElementById('modalReadOnly').checked;
-    templateProps.visibility = document.getElementById('modalVisibility').value;
-    
-    // Appearance
-    templateProps.borderColor = document.getElementById('modalBorderColor').value;
-    templateProps.fillColor = document.getElementById('modalFillColor').value;
-    templateProps.fontSize = document.getElementById('modalFontSize').value;
-    templateProps.fontColor = document.getElementById('modalFontColor').value;
-    templateProps.fontFamily = document.getElementById('modalFontFamily').value;
-    templateProps.lineThickness = document.getElementById('modalLineThickness').value;
-    templateProps.lineStyle = document.getElementById('modalLineStyle').value;
-    
-    // Options
-    templateProps.textAlign = document.getElementById('modalTextAlign').value;
-    templateProps.multiline = document.getElementById('modalMultiline').checked;
-    
-    // Checkbox style
-    if (modalField.type === 'checkbox' || modalField.type === 'radio') {
-        templateProps.checkboxStyle = document.getElementById('modalCheckboxStyle').value;
-    }
-    
-    fieldTemplates.push({
-        name: name,
-        properties: templateProps
-    });
-    
-    saveTemplatesToStorage();
-    renderTemplateList();
-    
-    nameInput.value = '';
-    
-    // Feedback
-    const btn = document.getElementById('btnSaveTemplate');
-    const originalText = btn.textContent;
-    btn.textContent = 'Saved!';
-    setTimeout(() => {
-        btn.textContent = originalText;
-    }, 1000);
-}
-
-function applyTemplate(index) {
-    if (index < 0 || index >= fieldTemplates.length) return;
-    
-    const template = fieldTemplates[index];
-    const props = template.properties;
-    
-    // Apply to UI elements
-    if (props.required !== undefined) document.getElementById('modalRequired').checked = props.required;
-    if (props.readOnly !== undefined) document.getElementById('modalReadOnly').checked = props.readOnly;
-    if (props.visibility !== undefined) document.getElementById('modalVisibility').value = props.visibility;
-    
-    if (props.borderColor !== undefined) document.getElementById('modalBorderColor').value = props.borderColor;
-    if (props.fillColor !== undefined) document.getElementById('modalFillColor').value = props.fillColor;
-    if (props.fontSize !== undefined) document.getElementById('modalFontSize').value = props.fontSize;
-    if (props.fontColor !== undefined) document.getElementById('modalFontColor').value = props.fontColor;
-    if (props.fontFamily !== undefined) document.getElementById('modalFontFamily').value = props.fontFamily;
-    if (props.lineThickness !== undefined) document.getElementById('modalLineThickness').value = props.lineThickness;
-    if (props.lineStyle !== undefined) document.getElementById('modalLineStyle').value = props.lineStyle;
-    
-    if (props.textAlign !== undefined) document.getElementById('modalTextAlign').value = props.textAlign;
-    if (props.multiline !== undefined) document.getElementById('modalMultiline').checked = props.multiline;
-    
-    if (props.checkboxStyle !== undefined && (modalField.type === 'checkbox' || modalField.type === 'radio')) {
-        document.getElementById('modalCheckboxStyle').value = props.checkboxStyle;
-    }
-    
-    // Switch to General tab to show it happened
-    switchPropertiesTab('general');
-}
-
-async function deleteTemplate(index) {
-    const ok = await showConfirm('Delete this template?', '🗑️ Delete Template');
-    if (ok) {
-        fieldTemplates.splice(index, 1);
-        saveTemplatesToStorage();
-        renderTemplateList();
-    }
-}
-
-// Initialize templates on load
+// Initialize Auto-Name buttons on load
 document.addEventListener('DOMContentLoaded', () => {
-    loadTemplates();
-    
-    const btnSaveTemplate = document.getElementById('btnSaveTemplate');
-    if (btnSaveTemplate) {
-        btnSaveTemplate.addEventListener('click', saveCurrentAsTemplate);
-    }
-    
     // Auto-Name Buttons
     const btnAutoSidebar = document.getElementById('btnAutoNameSidebar');
     if (btnAutoSidebar) {
@@ -5051,12 +4856,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Update renderTemplateList when modal opens
-const originalOpenPropertiesModalTemplates = openPropertiesModal;
-openPropertiesModal = function(field) {
-    originalOpenPropertiesModalTemplates(field);
-    renderTemplateList();
-};
 
 // ============ AI Helpers ============
 // ============ AI Helpers ============
@@ -5263,44 +5062,6 @@ async function handleAutoName(btn, isModal) {
     }
 }
 
-// ============ Validation Helpers ============
-function updateValidationOptions() {
-    const rule = document.getElementById('modalValidationRule').value;
-    
-    // Hide all
-    document.querySelectorAll('.validation-options').forEach(el => el.style.display = 'none');
-    
-    // Show selected
-    const selected = document.getElementById(`valOptions-${rule}`);
-    if (selected) {
-        selected.style.display = 'block';
-    }
-}
-
-function testRegex() {
-    const pattern = document.getElementById('valRegexPattern').value;
-    const testStr = document.getElementById('valRegexTest').value;
-    const statusEl = document.getElementById('valRegexStatus');
-    
-    try {
-        if (!pattern) {
-            statusEl.textContent = '⚪';
-            return;
-        }
-        const regex = new RegExp(pattern);
-        if (regex.test(testStr)) {
-            statusEl.textContent = '✅';
-            statusEl.title = 'Match!';
-        } else {
-            statusEl.textContent = '❌';
-            statusEl.title = 'No match';
-        }
-    } catch (e) {
-        statusEl.textContent = '⚠️';
-        statusEl.title = 'Invalid Regex';
-    }
-}
-
 // ============ Draggable Modal Logic ============
 function makeElementDraggable(headerEl, modalEl) {
     let isDragging = false;
@@ -5387,50 +5148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add Rule Button
-    const btnAddRule = document.getElementById('btnAddRule');
-    if (btnAddRule) {
-        btnAddRule.addEventListener('click', addNewRule);
-    }
-
-    // Rules tab — pick trigger field from canvas (one-shot)
-    const btnRulesPick = document.getElementById('btnRulesPickField');
-    if (btnRulesPick) {
-        btnRulesPick.addEventListener('click', () => {
-            if (isPickModeActive()) {
-                disablePickMode();
-            } else {
-                pickMode = {
-                    btnId: 'btnRulesPickField',
-                    onPick: (field) => {
-                        // Set dropdown to the picked field, then auto-stop
-                        const select = document.getElementById('ruleTriggerField');
-                        if (select) select.value = field.name;
-                        disablePickMode();   // One-shot: pick one field then stop
-                    },
-                    onDisable: null,
-                };
-                btnRulesPick.classList.add('active');
-                btnRulesPick.textContent = '🎯 Picking... (click a field, or click here to stop)';
-                if (canvas) canvas.classList.add('canvas-pick-mode');
-            }
-        });
-    }
-
-    // Condition change - hide/show value input for is_empty/is_not_empty
-    const ruleCondition = document.getElementById('ruleCondition');
-    if (ruleCondition) {
-        ruleCondition.addEventListener('change', () => {
-            const val = ruleCondition.value;
-            const valInput = document.getElementById('ruleValue');
-            if (val === 'is_empty' || val === 'is_not_empty') {
-                valInput.style.display = 'none';
-            } else {
-                valInput.style.display = '';
-            }
-        });
-    }
-
     // Initialize draggable History panel
     const historyPanel = document.getElementById('historyModal');
     if (historyPanel) {
@@ -5438,334 +5155,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (histHeader) makeElementDraggable(histHeader, historyPanel);
     }
 
-    // Initialize draggable Dependencies panel
-    const depsPanel = document.getElementById('dependenciesModal');
-    if (depsPanel) {
-        const depsHeader = document.getElementById('depsPanelHeader');
-        if (depsHeader) makeElementDraggable(depsHeader, depsPanel);
-    }
 });
 
-// ============ Rules/Conditional Logic ============
-
-function populateRulesDropdown() {
-    const select = document.getElementById('ruleTriggerField');
-    if (!select) return;
-    
-    // Clear existing options
-    select.innerHTML = '<option value="">-- Select Field --</option>';
-    
-    // Add all fields except current modal field
-    fields.forEach(f => {
-        if (modalField && f.name === modalField.name) return; // Skip self
-        const option = document.createElement('option');
-        option.value = f.name;
-        option.textContent = f.name;
-        select.appendChild(option);
-    });
-}
-
-function loadRulesForField(field) {
-    populateRulesDropdown();
-    renderRulesList(field);
-    renderControlsOthersList(field);
-    
-    // Reset add form
-    document.getElementById('ruleTriggerField').value = '';
-    document.getElementById('ruleCondition').value = 'equals';
-    document.getElementById('ruleValue').value = '';
-    document.getElementById('ruleValue').style.display = '';
-    document.getElementById('ruleAction').value = 'show';
-}
-
-function renderRulesList(field) {
-    const container = document.getElementById('rulesList');
-    if (!container) return;
-    
-    // Get rules from changes or field
-    const fieldChanges = changes.styled[field.name] || {};
-    const rules = fieldChanges.rules || field.rules || [];
-    
-    if (rules.length === 0) {
-        container.innerHTML = '<div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 20px;">No rules defined yet</div>';
-        return;
-    }
-    
-    container.innerHTML = rules.map((rule, idx) => `
-        <div class="rule-item" style="display: flex; align-items: center; padding: 8px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 6px; font-size: 12px;">
-            <span style="flex: 1;">
-                When <strong>${rule.triggerField}</strong> 
-                <em>${formatCondition(rule.condition)}</em> 
-                ${rule.value ? `"${rule.value}"` : ''} 
-                → <strong>${formatAction(rule.action)}</strong>
-            </span>
-            <button class="btn-icon" onclick="deleteRule(${idx})" style="color: var(--danger); background: none; border: none; cursor: pointer;" title="Delete rule">🗑️</button>
-        </div>
-    `).join('');
-}
-
-function formatCondition(cond) {
-    const map = {
-        'equals': '=',
-        'not_equals': '≠',
-        'contains': 'contains',
-        'is_empty': 'is empty',
-        'is_not_empty': 'has value',
-        'greater_than': '>',
-        'less_than': '<'
-    };
-    return map[cond] || cond;
-}
-
-function formatAction(action) {
-    const map = {
-        'show': 'Show',
-        'hide': 'Hide',
-        'enable': 'Enable',
-        'disable': 'Disable',
-        'require': 'Require',
-        'unrequire': 'Optional'
-    };
-    return map[action] || action;
-}
-
-function addNewRule() {
-    if (!modalField) return;
-    
-    const triggerField = document.getElementById('ruleTriggerField').value;
-    const condition = document.getElementById('ruleCondition').value;
-    const value = document.getElementById('ruleValue').value;
-    const action = document.getElementById('ruleAction').value;
-    
-    if (!triggerField) {
-        showAlert('Please select a trigger field.', '⚠️ Missing Field');
-        return;
-    }
-    
-    // For is_empty/is_not_empty, value is not needed
-    if (condition !== 'is_empty' && condition !== 'is_not_empty' && !value) {
-        showAlert('Please enter a value to compare.', '⚠️ Missing Value');
-        return;
-    }
-    
-    const newRule = {
-        triggerField,
-        condition,
-        value: (condition === 'is_empty' || condition === 'is_not_empty') ? '' : value,
-        action
-    };
-    
-    // Ensure changes.styled entry exists
-    if (!changes.styled[modalField.name]) {
-        changes.styled[modalField.name] = {};
-    }
-    
-    // Get existing rules
-    const existingRules = changes.styled[modalField.name].rules || modalField.rules || [];
-    
-    // Add new rule
-    changes.styled[modalField.name].rules = [...existingRules, newRule];
-    
-    // Also update the field object in memory
-    modalField.rules = changes.styled[modalField.name].rules;
-    
-    // Update UI
-    renderRulesList(modalField);
-    hasUnsavedChanges = true;
-    document.getElementById('changesMade').style.display = 'inline';
-    
-    // Reset form
-    document.getElementById('ruleTriggerField').value = '';
-    document.getElementById('ruleValue').value = '';
-}
-
-function deleteRule(index) {
-    if (!modalField) return;
-    
-    // Ensure changes.styled entry exists
-    if (!changes.styled[modalField.name]) {
-        changes.styled[modalField.name] = {};
-    }
-    
-    const existingRules = changes.styled[modalField.name].rules || modalField.rules || [];
-    const updatedRules = existingRules.filter((_, i) => i !== index);
-    
-    changes.styled[modalField.name].rules = updatedRules;
-    modalField.rules = updatedRules;
-    
-    renderRulesList(modalField);
-    hasUnsavedChanges = true;
-    document.getElementById('changesMade').style.display = 'inline';
-}
-
-function renderControlsOthersList(field) {
-    const container = document.getElementById('controlsOthersList');
-    if (!container) return;
-    
-    // Find all fields that have rules triggered by this field
-    const controlledFields = [];
-    
-    fields.forEach(f => {
-        const fChanges = changes.styled[f.name] || {};
-        const rules = fChanges.rules || f.rules || [];
-        
-        rules.forEach(rule => {
-            if (rule.triggerField === field.name) {
-                controlledFields.push({
-                    fieldName: f.name,
-                    action: rule.action,
-                    condition: rule.condition,
-                    value: rule.value
-                });
-            }
-        });
-    });
-    
-    if (controlledFields.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 15px; font-size: 11px;">
-                When this field's value changes, it can control other fields.<br>
-                Configure rules on target fields to set up dependencies.
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = controlledFields.map(cf => `
-        <div style="display: flex; align-items: center; padding: 6px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px; font-size: 11px;">
-            <span style="flex: 1;">
-                Will <strong>${formatAction(cf.action)}</strong> 
-                <em style="color: var(--primary);">${cf.fieldName}</em>
-                when ${formatCondition(cf.condition)} ${cf.value ? `"${cf.value}"` : ''}
-            </span>
-        </div>
-    `).join('');
-}
-
-// ============ Dependencies Visualization ============
-
-function openDependenciesModal() {
-    const panel = document.getElementById('dependenciesModal');
-    if (panel) {
-        panel.style.display = 'flex';
-        panel.classList.remove('minimized');
-        renderDependencyGraph();
-    }
-}
-
-function closeDependenciesModal() {
-    const panel = document.getElementById('dependenciesModal');
-    if (panel) {
-        panel.style.display = 'none';
-        panel.classList.remove('minimized');
-    }
-}
-
-function renderDependencyGraph() {
-    const container = document.getElementById('dependencyGraph');
-    if (!container) return;
-    
-    // Collect all rules from all fields
-    const connections = [];
-    const triggerFields = new Set();
-    const targetFields = new Set();
-    
-    fields.forEach(f => {
-        const fChanges = changes.styled[f.name] || {};
-        const rules = fChanges.rules || f.rules || [];
-        
-        rules.forEach(rule => {
-            connections.push({
-                trigger: rule.triggerField,
-                target: f.name,
-                action: rule.action,
-                condition: rule.condition,
-                value: rule.value
-            });
-            triggerFields.add(rule.triggerField);
-            targetFields.add(f.name);
-        });
-    });
-    
-    if (connections.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                <div style="font-size: 48px; margin-bottom: 15px;">🔗</div>
-                <div style="font-size: 16px; margin-bottom: 10px;">No Dependencies Found</div>
-                <div style="font-size: 13px;">
-                    Add rules in the "🔗 Rules" tab of any field's Properties to create dependencies.
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    // Build a simple visual list (for MVP - could upgrade to SVG graph later)
-    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
-    
-    // Group by trigger field
-    const byTrigger = {};
-    connections.forEach(conn => {
-        if (!byTrigger[conn.trigger]) {
-            byTrigger[conn.trigger] = [];
-        }
-        byTrigger[conn.trigger].push(conn);
-    });
-    
-    for (const [trigger, conns] of Object.entries(byTrigger)) {
-        html += `
-            <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 15px; border: 1px solid var(--border-color);">
-                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                    <span style="display: inline-block; width: 12px; height: 12px; background: #64ffda; border-radius: 50%; margin-right: 8px;"></span>
-                    <strong style="color: #64ffda; font-size: 14px;">${escapeHtml(trigger)}</strong>
-                    <span style="color: var(--text-secondary); margin-left: 10px; font-size: 12px;">controls ${conns.length} field${conns.length > 1 ? 's' : ''}</span>
-                </div>
-                <div style="margin-left: 20px; border-left: 2px solid #64ffda; padding-left: 15px;">
-        `;
-        
-        conns.forEach(conn => {
-            const actionText = formatAction(conn.action);
-            const condText = formatCondition(conn.condition);
-            
-            html += `
-                <div style="display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
-                    <span style="display: inline-block; width: 10px; height: 10px; background: #e94560; border-radius: 50%; margin-right: 8px;"></span>
-                    <span style="color: #e94560; font-weight: 500;">${escapeHtml(conn.target)}</span>
-                    <span style="color: var(--text-secondary); margin-left: auto; font-size: 11px;">
-                        ${condText} ${conn.value ? `"${escapeHtml(conn.value)}"` : ''} → ${actionText}
-                    </span>
-                </div>
-            `;
-        });
-        
-        html += `
-                </div>
-            </div>
-        `;
-    }
-    
-    html += '</div>';
-    
-    // Add summary stats
-    html += `
-        <div style="margin-top: 20px; padding: 15px; background: rgba(100, 255, 218, 0.1); border-radius: 8px; display: flex; justify-content: space-around; text-align: center;">
-            <div>
-                <div style="font-size: 24px; font-weight: 700; color: #64ffda;">${triggerFields.size}</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Trigger Fields</div>
-            </div>
-            <div>
-                <div style="font-size: 24px; font-weight: 700; color: #e94560;">${targetFields.size}</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Target Fields</div>
-            </div>
-            <div>
-                <div style="font-size: 24px; font-weight: 700; color: var(--text-tertiary);">${connections.length}</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Total Rules</div>
-            </div>
-        </div>
-    `;
-    
-    container.innerHTML = html;
-}
+// ============ Utility Functions ============
 
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -5773,13 +5165,8 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Event listener for Dependencies button
+// Event listener for History button
 document.addEventListener('DOMContentLoaded', () => {
-    const btnDeps = document.getElementById('btnViewDependencies');
-    if (btnDeps) {
-        btnDeps.addEventListener('click', openDependenciesModal);
-    }
-    
     const btnHistory = document.getElementById('btnVersionHistory');
     if (btnHistory) {
         btnHistory.addEventListener('click', openHistoryModal);
