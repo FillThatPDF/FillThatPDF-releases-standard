@@ -1064,9 +1064,8 @@
             background: var(--bg-tertiary);
             border-radius: 0 0 12px 12px;
         }
-        /* Pick-from-canvas mode (shared by Calculate and Rules tabs) */
-        #btnPickFromCanvas.active,
-        #btnRulesPickField.active {
+        /* Pick-from-canvas mode (Calculate tab) */
+        #btnPickFromCanvas.active {
             background: #e94560;
             animation: pickPulse 1.5s ease-in-out infinite;
         }
@@ -1687,9 +1686,6 @@
                 
                 <button class="toolbar-btn-small" id="btnCalcManager" title="Manage all calculations" style="color: #64ffda;">
                     🧮 Calculations
-                </button>
-                <button class="toolbar-btn-small" id="btnViewDependencies" title="View field dependencies and rules">
-                    🔗 Dependencies
                 </button>
                 <button class="toolbar-btn-small" id="btnVersionHistory" title="View version history and snapshots">
                     🕐 History
@@ -2315,32 +2311,6 @@
     </div>
 
     <!-- Dependencies Panel (non-blocking) -->
-    <div class="float-panel" id="dependenciesModal" style="display: none; width: 700px;">
-        <div class="float-panel-header" id="depsPanelHeader">
-            <h2 class="modal-title">🔗 Field Dependencies</h2>
-            <button class="modal-close" onclick="closeDependenciesModal()" title="Close">&times;</button>
-        </div>
-        <div class="float-panel-body">
-            <p class="modal-hint">This diagram shows which fields control other fields through conditional rules.</p>
-
-            <div id="dependencyGraph" style="margin-top: 15px;">
-                <!-- Graph will be rendered here -->
-            </div>
-
-            <div id="dependencyLegend" style="margin-top: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px;">
-                <div style="font-weight: 600; margin-bottom: 10px; color: var(--text-accent);">Legend</div>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 12px;">
-                    <span><span style="display: inline-block; width: 12px; height: 12px; background: #64ffda; border-radius: 50%; margin-right: 5px;"></span> Trigger Field</span>
-                    <span><span style="display: inline-block; width: 12px; height: 12px; background: #e94560; border-radius: 50%; margin-right: 5px;"></span> Target Field</span>
-                    <span><span style="display: inline-block; width: 30px; height: 2px; background: #64ffda; margin-right: 5px; vertical-align: middle;"></span> Controls</span>
-                </div>
-            </div>
-        </div>
-        <div class="float-panel-footer">
-            <button class="action-btn btn-secondary" onclick="closeDependenciesModal()">Close</button>
-        </div>
-    </div>
-    
     <!-- Calculations Manager Modal -->
     <!-- Calculations Manager — Floating Panel (non-blocking, draggable) -->
     <div class="calc-panel" id="calcManagerPanel" style="display: none;">
@@ -2415,10 +2385,7 @@
                 <button class="modal-tab" data-tab="options">Options</button>
                 <button class="modal-tab" data-tab="format">Format</button>
                 <button class="modal-tab" data-tab="calculate">🧮 Calculate</button>
-                <button class="modal-tab" data-tab="validation">Validation</button>
-                <button class="modal-tab" data-tab="rules">🔗 Rules</button>
                 <button class="modal-tab" data-tab="actions">Actions</button>
-                <button class="modal-tab" data-tab="templates">Templates</button>
             </div>
             
             <div class="modal-content">
@@ -2889,146 +2856,7 @@
                     </div>
                 </div>
 
-                <!-- Validation Tab -->
-                <div class="modal-tab-content" id="tab-validation">
-                    <p class="modal-hint">
-                        Configure validation rules to ensure correct data entry.
-                    </p>
-                    
-                    <div class="modal-form-group">
-                        <label class="modal-label">Validation Rule</label>
-                        <select class="modal-select" id="modalValidationRule">
-                            <option value="none">None</option>
-                            <option value="numeric_range">Numeric Range (Min/Max)</option>
-                            <option value="text_length">Text Length (Min/Max Chars)</option>
-                            <option value="email">Email Address</option>
-                            <option value="date">Date Format</option>
-                            <option value="regex">Custom Regex</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Numeric Range Options -->
-                    <div id="valOptions-numeric_range" class="validation-options" style="display: none;">
-                        <div class="modal-form-row">
-                            <div class="modal-form-group half">
-                                <label class="modal-label">Min Value</label>
-                                <input type="number" class="modal-input" id="valMinVal">
-                            </div>
-                            <div class="modal-form-group half">
-                                <label class="modal-label">Max Value</label>
-                                <input type="number" class="modal-input" id="valMaxVal">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Text Length Options -->
-                    <div id="valOptions-text_length" class="validation-options" style="display: none;">
-                        <div class="modal-form-row">
-                            <div class="modal-form-group half">
-                                <label class="modal-label">Min Characters</label>
-                                <input type="number" class="modal-input" id="valMinChars" min="0">
-                            </div>
-                            <div class="modal-form-group half">
-                                <label class="modal-label">Max Characters</label>
-                                <input type="number" class="modal-input" id="valMaxChars" min="0">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Regex Options -->
-                    <div id="valOptions-regex" class="validation-options" style="display: none;">
-                        <div class="modal-form-group">
-                            <label class="modal-label">Regular Expression</label>
-                            <input type="text" class="modal-input" id="valRegexPattern" placeholder="e.g. ^[A-Z]{3}-\d{4}$" style="font-family: monospace;">
-                        </div>
-                        <div class="modal-form-group">
-                            <label class="modal-label">Test String</label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="text" class="modal-input" id="valRegexTest" placeholder="Type to test...">
-                                <span id="valRegexStatus" style="padding: 8px; font-size: 16px;">⚪</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-form-group" style="margin-top: 15px;">
-                        <label class="modal-label">Custom Error Message</label>
-                        <input type="text" class="modal-input" id="valErrorMsg" placeholder="Invalid format. Please enter...">
-                    </div>
-                </div>
-
-                <!-- Rules Tab -->
-                <div class="modal-tab-content" id="tab-rules">
-                    <p class="modal-hint">
-                        Define conditions that control this field based on other fields' values.
-                    </p>
-                    
-                    <!-- Existing Rules List -->
-                    <div id="rulesListContainer" style="margin-bottom: 15px;">
-                        <div class="modal-section-title" style="margin-bottom: 10px;">Active Rules</div>
-                        <div id="rulesList" style="max-height: 200px; overflow-y: auto; background: var(--bg-secondary); border-radius: 6px; padding: 10px;">
-                            <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 20px;">
-                                No rules defined yet
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Add New Rule -->
-                    <div class="modal-section-title" style="margin-bottom: 10px;">Add Rule</div>
-                    <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                        <div class="modal-form-row" style="margin-bottom: 10px;">
-                            <span style="color: var(--text-secondary); font-size: 12px;">When</span>
-                            <select class="modal-select" id="ruleTriggerField" style="flex: 1;">
-                                <option value="">-- Select Field --</option>
-                            </select>
-                        </div>
-                        <button class="action-btn btn-primary" id="btnRulesPickField"
-                                data-default-text="🎯 Click a Field on Canvas to Select"
-                                style="width: 100%; margin-bottom: 10px; padding: 8px; font-size: 12px;">
-                            🎯 Click a Field on Canvas to Select
-                        </button>
-                        
-                        <div class="modal-form-row" style="margin-bottom: 10px; gap: 8px;">
-                            <select class="modal-select" id="ruleCondition" style="width: 120px;">
-                                <option value="equals">equals</option>
-                                <option value="not_equals">not equals</option>
-                                <option value="contains">contains</option>
-                                <option value="is_empty">is empty</option>
-                                <option value="is_not_empty">is not empty</option>
-                                <option value="greater_than">greater than</option>
-                                <option value="less_than">less than</option>
-                            </select>
-                            <input type="text" class="modal-input" id="ruleValue" placeholder="value" style="flex: 1;">
-                        </div>
-                        
-                        <div class="modal-form-row" style="margin-bottom: 15px;">
-                            <span style="color: var(--text-secondary); font-size: 12px;">Then</span>
-                            <select class="modal-select" id="ruleAction" style="flex: 1;">
-                                <option value="show">Show this field</option>
-                                <option value="hide">Hide this field</option>
-                                <option value="enable">Enable this field</option>
-                                <option value="disable">Disable this field</option>
-                                <option value="require">Make this field required</option>
-                                <option value="unrequire">Make this field optional</option>
-                            </select>
-                        </div>
-                        
-                        <button class="action-btn btn-primary" id="btnAddRule" style="width: 100%;">
-                            + Add Rule
-                        </button>
-                    </div>
-                    
-                    <!-- This Field Controls Others -->
-                    <div style="margin-top: 20px;">
-                        <div class="modal-section-title" style="margin-bottom: 10px;">This Field Controls</div>
-                        <div id="controlsOthersList" style="max-height: 150px; overflow-y: auto; background: var(--bg-secondary); border-radius: 6px; padding: 10px;">
-                            <div class="empty-state" style="text-align: center; color: var(--text-secondary); padding: 15px; font-size: 11px;">
-                                When this field's value changes, it can control other fields.
-                                Configure rules on target fields to set up dependencies.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Actions Tab (below) -->
                 <!-- Actions Tab -->
                 <div class="modal-tab-content" id="tab-actions">
                     <div class="modal-section-title">JavaScript Actions</div>
@@ -3068,24 +2896,6 @@
                 </div>
             </div>
             
-                <!-- Templates Tab -->
-                <div class="modal-tab-content" id="tab-templates">
-                    <div class="modal-form-group">
-                        <label class="modal-label">Saved Templates</label>
-                        <div class="template-list" id="templateList">
-                            <!-- Templates injected via JS -->
-                            <div class="template-item empty">No templates saved yet.</div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-form-group" style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
-                        <label class="modal-label">Save Current Properties as Template</label>
-                        <div class="modal-form-row">
-                            <input type="text" class="modal-input" id="newTemplateName" placeholder="Template Name (e.g., 'Warning Red')">
-                            <button class="modal-btn modal-btn-primary" id="btnSaveTemplate" style="width: auto; padding: 0 15px;">Save</button>
-                        </div>
-                    </div>
-                </div>
 
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-secondary" onclick="closePropertiesModal()">Cancel</button>
