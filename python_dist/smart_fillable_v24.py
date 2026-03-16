@@ -18,9 +18,10 @@ import json
 import time
 import logging
 import argparse
+import tempfile
 
 # Reduce verbose parsing logs from pdfminer/pdfplumber
-logging.basicConfig(filename='/tmp/smart_fillable_debug.log', level=logging.DEBUG, filemode='w')
+logging.basicConfig(filename=os.path.join(tempfile.gettempdir(), 'smart_fillable_debug.log'), level=logging.DEBUG, filemode='w')
 logging.getLogger('pdfminer').setLevel(logging.WARNING)
 logging.getLogger('pdfplumber').setLevel(logging.WARNING)
 
