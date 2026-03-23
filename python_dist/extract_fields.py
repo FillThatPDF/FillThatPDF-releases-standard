@@ -697,6 +697,13 @@ def _parse_calculate_js(js_str: str, field_name: str = None) -> dict:
     if not field_refs:
         return {}
 
+    # Detect complex/scripted JavaScript: any control flow → CUSTOM_SCRIPT
+    # This catches if/else, ternary, logical operators, loops, comparisons, etc.
+    # Must be checked BEFORE the simple operator heuristics so that JS containing
+    # e.g. `if (v2 <= (v1 / 2))` is not misclassified as DIVIDE.
+    if re.search(r'\bif\s*\(|\belse\b|&&|\|\||\bswitch\s*\(|\bwhile\s*\(|\bfor\s*\(', js_str):
+        return {"type": "CUSTOM_SCRIPT", "script": js_str.strip(), "sources": field_refs}
+
     # Constant multiply: event.value = NUMBER * AFMakeNumber(getField("x").value)
     # Also handles: event.value = NUMBER * ((Number(this.getField("x").value) || 0))
     # Matches patterns like: event.value=35*AFMakeNumber(getField("cal1").value)
@@ -850,7 +857,8 @@ def _parse_calculate_js(js_str: str, field_name: str = None) -> dict:
 
         return {"type": "CUSTOM", "sources": field_refs, "formula": simplified}
 
-    return {"type": "CUSTOM", "sources": field_refs, "formula": js_str}
+    # No simplified formula could be extracted — treat as raw script
+    return {"type": "CUSTOM_SCRIPT", "script": js_str.strip(), "sources": field_refs}
 
 
 def _extract_format_details(actions: dict) -> (str, dict):
