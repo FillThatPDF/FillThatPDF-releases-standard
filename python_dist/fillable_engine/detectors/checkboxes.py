@@ -43,6 +43,12 @@ class CheckboxDetector(BaseDetector):
 
     def detect(self, pages: List[PageModel]) -> List[FieldCandidate]:
         """Run all four sub-detectors, self-deduplicate, and attach labels."""
+        # Allow auto-calibration to override class defaults
+        if 'checkbox_size_min' in self.settings:
+            self.CHECKBOX_MIN_SIZE = self.settings['checkbox_size_min']
+        if 'checkbox_size_max' in self.settings:
+            self.CHECKBOX_MAX_SIZE = self.settings['checkbox_size_max']
+
         all_candidates: List[FieldCandidate] = []
 
         for page in pages:

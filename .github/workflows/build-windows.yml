@@ -110,7 +110,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── 8. Upload artifact ──
+      # ── 8. Upload artifact (always available as backup) ──
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
@@ -119,3 +119,71 @@ jobs:
             dist/*.exe
             dist/*.yml
           retention-days: 30
+
+      # ── 9. Determine target release repo ──
+      - name: Set release repo
+        id: release-repo
+        shell: bash
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" = "pro" ]; then
+            echo "repo=FillThatPDF-releases-pro" >> $GITHUB_OUTPUT
+          else
+            echo "repo=FillThatPDF-releases-standard" >> $GITHUB_OUTPUT
+          fi
+
+      # ── 10. Read version from package.json ──
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      # ── 11. Create GitHub Release with Windows installer ──
+      #
+      # This uploads the .exe and latest.yml to the correct releases repo
+      # so electron-updater can find and serve Windows auto-updates.
+      #
+      # Requires a RELEASE_TOKEN secret (PAT with repo scope) that has
+      # write access to FillThatPDF-releases-pro and FillThatPDF-releases-standard.
+      #
+      - name: Upload to release repo
+        if: github.event.inputs.version_type != 'demo'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          REPO="FillThatPDF/${{ steps.release-repo.outputs.repo }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="v${VERSION}"
+
+          echo "Uploading Windows installer to ${REPO} as ${TAG}..."
+
+          # Check if a release with this tag already exists
+          EXISTING=$(gh release view "$TAG" --repo "$REPO" 2>&1 || true)
+
+          if echo "$EXISTING" | grep -q "release not found"; then
+            # Create new release
+            echo "Creating new release ${TAG}..."
+            gh release create "$TAG" \
+              --repo "$REPO" \
+              --title "v${VERSION}" \
+              --notes "Windows installer for FillThatPDF v${VERSION}" \
+              dist/*.exe dist/latest.yml
+          else
+            # Release exists — upload Windows assets alongside existing macOS assets
+            echo "Release ${TAG} exists, uploading Windows assets..."
+
+            # Upload .exe (overwrite if exists)
+            for f in dist/*.exe; do
+              gh release upload "$TAG" "$f" --repo "$REPO" --clobber
+            done
+
+            # Upload latest.yml (Windows auto-update manifest)
+            if [ -f "dist/latest.yml" ]; then
+              gh release upload "$TAG" "dist/latest.yml" --repo "$REPO" --clobber
+            fi
+          fi
+
+          echo "Done! Windows installer uploaded to ${REPO} release ${TAG}"

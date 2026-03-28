@@ -2,7 +2,7 @@
   "name": "fill-that-pdf",
   "productName": "Fill That PDF!",
   "isPro": true,
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Create fillable PDFs and test fill them with dummy data",
   "repository": {
     "type": "git",
@@ -41,11 +41,10 @@
       "category": "public.app-category.productivity",
       "icon": "assets/icon.png",
       "target": [
-        {
-          "target": "dmg",
-          "arch": "universal"
-        }
+        "dmg",
+        "zip"
       ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "identity": "E8934069A73A7841583014D9461E31188D2358CB",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
@@ -53,8 +52,7 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "notarize": {
         "teamId": "9VRW78GQHM"
-      },
-      "x64ArchFiles": "**/{python_dist/dist_*,poppler_bin}/**/*"
+      }
     },
     "win": {
       "icon": "assets/icon.png",
@@ -82,6 +80,7 @@
     },
     "dmg": {
       "title": "Fill That PDF!",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "icon": "assets/icon.png",
       "contents": [
         {

@@ -26,7 +26,7 @@ from ..models import ResolvedField, FieldType, PageModel
 
 # A word's x0 must be within this many points of the field's x0 (or
 # above it) to count as "at the left edge".
-EDGE_TOL = 6.0
+EDGE_TOL = 10.0
 
 # Padding between the text cluster's right/bottom edge and the new
 # field boundary.
@@ -57,9 +57,25 @@ class LabelTrimmer:
                                     FieldType.SIGNATURE):
                 continue
 
+            # Never trim COMB fields — their bounds match the box grid
+            # precisely and must not be modified.
+            if f.field_type == FieldType.COMB:
+                continue
+
             page = pages_by_num.get(f.page)
             if page is None:
                 continue
+
+            # Line-based fields and below-label fields are designed with
+            # the label sitting inside (or above) the field area.
+            # Only attempt left-trim (Strategy 1) for these — never
+            # clip height or remove them, as that destroys the field
+            # or undoes height standardisation.
+            src = getattr(f, 'source', '') or ''
+            is_line_field = src in (
+                'form_line', 'horizontal_line_table',
+                'label_entry_cell', 'label_entry_below',
+            )
 
             words = page.get_words_in_bbox(
                 (f.x0, f.y0, f.x1, f.y1), 0.5,
@@ -97,6 +113,11 @@ class LabelTrimmer:
                     trimmed += 1
                     continue  # success
 
+            # For line-based fields, stop here — do not clip height
+            # or remove.  The label naturally sits inside the field.
+            if is_line_field:
+                continue
+
             # ----------------------------------------------------------
             # Strategy 2: trim the TOP edge downward past the text
             # ----------------------------------------------------------
@@ -114,6 +135,24 @@ class LabelTrimmer:
             # ----------------------------------------------------------
             text_at_right = (f.x1 - text_x1) < EDGE_TOL
             if text_at_right:
+                new_x1 = text_x0 - PAD_X
+                if (new_x1 - f.x0) >= MIN_REMAIN_W:
+                    f.x1 = new_x1
+                    trimmed += 1
+                    continue  # success
+
+            # ----------------------------------------------------------
+            # Strategy 3b: right-trim for NARROW text in the right half
+            # of the field.  This catches unit symbols like "%", "°F",
+            # "kW" that sit in the right portion of a cell but aren't
+            # strictly within EDGE_TOL of the right edge.  Without
+            # this, Strategy 4 (bottom trim) would incorrectly shrink
+            # the field above the symbol instead of to its left.
+            # ----------------------------------------------------------
+            text_w = text_x1 - text_x0
+            field_w = f.x1 - f.x0
+            if (text_w < field_w * 0.25
+                    and text_x0 > (f.x0 + f.x1) / 2):
                 new_x1 = text_x0 - PAD_X
                 if (new_x1 - f.x0) >= MIN_REMAIN_W:
                     f.x1 = new_x1
@@ -168,11 +207,20 @@ class LabelTrimmer:
             # But protect fields with certain keywords (contact person,
             # title, signature) — these ARE real form fields even though
             # their labels fill the cell area.
-            _PROTECTED_KWS = {'contact', 'person', 'title', 'signature'}
+            #
+            # Exception: when the label text fills > 75% of the field
+            # width, the cell is truly label-only (e.g. "Project Number:"
+            # filling an 82pt cell) — the protection should not apply
+            # because there is no entry space left.
+            _PROTECTED_KWS = {'contact', 'person', 'title', 'signature',
+                              'landlord', 'name', 'email', 'phone',
+                              'address', 'account', 'number', 'initial'}
+            text_fill_ratio = (text_x1 - text_x0) / max(1, f.x1 - f.x0)
             fname_lower = (f.name or '').lower()
             flabel_lower = (f.label or '').lower()
-            if any(kw in fname_lower or kw in flabel_lower
-                   for kw in _PROTECTED_KWS):
+            if (text_fill_ratio <= 0.75
+                    and any(kw in fname_lower or kw in flabel_lower
+                            for kw in _PROTECTED_KWS)):
                 continue  # Protected — keep this field
             to_remove.add(idx)
             removed += 1

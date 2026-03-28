@@ -37,10 +37,6 @@ a = Analysis(
         'pypdfium2.raw',
         # The extract_fields module
         'extract_fields',
-        # Post-processing modules (garbage cleanup + auto rename)
-        'garbage_field_cleanup',
-        'auto_rename_all',
-        'auto_name_field',
         # System
         'psutil',
         # XML

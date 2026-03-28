@@ -283,12 +283,6 @@ def build_calculate_js(calc: Dict[str, Any], field_name: str = None) -> str:
                 parts.append(f'var {letter} = Number(this.getField("{s}").value) || 0;')
             js = "\n".join(parts) + f"\nevent.value = {formula};"
 
-    elif calc_type == "CUSTOM_SCRIPT":
-        script = calc.get("script", "")
-        if script:
-            # Wrap in markers so extract_fields can round-trip this as CUSTOM_SCRIPT
-            js = f"/** BVCALC_CUSTOM_SCRIPT_START **/\n{script}\n/** BVCALC_CUSTOM_SCRIPT_END **/"
-
     # Apply rounding if decimals specified
     if js and decimals is not None:
         try:

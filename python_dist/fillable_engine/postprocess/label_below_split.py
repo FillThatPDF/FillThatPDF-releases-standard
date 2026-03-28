@@ -230,6 +230,27 @@ class LabelBelowSplitter:
         if not below_words:
             return []
 
+        # Guard: if the "below" words sit just above another horizontal
+        # line, they are labels for THAT line — not split-labels for the
+        # current field.  For example:
+        #   a. Customer Name: ________________________
+        #   b. Customer Email: ________  Phone: ______
+        # "Customer Email" sits 6pt below line a's field, but it belongs
+        # to line b.  Detect this by checking for an h_line within 20pt
+        # below the dominant_y of the below-words.
+        words_bottom = max(float(w.get('bottom', w.get('top', 0) + 10))
+                           for w in below_words)
+        for hl in getattr(page, 'h_lines', []):
+            hl_y = float(hl.get('y', hl.get('top', 0)))
+            hl_w = float(hl.get('x1', 0)) - float(hl.get('x0', 0))
+            if hl_w < 40:
+                continue  # skip short lines
+            # h_line is within 20pt below the words' bottom edge
+            # and below the current field's bottom
+            dist_to_line = hl_y - words_bottom
+            if 0 <= dist_to_line <= 20 and hl_y > field.y1 + 5:
+                return []  # words belong to the next form row
+
         # Group consecutive words (gap < _WORD_GAP) into clusters
         groups: List[List[Dict]] = []
         current_group: List[Dict] = [below_words[0]]

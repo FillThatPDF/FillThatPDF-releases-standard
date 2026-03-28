@@ -15,37 +15,43 @@ process.on('uncaughtException', (err) => {
 function setupAutoUpdater() {
     const { autoUpdater } = require('electron-updater');
     autoUpdater.on('update-available', (info) => {
-        dialog.showMessageBox({
-            type: 'info',
-            title: 'Update Available',
-            message: `A new version (${info.version}) is available!`,
-            detail: 'It will be downloaded in the background. You will be notified when it is ready to install.',
-            buttons: ['OK']
-        });
+        // Show in-app banner instead of dialog
+        if (mainWindow) {
+            mainWindow.webContents.send('update-available', info.version);
+        }
+    });
+    autoUpdater.on('download-progress', (progressObj) => {
+        if (mainWindow) {
+            mainWindow.webContents.send('update-download-progress', Math.round(progressObj.percent));
+        }
     });
     autoUpdater.on('update-downloaded', (info) => {
-        dialog.showMessageBox({
-            type: 'info',
-            title: 'Update Ready',
-            message: `Version ${info.version} has been downloaded.`,
-            detail: 'The update will be installed when you quit the app. Would you like to restart now?',
-            buttons: ['Restart Now', 'Later']
-        }).then((result) => {
-            if (result.response === 0) {
-                autoUpdater.quitAndInstall();
-            }
-        });
+        if (mainWindow) {
+            mainWindow.webContents.send('update-downloaded', info.version);
+        }
     });
     autoUpdater.on('error', (err) => {
         console.error('Auto-updater error:', err);
     });
+
+    // IPC handler: user clicked "Restart to Update"
+    ipcMain.handle('install-update', () => {
+        autoUpdater.quitAndInstall();
+    });
+
     return autoUpdater;
 }
 
 // Get the correct Python path - checks common locations for packaged app compatibility (for development mode)
 function getPythonPath() {
     // List of Python paths to check (in order of preference)
-    const pythonPaths = [
+    const isWin = process.platform === 'win32';
+    const pythonPaths = isWin ? [
+        path.join(__dirname, 'venv\\Scripts\\python.exe'),  // Local venv (Windows)
+        path.join(__dirname, '.venv\\Scripts\\python.exe'), // Local .venv (Windows)
+        'python',                                            // Fallback to PATH (Windows)
+        'python3'                                            // Alternative PATH
+    ] : [
         path.join(__dirname, 'pyenv/bin/python3'), // Local pyenv
         path.join(__dirname, 'venv/bin/python3'),  // Local venv
         path.join(__dirname, '.venv/bin/python3'), // Local .venv
@@ -79,9 +85,10 @@ function getPythonPath() {
         }
     }
 
-    // Fallback - just return python3 and hope for the best
-    try { console.warn('Could not find Python with required packages, using default python3'); } catch (_) {}
-    return 'python3';
+    // Fallback - just return python/python3 and hope for the best
+    const fallback = isWin ? 'python' : 'python3';
+    try { console.warn(`Could not find Python with required packages, using default ${fallback}`); } catch (_) {}
+    return fallback;
 }
 
 // Cache the Python path
@@ -94,28 +101,38 @@ function python() {
 }
 
 // ===== BUNDLED EXECUTABLE SUPPORT =====
-// Architecture-specific folder name (Windows: dist_win, macOS ARM64: dist_arm64, macOS x64: dist_x64)
+// Platform/architecture-specific folder name
 function getArchFolder() {
     if (process.platform === 'win32') return 'dist_win';
     return process.arch === 'x64' ? 'dist_x64' : 'dist_arm64';
 }
 
+// Append .exe on Windows for binary names
+function exeName(name) {
+    return process.platform === 'win32' ? name + '.exe' : name;
+}
+
 // Get path to bundled executable (used in packaged app)
 function getBundledExecutable(name) {
     const archFolder = getArchFolder();
-    const exeSuffix = process.platform === 'win32' ? '.exe' : '';
+    const exe = exeName(name);
 
     if (app.isPackaged) {
-        // In packaged app, use architecture-specific bundled executables
-        return path.join(process.resourcesPath, 'python_dist', archFolder, name + exeSuffix);
+        // Try folder-based first (onedir), then fall back to single file (onefile)
+        const onedirPath = path.join(process.resourcesPath, 'python_dist', archFolder, name, exe);
+        if (fs.existsSync(onedirPath)) return onedirPath;
+        return path.join(process.resourcesPath, 'python_dist', archFolder, exe);
     } else {
-        // In development, use bundled executables if they exist, otherwise use Python
-        const bundledPath = path.join(__dirname, 'python_dist', archFolder, name + exeSuffix);
-        if (fs.existsSync(bundledPath)) {
+        // Dev mode: check for onedir binary first
+        const devOnedirPath = path.join(__dirname, 'python_dist', archFolder, name, exe);
+        if (fs.existsSync(devOnedirPath)) return devOnedirPath;
+        // Then check for onefile binary
+        const bundledPath = path.join(__dirname, 'python_dist', archFolder, exe);
+        if (fs.existsSync(bundledPath) && !fs.statSync(bundledPath).isDirectory()) {
             return bundledPath;
         }
         // Fall back to legacy dist folder if architecture-specific not found
-        const legacyPath = path.join(__dirname, 'python_dist', 'dist', name + exeSuffix);
+        const legacyPath = path.join(__dirname, 'python_dist', 'dist', exe);
         if (fs.existsSync(legacyPath)) {
             return legacyPath;
         }
@@ -153,14 +170,14 @@ let _serverBuffer = '';  // Accumulates partial stdout chunks
 function _getServerScriptPath() {
     if (app.isPackaged) {
         const archFolder = getArchFolder();
-        const exeSuffix = process.platform === 'win32' ? '.exe' : '';
+        const serverExe = exeName('smart_fillable_server');
         // --onedir bundled server: executable is inside a subdirectory
-        const onedirExe = path.join(process.resourcesPath, 'python_dist', archFolder, 'smart_fillable_server', 'smart_fillable_server' + exeSuffix);
+        const onedirExe = path.join(process.resourcesPath, 'python_dist', archFolder, 'smart_fillable_server', serverExe);
         if (fs.existsSync(onedirExe)) {
             return { type: 'exe', path: onedirExe };
         }
         // Legacy --onefile bundled server (single binary)
-        const onefileExe = path.join(process.resourcesPath, 'python_dist', archFolder, 'smart_fillable_server' + exeSuffix);
+        const onefileExe = path.join(process.resourcesPath, 'python_dist', archFolder, serverExe);
         if (fs.existsSync(onefileExe)) {
             return { type: 'exe', path: onefileExe };
         }
@@ -494,10 +511,7 @@ const DEFAULT_SETTINGS = {
     output_suffix: '_fillable',            // Output filename suffix
     testfill_suffix: '_FILLED',            // Test fill output filename suffix
     auto_improve_names: false,             // Run auto-naming on all fields after generation
-    
-    // === TEST FILL MODE ===
-    test_fill_mode: 'smart',               // 'smart' (Python, format-aware) or 'quick' (JavaScript)
-    
+
     // === TEST FILL CONFIGURATION ===
     testFillConfig: {
         categories: [
@@ -607,8 +621,7 @@ function getPythonScriptPath() {
 
     if (app.isPackaged) {
         // In packaged app, use architecture-specific bundled executable
-        const exeSuffix = process.platform === 'win32' ? '.exe' : '';
-        const bundledExe = path.join(process.resourcesPath, 'python_dist', archFolder, 'smart_fillable' + exeSuffix);
+        const bundledExe = path.join(process.resourcesPath, 'python_dist', archFolder, exeName('smart_fillable'));
         if (fs.existsSync(bundledExe)) {
             return { type: 'exe', path: bundledExe };
         }
@@ -680,13 +693,12 @@ function getAcroFormFixScriptPath() {
     const binDir = app.isPackaged
         ? path.join(process.resourcesPath, 'python_dist', archFolder)
         : path.join(__dirname, 'python_dist', archFolder);
-    const exeSuffix = process.platform === 'win32' ? '.exe' : '';
-    const binPath = path.join(binDir, 'apply_acroform_fix' + exeSuffix);
-    
+    const binPath = path.join(binDir, exeName('apply_acroform_fix'));
+
     if (fs.existsSync(binPath)) {
         return { type: 'binary', path: binPath };
     }
-    
+
     // Fallback to Python script
     const scriptPath = app.isPackaged
         ? path.join(process.resourcesPath, 'apply_acroform_fix.py')
@@ -944,81 +956,7 @@ ipcMain.handle('delete-template', async (event, name) => {
 });
 
 // Update Checker IPC Handler
-ipcMain.handle('check-for-updates', async () => {
-    try {
-        const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-        // Replace with actual repo details or configuration
-        // For now, we'll try to get it from package.json or use a placeholder logic
-        const pkg = require('./package.json');
-        
-        // Check if repository URL exists and is a GitHub URL
-        if (!pkg.repository || !pkg.repository.url || !pkg.repository.url.includes('github.com')) {
-            return { updateAvailable: false, reason: 'No GitHub repository configured' };
-        }
-        
-        // Extract owner/repo from URL (e.g., https://github.com/owner/repo.git)
-        const match = pkg.repository.url.match(/github\.com\/([^/]+)\/([^/.]+)/);
-        if (!match) {
-            return { updateAvailable: false, reason: 'Invalid GitHub URL' };
-        }
-        
-        const owner = match[1];
-        const repo = match[2];
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
-        
-        // Note: This requires internet access
-        // Using electron 'net' module or fetch if available in Node environment
-        // Since we are in Main process, we can use built-in fetch in Electron 28+ or dynamic import node-fetch
-        // Or just use net module
-        
-        const { net } = require('electron');
-        
-        return new Promise((resolve) => {
-            const request = net.request(apiUrl);
-            
-            request.on('response', (response) => {
-                let data = '';
-                response.on('data', (chunk) => {
-                    data += chunk;
-                });
-                
-                response.on('end', () => {
-                    if (response.statusCode === 200) {
-                        try {
-                            const release = JSON.parse(data);
-                            const latestVersion = release.tag_name.replace('v', '');
-                            const currentVersion = pkg.version;
-                            
-                            // Simple version comparison (semver is better but let's keep it simple)
-                            const updateAvailable = latestVersion !== currentVersion; // Naive check
-                            
-                            resolve({
-                                updateAvailable,
-                                currentVersion,
-                                latestVersion,
-                                releaseUrl: release.html_url,
-                                releaseNotes: release.body
-                            });
-                        } catch (e) {
-                            resolve({ updateAvailable: false, error: 'Failed to parse response' });
-                        }
-                    } else {
-                        resolve({ updateAvailable: false, error: `GitHub API error: ${response.statusCode}` });
-                    }
-                });
-            });
-            
-            request.on('error', (error) => {
-                resolve({ updateAvailable: false, error: error.message });
-            });
-            
-            request.end();
-        });
-        
-    } catch (error) {
-        return { updateAvailable: false, error: error.message };
-    }
-});
+// check-for-updates is now handled by electron-updater via setupAutoUpdater()
 
 // Show error dialog
 ipcMain.handle('show-error', async (event, title, message) => {
@@ -1054,17 +992,18 @@ async function runGarbageFieldCleanup(pdfPath) {
             ? path.join(process.resourcesPath, 'python_dist', arch)
             : path.join(__dirname, 'python_dist', arch);
             
-        const gcExeSuffix = process.platform === 'win32' ? '.exe' : '';
-        let binPath = path.join(binDir, 'garbage_field_cleanup' + gcExeSuffix);
-        
+        let binPath = path.join(binDir, exeName('garbage_field_cleanup'));
+
         let cleanupProcess;
-        
+
         if (fs.existsSync(binPath)) {
             console.log('[Garbage Cleanup] Using binary:', binPath);
-            try {
-                fs.chmodSync(binPath, '755'); // Ensure executable
-            } catch (e) {
-                console.error('[Garbage Cleanup] Failed to chmod binary:', e);
+            if (process.platform === 'darwin') {
+                try {
+                    fs.chmodSync(binPath, '755');
+                } catch (e) {
+                    console.error('[Garbage Cleanup] Failed to chmod binary:', e);
+                }
             }
             cleanupProcess = spawn(binPath, [pdfPath, pdfPath, '--sensitivity', sensitivity]);
             setActiveProcess(cleanupProcess);
@@ -1135,24 +1074,23 @@ async function runAutoRenameAll(pdfPath) {
             ? path.join(process.resourcesPath, 'python_dist', arch)
             : path.join(__dirname, 'python_dist', arch);
             
-        const arExeSuffix = process.platform === 'win32' ? '.exe' : '';
-        let binPath = path.join(binDir, 'auto_rename_all' + arExeSuffix);
-        
+        let binPath = path.join(binDir, exeName('auto_rename_all'));
+
         let autoNameProcess;
-        
+
         if (fs.existsSync(binPath)) {
             console.log('[Auto Rename All] Using binary:', binPath);
-            try {
-                fs.chmodSync(binPath, 0o755);
-                // Attempt to remove quarantine attribute
+            if (process.platform === 'darwin') {
                 try {
-                    execSync(`xattr -d com.apple.quarantine "${binPath}"`);
+                    fs.chmodSync(binPath, 0o755);
+                    try {
+                        execSync(`xattr -d com.apple.quarantine "${binPath}"`);
+                    } catch (e) {
+                        console.log('xattr command failed (ignoring):', e.message);
+                    }
                 } catch (e) {
-                    // Ignore error if attribute doesn't exist or fails
-                    console.log('xattr command failed (ignoring):', e.message);
+                    console.error('Failed to set executable permissions:', e);
                 }
-            } catch (e) {
-                console.error('Failed to set executable permissions:', e);
             }
             autoNameProcess = spawn(binPath, [pdfPath]);
             setActiveProcess(autoNameProcess);
@@ -1625,85 +1563,77 @@ ipcMain.handle('run-test-fill', async (event, inputPath, outputPath) => {
                 outputFilePath = path.join(inputDir, `${baseName}${testfillSuffix}.pdf`);
             }
 
-            // Check test fill mode setting
-            const testFillMode = settingsStore.get('test_fill_mode', 'smart');
-            
-            // Get all current settings to pass to scripts
-            const currentSettings = settingsStore.store;
-            
             // ========== SMART MODE (Python - Format-Aware) ==========
-            if (testFillMode === 'smart') {
-                mainWindow.webContents.send('progress-update', '🧠 Smart Fill Mode (Python with format detection)\n');
-                mainWindow.webContents.send('progress-update', '📄 Loading PDF...\n');
-                
-                // Use helper to get architecture-specific path
-                const bundledExe = getBundledExecutable('fill_pdf_v3');
-                
-                let pythonProcess;
-                // DEV: Only force Python in development
-                const forceUsePython = !app.isPackaged;
-                
-                if (!forceUsePython && bundledExe && fs.existsSync(bundledExe)) {
-                    console.log('Running bundled fill_pdf:', bundledExe);
-                    pythonProcess = spawn(bundledExe, [inputPath, outputFilePath, '--settings', JSON.stringify(currentSettings)]);
-                } else {
-                    // Build Python script path
-                    const pythonScriptName = 'fill_pdf_v3.py';
-                    let pythonScript;
-                    
-                    if (app.isPackaged) {
-                        pythonScript = path.join(process.resourcesPath, pythonScriptName);
-                    } else {
-                        pythonScript = path.join(__dirname, 'python_dist', pythonScriptName);
-                    }
-                    
-                    // Check if script exists
-                    if (!fs.existsSync(pythonScript)) {
-                        mainWindow.webContents.send('progress-update', `⚠️  Python script not found: ${pythonScript}\n`);
-                        mainWindow.webContents.send('progress-update', '⚡ Falling back to Quick Mode...\n');
-                        // Fall through to JavaScript mode
-                    } else {
-                        console.log('Running Python fill_pdf:', pythonScript);
-                        // Spawn Python process with settings
-                        pythonProcess = spawn(python(), [pythonScript, inputPath, outputFilePath, '--settings', JSON.stringify(currentSettings)]);
-                    }
-                }
-                
-                if (pythonProcess) {
-                    setActiveProcess(pythonProcess);
+            // Always try Python fill first (same as EZ-Filler), fall back to JS if unavailable
+            mainWindow.webContents.send('progress-update', '🧠 Smart Fill Mode (Python with format detection)\n');
+            mainWindow.webContents.send('progress-update', '📄 Loading PDF...\n');
 
-                    pythonProcess.stdout.on('data', (data) => {
-                        const lines = data.toString().split('\n');
-                        lines.forEach(line => {
-                            if (line.trim()) {
-                                mainWindow.webContents.send('progress-update', line + '\n');
-                            }
-                        });
-                    });
-                    
-                    pythonProcess.stderr.on('data', (data) => {
-                        mainWindow.webContents.send('progress-update', `⚠️  ${data.toString()}\n`);
-                    });
-                    
-                    pythonProcess.on('close', (code) => {
-                        if (code === null || code === 143 || code === 137) {
-                            reject(new Error('CANCELLED'));
-                            return;
-                        }
-                        if (code === 0) {
-                            mainWindow.webContents.send('progress-update', '✅ Smart Fill complete!\n');
-                            resolve({ success: true, outputPath: outputFilePath });
-                        } else {
-                            mainWindow.webContents.send('progress-update', `❌ Python exited with code ${code}\n`);
-                            reject(new Error(`Python fill failed with code ${code}`));
-                        }
-                    });
-                    
-                    return; // Exit early, Python handles everything
+            // Use helper to get architecture-specific path
+            const bundledExe = getBundledExecutable('fill_pdf_v3');
+
+            let pythonProcess;
+            // DEV: Only force Python in development
+            const forceUsePython = !app.isPackaged;
+
+            if (!forceUsePython && bundledExe && fs.existsSync(bundledExe)) {
+                console.log('Running bundled fill_pdf:', bundledExe);
+                pythonProcess = spawn(bundledExe, [inputPath, outputFilePath]);
+            } else {
+                // Build Python script path
+                const pythonScriptName = 'fill_pdf_v3.py';
+                let pythonScript;
+
+                if (app.isPackaged) {
+                    pythonScript = path.join(process.resourcesPath, pythonScriptName);
+                } else {
+                    pythonScript = path.join(__dirname, 'python_dist', pythonScriptName);
+                }
+
+                // Check if script exists
+                if (!fs.existsSync(pythonScript)) {
+                    mainWindow.webContents.send('progress-update', `⚠️  Python script not found: ${pythonScript}\n`);
+                    mainWindow.webContents.send('progress-update', '⚡ Falling back to Quick Mode...\n');
+                    // Fall through to JavaScript mode
+                } else {
+                    console.log('Running Python fill_pdf:', pythonScript);
+                    pythonProcess = spawn(python(), [pythonScript, inputPath, outputFilePath]);
                 }
             }
-            
-            // ========== QUICK MODE (JavaScript - Name-Based) ==========
+
+            if (pythonProcess) {
+                setActiveProcess(pythonProcess);
+
+                pythonProcess.stdout.on('data', (data) => {
+                    const lines = data.toString().split('\n');
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            mainWindow.webContents.send('progress-update', line + '\n');
+                        }
+                    });
+                });
+
+                pythonProcess.stderr.on('data', (data) => {
+                    mainWindow.webContents.send('progress-update', `⚠️  ${data.toString()}\n`);
+                });
+
+                pythonProcess.on('close', (code) => {
+                    if (code === null || code === 143 || code === 137) {
+                        reject(new Error('CANCELLED'));
+                        return;
+                    }
+                    if (code === 0) {
+                        mainWindow.webContents.send('progress-update', '✅ Fill complete!\n');
+                        resolve({ success: true, outputPath: outputFilePath });
+                    } else {
+                        mainWindow.webContents.send('progress-update', `❌ Python exited with code ${code}\n`);
+                        reject(new Error(`Python fill failed with code ${code}`));
+                    }
+                });
+
+                return; // Exit early, Python handles everything
+            }
+
+            // ========== FALLBACK: QUICK MODE (JavaScript - Name-Based) ==========
             mainWindow.webContents.send('progress-update', '⚡ Quick Fill Mode (JavaScript)\n');
             
             const { PDFDocument, PDFTextField, PDFCheckBox, PDFDropdown, PDFRadioGroup } = require('pdf-lib');
@@ -1924,8 +1854,16 @@ ipcMain.handle('run-test-fill', async (event, inputPath, outputPath) => {
             mainWindow.webContents.send('fill-progress', 100);
             mainWindow.webContents.send('progress-update', `✅ Filled ${filledCount} fields\n`);
             mainWindow.webContents.send('progress-update', '💾 Saving PDF...\n');
-            
-            const pdfBytes = await pdfDoc.save();
+
+            let pdfBytes;
+            try {
+                pdfBytes = await pdfDoc.save();
+            } catch (saveErr) {
+                // Fields with JS format actions can cause appearance rendering to fail
+                // Retry without appearance updates - Acrobat will render them correctly
+                mainWindow.webContents.send('progress-update', '⚠️  Retrying save (skipping appearance streams)...\n');
+                pdfBytes = await pdfDoc.save({ updateFieldAppearances: false });
+            }
             fs.writeFileSync(outputFilePath, pdfBytes);
             
             mainWindow.webContents.send('progress-update', `✅ Saved: ${outputFilePath}\n`);
@@ -1941,8 +1879,7 @@ ipcMain.handle('run-test-fill', async (event, inputPath, outputPath) => {
             const binDir = app.isPackaged 
                 ? path.join(process.resourcesPath, 'python_dist', arch)
                 : path.join(__dirname, 'python_dist', arch);
-            const fcExeSuffix = process.platform === 'win32' ? '.exe' : '';
-            const fixCheckboxBin = path.join(binDir, 'fix_checkbox_appearances' + fcExeSuffix);
+            const fixCheckboxBin = path.join(binDir, exeName('fix_checkbox_appearances'));
             
             let fixProcess;
             
@@ -2235,10 +2172,9 @@ ipcMain.handle('extract-fields', async (event, pdfPath) => {
     return new Promise((resolve, reject) => {
         // Check for architecture-specific bundled executable
         const archFolder = getArchFolder();
-        const efExeSuffix = process.platform === 'win32' ? '.exe' : '';
         const bundledExe = app.isPackaged
-            ? path.join(process.resourcesPath, 'python_dist', archFolder, 'extract_fields' + efExeSuffix)
-            : path.join(__dirname, 'python_dist', archFolder, 'extract_fields' + efExeSuffix);
+            ? path.join(process.resourcesPath, 'python_dist', archFolder, exeName('extract_fields'))
+            : path.join(__dirname, 'python_dist', archFolder, exeName('extract_fields'));
 
         let pythonProcess;
 
@@ -2293,10 +2229,9 @@ ipcMain.handle('apply-field-changes', async (event, pdfPath, outputPath, changes
     return new Promise((resolve, reject) => {
         // Check for architecture-specific bundled executable
         const archFolder = getArchFolder();
-        const mfExeSuffix = process.platform === 'win32' ? '.exe' : '';
         const bundledExe = app.isPackaged
-            ? path.join(process.resourcesPath, 'python_dist', archFolder, 'modify_fields' + mfExeSuffix)
-            : path.join(__dirname, 'python_dist', archFolder, 'modify_fields' + mfExeSuffix);
+            ? path.join(process.resourcesPath, 'python_dist', archFolder, exeName('modify_fields'))
+            : path.join(__dirname, 'python_dist', archFolder, exeName('modify_fields'));
 
         // Write changes to temp file (to avoid command line length issues)
         const changesFile = path.join(require('os').tmpdir(), `pdf_editor_changes_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.json`);
@@ -2385,11 +2320,10 @@ ipcMain.handle('auto-name-field', async (event, pdfPath, pageNum, rect) => {
             // Check for bundled executable first
             // Determine correct architecture folder
             const archFolder = getArchFolder();
-            const anExeSuffix = process.platform === 'win32' ? '.exe' : '';
-            const bundledExe = app.isPackaged 
-                ? path.join(process.resourcesPath, 'python_dist', archFolder, 'auto_name_field' + anExeSuffix)
-                : path.join(__dirname, 'python_dist', archFolder, 'auto_name_field' + anExeSuffix);
-            
+            const bundledExe = app.isPackaged
+                ? path.join(process.resourcesPath, 'python_dist', archFolder, exeName('auto_name_field'))
+                : path.join(__dirname, 'python_dist', archFolder, exeName('auto_name_field'));
+
             // rect is [x0, y0, x1, y1]
             const rectArgs = [
                 pdfPath,
@@ -2399,19 +2333,21 @@ ipcMain.handle('auto-name-field', async (event, pdfPath, pageNum, rect) => {
                 rect[2].toString(),
                 rect[3].toString()
             ];
-            
+
             let childProcess;
             if (fs.existsSync(bundledExe)) {
                 console.log('Running bundled auto_name_field:', bundledExe);
-                try {
-                    fs.chmodSync(bundledExe, 0o755);
+                if (process.platform === 'darwin') {
                     try {
-                        execSync(`xattr -d com.apple.quarantine "${bundledExe}"`);
+                        fs.chmodSync(bundledExe, 0o755);
+                        try {
+                            execSync(`xattr -d com.apple.quarantine "${bundledExe}"`);
+                        } catch (e) {
+                            // Ignore
+                        }
                     } catch (e) {
-                        // Ignore
+                        console.error('Failed to set permissions:', e);
                     }
-                } catch (e) {
-                    console.error('Failed to set permissions:', e);
                 }
                 childProcess = spawn(bundledExe, rectArgs);
             } else {
@@ -2469,23 +2405,24 @@ ipcMain.handle('auto-name-fields', async (event, pdfPath, fields) => {
             // Check for bundled executable first
             // Determine correct architecture folder
             const archFolder = getArchFolder();
-            const anBatchExeSuffix = process.platform === 'win32' ? '.exe' : '';
-            const bundledExe = app.isPackaged 
-                ? path.join(process.resourcesPath, 'python_dist', archFolder, 'auto_name_field' + anBatchExeSuffix)
-                : path.join(__dirname, 'python_dist', archFolder, 'auto_name_field' + anBatchExeSuffix);
-            
+            const bundledExe = app.isPackaged
+                ? path.join(process.resourcesPath, 'python_dist', archFolder, exeName('auto_name_field'))
+                : path.join(__dirname, 'python_dist', archFolder, exeName('auto_name_field'));
+
             let childProcess;
             if (fs.existsSync(bundledExe)) {
                 console.log('Running bundled auto_name_field (batch):', bundledExe);
-                try {
-                    fs.chmodSync(bundledExe, 0o755);
+                if (process.platform === 'darwin') {
                     try {
-                        execSync(`xattr -d com.apple.quarantine "${bundledExe}"`);
+                        fs.chmodSync(bundledExe, 0o755);
+                        try {
+                            execSync(`xattr -d com.apple.quarantine "${bundledExe}"`);
+                        } catch (e) {
+                            // Ignore
+                        }
                     } catch (e) {
-                        // Ignore
+                        console.error('Failed to set permissions:', e);
                     }
-                } catch (e) {
-                    console.error('Failed to set permissions:', e);
                 }
                 childProcess = spawn(bundledExe, []);
             } else {

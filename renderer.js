@@ -1578,10 +1578,7 @@ const SETTING_FIELDS = {
     'output_suffix': 'text',
     'testfill_suffix': 'text',
     'auto_improve_names': 'toggle',
-    
-    // Test Fill
-    'test_fill_mode': 'text',
-    
+
     // Auto-Calibration
     'auto_calibrate': 'toggle'
 };
@@ -2165,20 +2162,34 @@ if (btnSignOut) {
         
         updateStatsDashboard(); // Initial load of stats
         
-        // Check for updates (non-blocking)
-        ipcRenderer.invoke('check-for-updates').then(update => {
-            if (update.updateAvailable) {
-                const notification = document.getElementById('updateNotification');
-                const version = document.getElementById('updateVersion');
-                const link = document.getElementById('updateLink');
-                
-                if (notification && version && link) {
-                    version.textContent = `(${update.latestVersion})`;
-                    link.href = update.releaseUrl;
-                    notification.style.display = 'flex';
-                }
+        // Listen for auto-update events from main process
+        ipcRenderer.on('update-available', (event, version) => {
+            const notification = document.getElementById('updateNotification');
+            const versionEl = document.getElementById('updateVersion');
+            const link = document.getElementById('updateLink');
+            if (notification && versionEl && link) {
+                versionEl.textContent = `(v${version})`;
+                link.textContent = 'Downloading...';
+                link.removeAttribute('href');
+                link.style.cursor = 'default';
+                notification.style.display = 'flex';
             }
-        }).catch(err => console.error('Update check failed:', err));
+        });
+        ipcRenderer.on('update-download-progress', (event, percent) => {
+            const link = document.getElementById('updateLink');
+            if (link) link.textContent = `Downloading... ${percent}%`;
+        });
+        ipcRenderer.on('update-downloaded', (event, version) => {
+            const link = document.getElementById('updateLink');
+            if (link) {
+                link.textContent = 'Restart to Update';
+                link.style.cursor = 'pointer';
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    ipcRenderer.invoke('install-update');
+                };
+            }
+        });
         
     } catch (e) {
         console.error('Failed to load settings:', e);

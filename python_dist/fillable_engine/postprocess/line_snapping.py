@@ -50,6 +50,10 @@ MIN_WIDTH = 10.0
 # line, and the detection height is preserved.  All other sources (grid,
 # table, empty_box, etc.) keep full pair-based Y-snapping so they can
 # fill their enclosing cells.
+#
+# ``label_entry_below`` is included because these fields are positioned
+# below their label text by design — pair-based snapping would expand
+# them upward past the label to fill the entire cell, covering it.
 LINE_BASED_SOURCES = {
     'form_line_presplit', 'form_line_segment',
     'signature', 'date',
@@ -58,6 +62,7 @@ LINE_BASED_SOURCES = {
     'general_underscore', 'inline_label',
     'label_below_underscore',
     'embedded_underscore',
+    'label_entry_below',
 }
 
 

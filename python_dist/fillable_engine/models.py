@@ -403,7 +403,7 @@ SOURCE_RANKS = {
     'split_cell_multi_row': 530,
     'horizontal_line_table_subrow': 530,
     'split_line_gap': 525,
-    'special_structural_header': 515,
+    'special_structural_header': 475,
     'form_line_segment': 370,
     'label_below_split': 370,
     'inline_fill_underline': 300,

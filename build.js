@@ -27,6 +27,8 @@ const isPro = version.toLowerCase() === 'pro' || isDemo; // Demo gets PRO featur
 
 const versionLabel = isDemo ? 'Demo' : (isPro ? 'PRO' : 'Standard');
 const platformLabel = isWindows ? 'Windows' : 'macOS';
+// Sanitized name for file artifacts (no spaces or special chars)
+const artifactBaseName = isDemo ? 'FillThatPDF-Demo' : (isPro ? 'FillThatPDF-PRO' : 'FillThatPDF');
 console.log(`\n🔧 Building FillThatPDF! ${versionLabel} version for ${platformLabel}...\n`);
 
 // Update config.js with correct values
@@ -78,6 +80,9 @@ if (isWindows) {
         const from = typeof r === 'string' ? r : r.from;
         return !from.includes('dist_arm64') && !from.includes('dist_x64');
     });
+    // Use sanitized artifact name for Windows installer (no spaces or special chars)
+    pkg.build.nsis = pkg.build.nsis || {};
+    pkg.build.nsis.artifactName = `${artifactBaseName}-\${version}-Setup.\${ext}`;
     console.log('✅ Filtered extraResources for Windows (removed macOS dist folders)');
 } else {
     // On macOS build: remove dist_win (Windows only)
@@ -92,6 +97,51 @@ fs.writeFileSync(packagePath, JSON.stringify(pkg, null, 2) + '\n');
 console.log(`✅ Updated package.json for ${versionLabel} (${platformLabel})`);
 console.log(`✅ Publish repo: ${pkg.build.publish.repo}`);
 
+// Build per-architecture to avoid universal merge issues with PyInstaller binaries
+function buildForArch(arch) {
+    const pkg2 = JSON.parse(originalPackageJson);
+    const otherArch = arch === 'arm64' ? 'x64' : 'arm64';
+    const otherDistFolder = `dist_${otherArch}`;
+
+    // Apply the same version/product name changes
+    if (isDemo) {
+        pkg2.productName = 'Fill That PDF! (Demo)';
+        pkg2.build.appId = 'com.fillthatpdf.demo';
+        pkg2.build.productName = 'Fill That PDF! (Demo)';
+    } else if (isPro) {
+        pkg2.productName = 'Fill That PDF! PRO';
+        pkg2.build.appId = 'com.fillthatpdf.pro';
+        pkg2.build.productName = 'Fill That PDF! PRO';
+    } else {
+        pkg2.productName = 'Fill That PDF!';
+        pkg2.build.appId = 'com.fillthatpdf.standard';
+        pkg2.build.productName = 'Fill That PDF!';
+    }
+
+    if (isPro) {
+        pkg2.build.publish.repo = 'FillThatPDF-releases-pro';
+    } else {
+        pkg2.build.publish.repo = 'FillThatPDF-releases-standard';
+    }
+
+    // Only include the Python binaries for this architecture
+    pkg2.build.extraResources = pkg2.build.extraResources.filter(r => {
+        const from = typeof r === 'string' ? r : r.from;
+        return !from.includes(otherDistFolder) && !from.includes('dist_win');
+    });
+
+    // Use sanitized artifact name and DMG title (no special chars for hdiutil)
+    const safeArtifactName = `${artifactBaseName}-\${version}-\${arch}.\${ext}`;
+    pkg2.build.mac.artifactName = safeArtifactName;
+    pkg2.build.dmg.artifactName = safeArtifactName;
+    pkg2.build.dmg.title = artifactBaseName;
+
+    fs.writeFileSync(packagePath, JSON.stringify(pkg2, null, 2) + '\n');
+    console.log(`\n📦 Building ${arch} DMG...\n`);
+    execSync(`npx electron-builder --mac dmg zip --${arch}`, { stdio: 'inherit' });
+    console.log(`\n✅ ${arch} build complete!\n`);
+}
+
 // Run electron-builder
 console.log('\n📦 Running electron-builder...\n');
 try {
@@ -99,8 +149,10 @@ try {
         execSync('npx electron-builder --win nsis --x64', { stdio: 'inherit' });
         console.log(`\n🎉 Build complete! Check the dist/ folder for your ${versionLabel} Windows installer.\n`);
     } else {
-        execSync('npx electron-builder --mac dmg zip --universal', { stdio: 'inherit' });
-        console.log(`\n🎉 Build complete! Check the dist/ folder for your ${versionLabel} DMG + ZIP.\n`);
+        // Build both architectures separately
+        buildForArch('arm64');
+        buildForArch('x64');
+        console.log(`\n🎉 Both builds complete! Check the dist/ folder for your ${versionLabel} DMGs.\n`);
     }
 } catch (error) {
     console.error('❌ Build failed:', error.message);

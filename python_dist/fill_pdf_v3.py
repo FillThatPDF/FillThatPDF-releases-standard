@@ -553,16 +553,35 @@ def fill_pdf(input_path: str, output_path: str = None, settings_json: str = None
         # /MK and /DA, this is safe to set globally.
         acroform['/NeedAppearances'] = True
 
-        fields = acroform.get('/Fields', [])
-        counts = {'text': 0, 'radio': 0, 'checkbox': 0, 'numeric': 0, 'image': 0}
+        def get_all_terminal_fields(fields_list):
+            terminal_fields = []
+            for f in fields_list:
+                # A terminal field either has /FT or has no /Kids
+                # If it has /Kids but no /FT, it's a non-terminal field (a group)
+                if '/FT' in f:
+                    terminal_fields.append(f)
+                elif '/Kids' in f:
+                    terminal_fields.extend(get_all_terminal_fields(f['/Kids']))
+                else:
+                    # No /FT and no /Kids? Might be an orphan widget or a terminal field 
+                    # without type (unlikely but we'll include it to be safe)
+                    terminal_fields.append(f)
+            return terminal_fields
+
+        all_terminal_fields = get_all_terminal_fields(acroform.get('/Fields', []))
+        counts = {'text': 0, 'radio': 0, 'checkbox': 0, 'choice': 0, 'numeric': 0, 'image': 0}
 
         # ---- PASS 1: Analyze fields for calculations ----
         calc_fields = {}       # name -> {'field': obj, 'js': str, 'references': [...]}
         source_field_names = set()  # Fields referenced by calculations
 
-        for field in fields:
+        for field in all_terminal_fields:
             ft = str(field.get('/FT', ''))
             name = str(field.get('/T', ''))
+            # If name is missing, try to get from parent
+            if not name and '/Parent' in field:
+                name = str(field['/Parent'].get('/T', ''))
+            
             if '/Tx' not in ft:
                 continue
             js = get_calc_js(field)
@@ -670,10 +689,12 @@ def fill_pdf(input_path: str, output_path: str = None, settings_json: str = None
         # ---- PASS 2: Fill regular fields + source fields ----
         filled_values = {}  # name -> numeric value (for calculation engine)
 
-        for field in fields:
+        for field in all_terminal_fields:
             try:
                 ft = str(field.get('/FT', ''))
                 name = str(field.get('/T', ''))
+                if not name and '/Parent' in field:
+                    name = str(field['/Parent'].get('/T', ''))
 
                 if '/Tx' in ft:
                     # Skip calculated fields — handled in pass 3
@@ -886,6 +907,62 @@ def fill_pdf(input_path: str, output_path: str = None, settings_json: str = None
                         w, h = get_field_rect(field)
                         field['/AP'] = pikepdf.Dictionary({'/N': make_appearance_dict(pdf, 'Yes', w, h, fill_settings.checkbox_style)})
                         counts['checkbox'] += 1
+                
+                elif '/Ch' in ft:
+                    # Choice field (Dropdown or ListBox)
+                    options = []
+                    raw_opts = []
+                    
+                    # Check for Opt on field or parent
+                    opt_source = field.get('/Opt')
+                    if opt_source is None and '/Parent' in field:
+                        opt_source = field['/Parent'].get('/Opt')
+                        
+                    if opt_source is not None:
+                        try:
+                            opt_items = list(opt_source)
+                            for opt in opt_items:
+                                raw_opts.append(opt)
+                                if isinstance(opt, pikepdf.Array):
+                                    # [export_value, display_value]
+                                    options.append(str(opt[0]))
+                                else:
+                                    options.append(str(opt))
+                        except Exception:
+                            pass
+                    
+                    # Store indices of valid options (non-empty)
+                    valid_indices = [i for i, o in enumerate(options) if o.strip()]
+                    
+                    if valid_indices:
+                        selected_idx = random.choice(valid_indices)
+                        selected_raw = raw_opts[selected_idx]
+                        
+                        # Set /V to the export value (first element if it's an array)
+                        val = selected_raw[0] if isinstance(selected_raw, pikepdf.Array) else selected_raw
+                        field['/V'] = val
+                        field['/I'] = pikepdf.Array([selected_idx])
+                        field['/DV'] = val
+
+                        # Font Preservation: Extract font from original DA if possible
+                        original_da = str(field.get('/DA', ''))
+                        if not original_da and '/Parent' in field:
+                            original_da = str(field['/Parent'].get('/DA', ''))
+                        
+                        if original_da:
+                            field['/DA'] = pikepdf.String(original_da)
+                        else:
+                            field['/DA'] = pikepdf.String("/Helv 9 Tf 0 g")
+                        
+                        # Set values on parent if this is a widget
+                        if '/Parent' in field:
+                            field['/Parent']['/V'] = val
+                            field['/Parent']['/I'] = field['/I']
+                        
+                        # Delete appearance to force regeneration
+                        if '/AP' in field:
+                            del field['/AP']
+                        counts['choice'] += 1
             except Exception as e:
                 print(f"[WARNING] Error processing field '{name}': {e}")
                 continue
@@ -931,7 +1008,7 @@ def fill_pdf(input_path: str, output_path: str = None, settings_json: str = None
 
         pdf.save(output_path)
         pdf.close()
-        print(f"\nSummary:\n   Text: {counts['text']}\n   Radio: {counts['radio']}\n   Check: {counts['checkbox']}\n   Saved: {output_path}")
+        print(f"\nSummary:\n   Text: {counts['text']}\n   Radio: {counts['radio']}\n   Check: {counts['checkbox']}\n   Choice: {counts['choice']}\n   Saved: {output_path}")
 
     except Exception as e:
         print(f"[ERROR] Error filling PDF: {e}")

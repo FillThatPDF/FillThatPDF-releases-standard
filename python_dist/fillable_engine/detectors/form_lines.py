@@ -129,7 +129,8 @@ class FormLineDetector(BaseDetector):
             # Find the nearest content above this line (another form line
             # or the bottom of a text line).  If the gap is large, expand
             # the field height upward so it fills toward the content above,
-            # leaving a small pad.  Capped at 30pt to avoid oversized fields.
+            # leaving a small pad.  Capped at base_field_height * 1.5 to
+            # avoid oversized fields that extend past the visible line.
             field_height = base_field_height
             nearest_above = None
             for ly in reversed(all_line_ys):
@@ -143,9 +144,11 @@ class FormLineDetector(BaseDetector):
                     break
             if nearest_above is not None:
                 gap = y - nearest_above
+                max_expand = int(base_field_height * 1.5)
                 if gap > 18:
-                    # Expand height, leave 4pt pad above, cap at 30pt
-                    field_height = min(int(gap - 4), 30)
+                    # Expand height conservatively — leave 4pt pad above,
+                    # cap at 1.5x the base height (typically ~21pt).
+                    field_height = min(int(gap - 4), max_expand)
 
             # Skip lines inside header bars
             if self._is_inside_header_bar(page, x0, y, x1):
@@ -276,7 +279,112 @@ class FormLineDetector(BaseDetector):
                 y_pos = (rtop + rbot) / 2
                 h_lines.append((min(rx0, rx1), y_pos, max(rx0, rx1), rh))
 
+        # -- Merge consecutive H-line segments at the same Y ----------
+        # Some PDFs draw a single visual line as several short segments
+        # (e.g., one segment per column boundary).  Merge segments that
+        # share the same Y (within 1pt) and are contiguous (gap ≤ 2pt).
+        h_lines = self._merge_h_line_segments(h_lines, v_lines)
+
         return h_lines, v_lines
+
+    @staticmethod
+    def _merge_h_line_segments(
+        h_lines: List[Tuple[float, float, float, float]],
+        v_lines: List[Tuple[float, float, float]],
+    ) -> List[Tuple[float, float, float, float]]:
+        """Merge consecutive H-line segments at the same Y.
+
+        Returns a new list where contiguous segments (gap ≤ 0.3pt,
+        same Y within 1pt) are replaced by a single spanning segment,
+        **unless**:
+          - a vertical line exists at the junction, OR
+          - the junction is a **confirmed column boundary** — i.e. its
+            X-position repeats across 3+ Y-rows AND the gap at that X
+            exceeds 0.3pt in at least one of those rows.
+
+        The column-boundary check ensures that ALL rows in a multi-row
+        table are split consistently: rows where the gap is visually
+        clear (≥0.5pt) establish the column structure, and rows where
+        segments happen to overlap (≤0pt) inherit the same splits.
+        Meanwhile, PDFs like Avangrid that draw truly abutting segments
+        (gap ~0pt in every row) are still merged because no row has a
+        gap above the threshold.
+        """
+        if len(h_lines) < 2:
+            return h_lines
+
+        def _vline_at(x: float, y: float) -> bool:
+            """Return True if a V-line crosses (x, y)."""
+            for vx, vtop, vbot in v_lines:
+                if abs(vx - x) < 2 and vtop <= y + 2 and vbot >= y - 2:
+                    return True
+            return False
+
+        # Group by Y bucket (0.5pt resolution)
+        from collections import defaultdict
+        y_buckets: dict = defaultdict(list)
+        for (x0, y, x1, lw) in h_lines:
+            y_key = round(y * 2) / 2
+            y_buckets[y_key].append((x0, y, x1, lw))
+
+        # --- Detect confirmed column boundaries ---
+        # A junction X-position is a column boundary when:
+        #   1. It appears in 3+ distinct Y-rows, AND
+        #   2. In at least one row the gap at that X exceeds 0.3pt.
+        # This distinguishes intentional table columns (Staff Info: some
+        # rows have 0.5pt+ gaps, last row has -0.2pt overlap) from pure
+        # drawing artefacts (Avangrid: ALL rows have ~0pt gaps).
+        COLUMN_GAP_THRESHOLD = 0.3
+        COLUMN_MIN_ROWS = 3
+
+        # Collect per-junction info: {bucket_x: [(y_key, gap), ...]}
+        junction_info: dict = defaultdict(list)
+        for _yk in y_buckets:
+            segs = sorted(y_buckets[_yk], key=lambda s: s[0])
+            for i in range(1, len(segs)):
+                gap = segs[i][0] - segs[i - 1][2]
+                # Only consider junctions where segments are close
+                # (gap < 3pt or overlapping) — skip large gaps that are
+                # just independent lines on the same Y.
+                if gap < 3:
+                    bucket_x = round(segs[i][0] / 3) * 3
+                    junction_info[bucket_x].append((_yk, gap))
+
+        column_boundaries: set = set()
+        for bx, entries in junction_info.items():
+            if len(entries) < COLUMN_MIN_ROWS:
+                continue
+            # Check if ANY row has a gap above the threshold
+            if any(g > COLUMN_GAP_THRESHOLD for _, g in entries):
+                column_boundaries.add(bx)
+
+        def _is_column_boundary(x: float) -> bool:
+            return round(x / 3) * 3 in column_boundaries
+
+        # --- Merge ---
+        merged: List[Tuple[float, float, float, float]] = []
+        for y_key in sorted(y_buckets):
+            segs = sorted(y_buckets[y_key], key=lambda s: s[0])
+            if len(segs) < 2:
+                merged.extend(segs)
+                continue
+
+            # Walk segments left-to-right, merging contiguous ones
+            cur_x0, cur_y, cur_x1, cur_lw = segs[0]
+            for s_x0, s_y, s_x1, s_lw in segs[1:]:
+                gap = s_x0 - cur_x1
+                if (gap <= 0.3
+                        and not _vline_at(s_x0, cur_y)
+                        and not _is_column_boundary(s_x0)):
+                    # Extend current merged segment
+                    cur_x1 = max(cur_x1, s_x1)
+                    cur_lw = max(cur_lw, s_lw)
+                else:
+                    merged.append((cur_x0, cur_y, cur_x1, cur_lw))
+                    cur_x0, cur_y, cur_x1, cur_lw = s_x0, s_y, s_x1, s_lw
+            merged.append((cur_x0, cur_y, cur_x1, cur_lw))
+
+        return merged
 
     @staticmethod
     def _has_nearby_sig_words(

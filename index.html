@@ -1193,7 +1193,7 @@
         <!-- Update Notification -->
         <div id="updateNotification" class="update-notification">
             <span>🚀 New version available! <span id="updateVersion"></span></span>
-            <a href="#" id="updateLink" target="_blank">Download</a>
+            <span id="updateLink" style="font-weight:600; cursor:default;">Downloading...</span>
         </div>
 
         <div class="header">
@@ -1804,21 +1804,7 @@
             <!-- Tab 2: Test Fill Data -->
             <div id="tabTestFill" class="tab-content">
                 <div class="settings-body">
-                    <!-- Test Fill Mode -->
-                    <div class="settings-section">
-                        <h3>Test Fill Mode</h3>
-                        <div class="setting-row">
-                        <span class="setting-label">Fill Engine <span class="info-icon" data-info="Smart uses Python for format-aware data. Quick uses JavaScript for faster but simpler fills.">i</span></span>
-                        <select id="setting_test_fill_mode" class="setting-input" style="width: 180px;">
-                                <option value="smart">🧠 Smart (Python, format-aware)</option>
-                                <option value="quick">⚡ Quick (JavaScript)</option>
-                            </select>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 11px; margin-top: 8px;">
-                            <strong>Smart:</strong> Reads field formatting metadata for accurate data types<br>
-                            <strong>Quick:</strong> Faster, uses field names only
-                        </p>
-                    </div>
+                    <!-- Test Fill always uses Smart (Python) mode -->
                     
                     <p class="spreadsheet-help">
                         <strong>💡 How it works:</strong> When a field name contains any keyword in the "Keywords" column, 

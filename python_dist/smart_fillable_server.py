@@ -24,14 +24,6 @@ Protocol
   or on error:
     RESULT:{"id":"req-1","success":false,"error":"..."}
 
-Additional commands:
-    {"cmd": "garbage_cleanup", "id": "req-2",
-     "input": "/path/to.pdf", "output": "/out.pdf",
-     "sensitivity": "standard"}
-
-    {"cmd": "auto_rename", "id": "req-3",
-     "input": "/path/to.pdf"}
-
 Special commands:
     {"cmd": "ping"}                → RESULT:{"pong":true}
     {"cmd": "quit"}                → clean exit
@@ -65,18 +57,6 @@ def _import_extract_fields():
     return extract_fields_and_images
 
 
-def _import_garbage_cleanup():
-    """Import garbage_field_cleanup module once."""
-    from garbage_field_cleanup import cleanup_garbage_fields
-    return cleanup_garbage_fields
-
-
-def _import_auto_rename():
-    """Import auto_rename_all module once."""
-    from auto_rename_all import auto_rename_all_fields
-    return auto_rename_all_fields
-
-
 try:
     Pipeline, ALL_DETECTORS, ALL_POSTPROCESSORS = _import_engine()
 except Exception as e:
@@ -90,18 +70,6 @@ except Exception as e:
     # Non-fatal — extract_fields can fall back to spawning the binary
     extract_fields_and_images = None
     print(f"Warning: extract_fields import failed: {e}", file=sys.stderr, flush=True)
-
-try:
-    cleanup_garbage_fields = _import_garbage_cleanup()
-except Exception as e:
-    cleanup_garbage_fields = None
-    print(f"Warning: garbage_field_cleanup import failed: {e}", file=sys.stderr, flush=True)
-
-try:
-    auto_rename_all_fields = _import_auto_rename()
-except Exception as e:
-    auto_rename_all_fields = None
-    print(f"Warning: auto_rename_all import failed: {e}", file=sys.stderr, flush=True)
 
 
 # -----------------------------------------------------------------------
@@ -137,45 +105,6 @@ def handle_make_fillable(req: dict) -> dict:
 
     output_path = pipeline.run()
     return {'success': True, 'output': str(output_path)}
-
-
-def handle_garbage_cleanup(req: dict) -> dict:
-    """
-    Run garbage field cleanup on a PDF.
-
-    Required keys: input
-    Optional keys: output, sensitivity
-    """
-    if cleanup_garbage_fields is None:
-        return {'success': False, 'error': 'garbage_field_cleanup module not available'}
-
-    input_pdf = req.get('input')
-    output_pdf = req.get('output', input_pdf)
-    sensitivity = req.get('sensitivity', 'standard')
-
-    if not input_pdf or not os.path.exists(input_pdf):
-        return {'success': False, 'error': f'Input file not found: {input_pdf}'}
-
-    result = cleanup_garbage_fields(input_pdf, output_pdf, verbose=False, sensitivity=sensitivity)
-    return result
-
-
-def handle_auto_rename(req: dict) -> dict:
-    """
-    Auto-rename all fields in a PDF based on nearby text.
-
-    Required keys: input
-    """
-    if auto_rename_all_fields is None:
-        return {'success': False, 'error': 'auto_rename_all module not available'}
-
-    input_pdf = req.get('input')
-
-    if not input_pdf or not os.path.exists(input_pdf):
-        return {'success': False, 'error': f'Input file not found: {input_pdf}'}
-
-    ok = auto_rename_all_fields(input_pdf)
-    return {'success': ok}
 
 
 def handle_extract_fields(req: dict) -> dict:
@@ -239,44 +168,6 @@ def main():
             except Exception as e:
                 tb = traceback.format_exc()
                 # Print traceback as progress so it appears in the UI log
-                print(tb, flush=True)
-                result = {
-                    'id': req_id,
-                    'success': False,
-                    'error': str(e),
-                }
-
-            print(f"RESULT:{json.dumps(result)}", flush=True)
-            continue
-
-        # ---- Garbage field cleanup ----
-        if cmd == 'garbage_cleanup':
-            t0 = time.time()
-            try:
-                result = handle_garbage_cleanup(req)
-                result['id'] = req_id
-                result['elapsed'] = round(time.time() - t0, 2)
-            except Exception as e:
-                tb = traceback.format_exc()
-                print(tb, flush=True)
-                result = {
-                    'id': req_id,
-                    'success': False,
-                    'error': str(e),
-                }
-
-            print(f"RESULT:{json.dumps(result)}", flush=True)
-            continue
-
-        # ---- Auto rename all ----
-        if cmd == 'auto_rename':
-            t0 = time.time()
-            try:
-                result = handle_auto_rename(req)
-                result['id'] = req_id
-                result['elapsed'] = round(time.time() - t0, 2)
-            except Exception as e:
-                tb = traceback.format_exc()
                 print(tb, flush=True)
                 result = {
                     'id': req_id,

@@ -43,12 +43,14 @@ from .text_column_filter import TextColumnFilter
 from .label_trimmer import LabelTrimmer
 from .label_below_split import LabelBelowSplitter
 from .cross_page_propagation import CrossPagePropagation
+from .same_cell_dedup import SameCellDedup
 
 ALL_POSTPROCESSORS = [
     LabelEnricher,
     LabelBelowSplitter,
     RadioGroupIdentifier,
     LineSnapper,
+    SameCellDedup,
     AdjacentFieldMerger,
     GridGapFill,
     LabelBelowSplitter,      # 2nd pass: split wide grid_gap_fill fields
@@ -65,6 +67,7 @@ __all__ = [
     'LabelBelowSplitter',
     'HeightStandardizer',
     'LineSnapper',
+    'SameCellDedup',
     'AdjacentFieldMerger',
     'GridGapFill',
     'AddressRowRecovery',
