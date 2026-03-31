@@ -5370,6 +5370,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Initialize draggable column resizers for Calculations Manager table
+    (function initCalcColumnResizers() {
+        const table = document.getElementById('calcManagerTableEl');
+        if (!table) return;
+        const resizers = table.querySelectorAll('.calc-col-resizer');
+        resizers.forEach(resizer => {
+            let startX, startWidth, th;
+            resizer.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                th = resizer.parentElement;
+                startX = e.pageX;
+                startWidth = th.offsetWidth;
+                resizer.classList.add('dragging');
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+            function onMouseMove(e) {
+                const newWidth = Math.max(40, startWidth + (e.pageX - startX));
+                th.style.width = newWidth + 'px';
+            }
+            function onMouseUp() {
+                resizer.classList.remove('dragging');
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        });
+    })();
+
     // Add Rule Button
     const btnAddRule = document.getElementById('btnAddRule');
     if (btnAddRule) {
@@ -7889,8 +7918,11 @@ function refreshCalcManagerTable() {
         !filter || name.toLowerCase().includes(filter)
     );
 
+    const actionsBody = document.getElementById('calcActionsBody');
+
     if (entries.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="calc-empty-msg">No calculations configured yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="calc-empty-msg">No calculations configured yet</td></tr>';
+        if (actionsBody) actionsBody.innerHTML = '<tr><td style="padding: 6px 10px;">&nbsp;</td></tr>';
         return;
     }
 
@@ -7900,15 +7932,42 @@ function refreshCalcManagerTable() {
             : `${calc.sources.length} fields`;
         const typeLabel = calc.type === 'CONSTANT_MULTIPLY' ? `×${calc.constant || 1}` : calc.type;
         return `<tr data-calc-field="${name}" style="border-bottom: 1px solid #1a2a44; transition: background 0.15s;">
-            <td style="padding: 6px 10px; color: var(--text-primary);">${name}</td>
-            <td style="padding: 6px 10px; color: var(--accent); font-weight: 500;">${typeLabel}</td>
-            <td style="padding: 6px 10px; color: var(--text-secondary); font-size: 11px;">${srcText}</td>
-            <td style="padding: 6px 10px; text-align: center; white-space: nowrap;">
-                <span style="cursor: pointer; color: var(--accent); font-size: 14px; margin-right: 6px;" onclick="editCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Edit calculation">🔧</span>
-                <span style="cursor: pointer; color: var(--danger); font-size: 14px;" onclick="removeCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Remove calculation">🗑</span>
-            </td>
+            <td style="padding: 6px 10px; color: var(--text-primary); white-space: nowrap;">${name}</td>
+            <td style="padding: 6px 10px; color: var(--accent); font-weight: 500; white-space: nowrap;">${typeLabel}</td>
+            <td style="padding: 6px 10px; color: var(--text-secondary); font-size: 11px; white-space: nowrap;">${srcText}</td>
         </tr>`;
     }).join('');
+
+    // Render actions in the separate fixed column
+    if (actionsBody) {
+        actionsBody.innerHTML = entries.map(([name]) => {
+            return `<tr data-calc-action="${name}" style="border-bottom: 1px solid #1a2a44;">
+                <td style="padding: 6px 10px; text-align: center; white-space: nowrap;">
+                    <span style="cursor: pointer; color: var(--accent); font-size: 14px; margin-right: 6px;" onclick="editCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Edit calculation">🔧</span>
+                    <span style="cursor: pointer; color: var(--danger); font-size: 14px;" onclick="removeCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Remove calculation">🗑</span>
+                </td>
+            </tr>`;
+        }).join('');
+
+        // Sync row heights between data table and actions table
+        requestAnimationFrame(() => {
+            const dataRows = tbody.querySelectorAll('tr');
+            const actionRows = actionsBody.querySelectorAll('tr');
+            dataRows.forEach((row, i) => {
+                if (actionRows[i]) {
+                    const h = Math.max(row.offsetHeight, actionRows[i].offsetHeight);
+                    row.style.height = h + 'px';
+                    actionRows[i].style.height = h + 'px';
+                }
+            });
+            // Sync scroll position vertically
+            const dataScroll = document.getElementById('calcDataScroll');
+            const actionsCol = document.getElementById('calcActionsCol');
+            if (dataScroll && actionsCol) {
+                dataScroll.onscroll = () => { actionsCol.scrollTop = dataScroll.scrollTop; };
+            }
+        });
+    }
 
     // Update order list
     updateCalcOrderList(allCalcs);
@@ -7934,6 +7993,18 @@ function highlightCalcManagerRow() {
             row.style.boxShadow = '';
         }
     });
+
+    // Also highlight the corresponding actions row
+    const actionsBody = document.getElementById('calcActionsBody');
+    if (actionsBody) {
+        actionsBody.querySelectorAll('tr[data-calc-action]').forEach(row => {
+            if (row.dataset.calcAction === activeName) {
+                row.style.background = 'rgba(100, 255, 218, 0.08)';
+            } else {
+                row.style.background = '';
+            }
+        });
+    }
 
     // Scroll the highlighted row into view, centered in the list
     if (activeRow) {
@@ -8165,7 +8236,103 @@ function autoDetectCalculations() {
         }
     }
 
+    // Pattern 6: t-suffix CONSTANT_MULTIPLY — detect "calNt = constant × calN" naming convention
+    // Works when column headers above the source field contain a dollar/numeric value
+    // e.g. cal1t = 35 * cal1, iuw4t = 7 * iuw4, cag1t = 1300 * cag1
+    for (const f of fields) {
+        if (suggestions.find(s => s.target === f.name)) continue;
+
+        // Field name ends in 't' (the total/result field)
+        const tMatch = f.name.match(/^(.+)t$/i);
+        if (!tMatch) continue;
+        const baseName = tMatch[1];
+
+        // Find the matching source field (same name without the 't')
+        const sourceField = fields.find(sf => sf.name === baseName);
+        if (!sourceField) continue;
+
+        // Look for a numeric constant in the column header above the source field
+        const constant = _getColumnConstant(sourceField);
+        if (constant !== null) {
+            suggestions.push({
+                target: f.name,
+                type: 'CONSTANT_MULTIPLY',
+                sources: [sourceField.name],
+                constant: constant,
+                confidence: 'high',
+                reason: `Column header value ${constant} × ${sourceField.name} (from table header)`
+            });
+            continue;
+        }
+
+        // Fallback: check column header above the total field itself
+        const constantFromTotal = _getColumnConstant(f);
+        if (constantFromTotal !== null) {
+            suggestions.push({
+                target: f.name,
+                type: 'CONSTANT_MULTIPLY',
+                sources: [sourceField.name],
+                constant: constantFromTotal,
+                confidence: 'medium',
+                reason: `Column header value ${constantFromTotal} × ${sourceField.name}`
+            });
+        }
+    }
+
+    // Pattern 7: General column header constant detect — any field whose column header
+    // has a number, paired with a same-row "total" field to the right or with a name suffix
+    for (const f of fields) {
+        if (suggestions.find(s => s.target === f.name)) continue;
+        if (!f.nearbyText) continue;
+
+        const constant = _getColumnConstant(f);
+        if (constant === null) continue;
+
+        // Skip if this field already looks like a total
+        if (/total|sum|subtotal|rebate/i.test(f.name)) continue;
+
+        // Look for a "total" partner field on the same page and same row (similar Y)
+        const fy_mid = (f.rect[1] + f.rect[3]) / 2;
+        const sameRow = (fieldsByPage[f.page] || []).filter(other => {
+            if (other.name === f.name) return false;
+            const oy_mid = (other.rect[1] + other.rect[3]) / 2;
+            // Same row: Y centers within 10pt
+            if (Math.abs(oy_mid - fy_mid) > 10) return false;
+            // Total field is to the right
+            if (other.rect[0] <= f.rect[2]) return false;
+            // Partner name or text suggests it's a total
+            const isTotal = /total|sum|rebate|result|amount/i.test(other.name) ||
+                (other.nearbyText && /\btotal\b|\bsum\b|\brebate\b/i.test(Object.values(other.nearbyText).join(' ')));
+            return isTotal;
+        });
+
+        if (sameRow.length > 0) {
+            // Pick the closest total field to the right
+            sameRow.sort((a, b) => a.rect[0] - b.rect[0]);
+            const totalField = sameRow[0];
+            if (!suggestions.find(s => s.target === totalField.name)) {
+                suggestions.push({
+                    target: totalField.name,
+                    type: 'CONSTANT_MULTIPLY',
+                    sources: [f.name],
+                    constant: constant,
+                    confidence: 'medium',
+                    reason: `Column header value ${constant} × ${f.name} (table pattern)`
+                });
+            }
+        }
+    }
+
     return suggestions;
+}
+
+// Helper: extract numeric constant from a field's row context
+// Checks rowConstant (dollar amount on same row to the left) set by extract_fields.py
+function _getColumnConstant(field) {
+    if (!field.nearbyText) return null;
+    // Primary: row-level dollar amount (e.g. "$35.00" between measure description and qty field)
+    if (field.nearbyText.rowConstant !== undefined) return field.nearbyText.rowConstant;
+    return null;
 }
 
 function displayAutoDetectResults(suggestions) {
@@ -8186,9 +8353,11 @@ function displayAutoDetectResults(suggestions) {
                 <input type="checkbox" id="autoCalc_${i}" checked style="accent-color: var(--accent);">
                 <span style="flex: 1;">
                     <span style="color: var(--accent); font-weight: 600;">${s.target}</span>
-                    <span style="color: var(--text-secondary);"> = ${s.type}(</span>
-                    <span style="color: var(--text-primary);">${s.sources.join(', ')}</span>
-                    <span style="color: var(--text-secondary);">)</span>
+                    <span style="color: var(--text-secondary);"> = </span>
+                    ${s.type === 'CONSTANT_MULTIPLY' && s.constant !== undefined
+                        ? `<span style="color: #f0a500; font-weight:600;">${s.constant}</span><span style="color: var(--text-secondary);"> × </span><span style="color: var(--text-primary);">${s.sources[0]}</span>`
+                        : `<span style="color: var(--text-secondary);">${s.type}(</span><span style="color: var(--text-primary);">${s.sources.join(', ')}</span><span style="color: var(--text-secondary);">)</span>`
+                    }
                 </span>
                 <span style="font-size: 10px; padding: 1px 6px; border-radius: 3px; background: ${s.confidence === 'high' ? '#1a3a2a' : '#2a2a1a'}; color: ${s.confidence === 'high' ? '#4caf50' : '#ff9800'};">${s.confidence}</span>
             </div>
@@ -8210,12 +8379,16 @@ function applyAutoDetectedCalcs() {
         const checkbox = document.getElementById(`autoCalc_${i}`);
         if (checkbox && checkbox.checked) {
             const s = suggestions[i];
-            changes.calculations[s.target] = {
+            const calcEntry = {
                 type: s.type,
                 sources: s.sources,
                 decimals: 2,
                 readOnly: true
             };
+            if (s.type === 'CONSTANT_MULTIPLY' && s.constant !== undefined) {
+                calcEntry.constant = s.constant;
+            }
+            changes.calculations[s.target] = calcEntry;
             // Update field object
             const field = fields.find(f => f.name === s.target);
             if (field) {

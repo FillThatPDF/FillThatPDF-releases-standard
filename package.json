@@ -2,7 +2,7 @@
   "name": "fill-that-pdf",
   "productName": "Fill That PDF!",
   "isPro": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create fillable PDFs and test fill them with dummy data",
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
   "build": {
     "appId": "com.fillthatpdf.standard",
     "productName": "Fill That PDF!",
+    "afterPack": "scripts/fix-framework-signing.js",
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "assets/icon.png",

@@ -954,6 +954,25 @@
             background: var(--bg-tertiary);
             border-radius: 0 0 12px 12px;
         }
+        /* Resizable column handles */
+        .calc-col-resizer {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            cursor: col-resize;
+            background: transparent;
+            transition: background 0.15s;
+            z-index: 1;
+        }
+        .calc-col-resizer:hover,
+        .calc-col-resizer.dragging {
+            background: var(--accent);
+        }
+        #calcManagerTableEl td {
+            white-space: nowrap;
+        }
         .calc-panel.minimized .calc-panel-body,
         .calc-panel.minimized .calc-panel-footer { display: none; }
         .calc-panel.minimized {
@@ -2372,20 +2391,35 @@
             <div style="margin-bottom: 8px;">
                 <input type="text" class="modal-input" id="calcManagerFilter" placeholder="🔍 Filter calculations..." style="font-size: 12px; padding: 6px 10px;">
             </div>
-            <div id="calcManagerTable" style="border: 1px solid #233554; border-radius: 6px; overflow: hidden;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                    <thead>
-                        <tr style="background: var(--bg-tertiary);">
-                            <th style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500;">Target Field</th>
-                            <th style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500;">Type</th>
-                            <th style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500;">Sources</th>
-                            <th style="width: 60px; padding: 8px 10px;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="calcManagerBody">
-                        <tr><td colspan="4" class="calc-empty-msg">No calculations configured yet</td></tr>
-                    </tbody>
-                </table>
+            <div id="calcManagerTable" style="border: 1px solid #233554; border-radius: 6px; overflow: hidden; display: flex;">
+                <!-- Scrollable data columns -->
+                <div id="calcDataScroll" style="flex: 1; overflow-x: auto; min-width: 0;">
+                    <table id="calcManagerTableEl" style="border-collapse: collapse; font-size: 12px; min-width: 600px; width: 100%;">
+                        <thead>
+                            <tr style="background: var(--bg-tertiary);">
+                                <th class="calc-col-resizable" data-col="0" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 45%; position: relative; white-space: nowrap;">Target Field<span class="calc-col-resizer"></span></th>
+                                <th class="calc-col-resizable" data-col="1" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 20%; position: relative; white-space: nowrap;">Type<span class="calc-col-resizer"></span></th>
+                                <th class="calc-col-resizable" data-col="2" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 35%; position: relative; white-space: nowrap;">Sources<span class="calc-col-resizer"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="calcManagerBody">
+                            <tr><td colspan="3" class="calc-empty-msg">No calculations configured yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Fixed actions column -->
+                <div id="calcActionsCol" style="flex-shrink: 0; border-left: 1px solid #233554; background: var(--bg-secondary);">
+                    <table style="border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: var(--bg-tertiary);">
+                                <th style="width: 64px; padding: 8px 10px; text-align: center; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calcActionsBody">
+                            <tr><td style="padding: 6px 10px;">&nbsp;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Calculation Order -->

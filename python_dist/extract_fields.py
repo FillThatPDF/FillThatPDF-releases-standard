@@ -105,6 +105,48 @@ def _extract_nearby_text(pdf_path: str, fields_list: list, page_cropdata: dict) 
                     above_words.sort(key=lambda t: (-t[0], t[1]))  # Closest first, left to right
                     nearby['above'] = ' '.join(t[2] for t in above_words[:10])
 
+                # Search SAME ROW for a rebate/rate constant — dollar amount on the same row
+                # as the field but to the LEFT, between the row label and the input field.
+                # e.g. "$35 .00" sitting between the measure description and the qty field.
+                import re as _re
+                row_mid = (fy0 + fy1) / 2
+                row_tolerance = max((fy1 - fy0) * 0.8, 6)  # vertical band around row center
+                row_constant_words = []
+                for w in words:
+                    wx0, wx1 = float(w['x0']) - cx_off, float(w['x1']) - cx_off
+                    wtop, wbot = float(w['top']), float(w['bottom'])
+                    wmid = (wtop + wbot) / 2
+
+                    # Same row: word center within tolerance of field center
+                    if abs(wmid - row_mid) > row_tolerance:
+                        continue
+                    # To the LEFT of the field (not overlapping)
+                    if wx1 > fx0 + 5:
+                        continue
+                    row_constant_words.append((wx0, w['text']))
+
+                if row_constant_words:
+                    row_text = ' '.join(t[1] for t in sorted(row_constant_words))
+                    # Look for dollar amount: "$35 .00", "$35.00", "$1,300", etc.
+                    # The PDF sometimes splits "$35" and ".00" as separate words
+                    dollar_match = _re.search(
+                        r'\$\s*([\d,]+(?:\.\d+)?)\s*(?:\.\d+)?',
+                        row_text
+                    )
+                    if dollar_match:
+                        raw = dollar_match.group(1).replace(',', '')
+                        # Handle case where cents are separate token ("$35 .00" → 35.00)
+                        after = row_text[dollar_match.end():].strip()
+                        cents_match = _re.match(r'^\.(\d+)', after)
+                        try:
+                            val_str = raw + (f'.{cents_match.group(1)}' if cents_match else '')
+                            val = float(val_str)
+                            if 0 < val < 1000000:
+                                nearby['rowConstant'] = val
+                                nearby['rowConstantText'] = row_text.strip()
+                        except ValueError:
+                            pass
+
                 if nearby:
                     nearby_map[idx] = nearby
     except Exception as e:
