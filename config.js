@@ -7,12 +7,12 @@
 
 const config = {
     // Set by build process - DO NOT EDIT MANUALLY
-    isPro: false,    // true = PRO, false = Standard
+    isPro: true,    // true = PRO, false = Standard
     isDemo: false,  // true = Demo (free trial with limits)
 
     
     // Version info
-    version: '1.0.4',
+    version: '1.0.5',
     
     // Demo/Trial limits
     demo: {

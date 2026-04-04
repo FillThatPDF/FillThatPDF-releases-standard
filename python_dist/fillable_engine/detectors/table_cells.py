@@ -952,7 +952,7 @@ class TableCellDetector(BaseDetector):
                 fill_ratio = (txt_x1 - txt_x0) / cw if cw > 0 else 0
                 has_fill = ('___' in inner_text or
                             (':' in inner_text and cx1 - txt_x1 > 25) or
-                            any(c in inner_text for c in ['☐', '☑', '□']))
+                            any(c in inner_text for c in ['☐', '☑', '□', '⬜', '\u20DE', '☒', '❑', '❒']))
                 if fill_ratio > 0.70 and not has_fill and len(inner_text.split()) >= 3:
                     continue
 

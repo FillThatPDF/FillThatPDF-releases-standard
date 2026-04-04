@@ -20,7 +20,7 @@ so merged fields are normalised together.
 """
 
 from collections import defaultdict
-from typing import List
+from typing import List, Optional
 
 from ..models import ResolvedField, FieldType, PageModel
 
@@ -114,7 +114,7 @@ class AdjacentFieldMerger:
     def _merge_page(
         self,
         fields: List[ResolvedField],
-        page: PageModel | None,
+        page: Optional[PageModel] = None,
     ) -> List[ResolvedField]:
         """Merge adjacent fields on a single page."""
         if len(fields) < 2:

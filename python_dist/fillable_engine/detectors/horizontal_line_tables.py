@@ -45,6 +45,20 @@ class HorizontalLineTableDetector(BaseDetector):
             page_candidates = self._detect_page(page_model)
             candidates.extend(page_candidates)
 
+            # NEW: detect data fields in tables whose column structure is defined
+            # by tiling colored header rectangles (no explicit vertical lines).
+            # Only adds candidates for cells not already covered by _detect_page.
+            tiling_candidates = self._detect_tiling_rect_table_rows(page_model)
+            for c in tiling_candidates:
+                already_covered = any(
+                    e.page == c.page
+                    and abs(e.x0 - c.x0) < 8
+                    and abs(e.y0 - c.y0) < 8
+                    for e in page_candidates
+                )
+                if not already_covered:
+                    candidates.append(c)
+
         return candidates
 
     # ------------------------------------------------------------------
@@ -919,3 +933,199 @@ class HorizontalLineTableDetector(BaseDetector):
                     return True
 
         return False
+
+    # ------------------------------------------------------------------
+    # Tiling colored-rect table detection (add-on pass)
+    # ------------------------------------------------------------------
+
+    def _detect_tiling_rect_table_rows(self, pm: PageModel) -> List[FieldCandidate]:
+        """
+        Detect input fields in tables whose column structure is defined by
+        tiling colored header rectangles — not explicit vertical lines.
+
+        Pattern recognised:
+          - 3+ colored rectangles that share the same top & bottom Y-coordinate
+            and tile horizontally end-to-end across a significant page span.
+          - The rectangles form a table header row; their bottom-Y is the top
+            boundary of the first data row.
+          - One or more horizontal lines below define the subsequent row boundaries.
+          - Empty cells in those data rows become TEXT field candidates.
+
+        Safety:
+          - Cells that already contain pre-filled text (words covering >40% of
+            cell width) are skipped — they are read-only columns.
+          - Only well-formed row heights (8-80 pt) are processed.
+          - Returns empty list when no qualifying group is found, so no change
+            for PDFs that don't match this pattern.
+        """
+        if not pm.rects:
+            return []
+
+        candidates: List[FieldCandidate] = []
+        padding = 1.5
+
+        # ---- Step 1: group colored rects by shared (approx top, approx bottom) ----
+        from collections import defaultdict as _dd
+        rect_groups: Dict[Tuple[int, int], List[Dict]] = _dd(list)
+
+        for r in pm.rects:
+            top = float(r.get('top', r.get('y0', 0)))
+            bot = float(r.get('bottom', r.get('y1', 0)))
+            x0 = float(r.get('x0', 0))
+            x1 = float(r.get('x1', 0))
+
+            h = bot - top
+            w = x1 - x0
+            if not (8 < h < 60) or w < 10:
+                continue
+
+            # Must be non-white, non-transparent colored fill
+            fill = r.get('non_stroking_color') or r.get('fill')
+            if fill is None:
+                continue
+            if isinstance(fill, (int, float)):
+                if fill > 0.92:          # near-white grayscale
+                    continue
+            elif isinstance(fill, (list, tuple)):
+                if len(fill) == 1 and fill[0] > 0.92:
+                    continue
+                elif len(fill) == 3 and all(c > 0.90 for c in fill):
+                    continue             # near-white RGB
+                elif len(fill) == 4 and sum(fill) < 0.05:
+                    continue             # near-white CMYK
+
+            rect_groups[(round(top), round(bot))].append(
+                {'x0': x0, 'x1': x1, 'top': top, 'bottom': bot}
+            )
+
+        # ---- Step 2: find groups that tile horizontally (3+ contiguous rects) ----
+        for (tk, bk), rects in rect_groups.items():
+            if len(rects) < 3:
+                continue
+
+            rects_sorted = sorted(rects, key=lambda r: r['x0'])
+
+            # Verify rects tile (each rect's x1 ≈ next rect's x0, gap ≤ 5 pt)
+            tiling = True
+            for i in range(len(rects_sorted) - 1):
+                gap = rects_sorted[i + 1]['x0'] - rects_sorted[i]['x1']
+                if gap > 5:
+                    tiling = False
+                    break
+            if not tiling:
+                continue
+
+            # Collect all column boundary x-positions
+            col_x = sorted(set(
+                [r['x0'] for r in rects_sorted] + [r['x1'] for r in rects_sorted]
+            ))
+            if len(col_x) < 4:           # need at least 3 columns (4 boundaries)
+                continue
+
+            header_bottom = float(bk)    # bottom of header = top of first data row
+            table_x0 = rects_sorted[0]['x0']
+            table_x1 = rects_sorted[-1]['x1']
+            table_span = table_x1 - table_x0
+
+            if table_span < pm.width * 0.25:   # table must span ≥25% page width
+                continue
+
+            # ---- Step 3: find h_lines below header_bottom that bound data rows ----
+            # Group segments by Y (1pt bucket) and test whether the group
+            # collectively covers both table edges — a row-separator line is
+            # valid even when it is split into non-contiguous segments (e.g.
+            # the middle column has no divider but the left and right edges do).
+            _SPAN_TOL = 20.0
+            _segs_by_y: Dict[int, List[Dict]] = _dd(list)
+            for hl in pm.h_lines:
+                hy = float(hl.get('y', hl.get('top', 0)))
+                if header_bottom + 5 < hy < header_bottom + 200:
+                    _segs_by_y[round(hy)].append(hl)
+            below_ys = sorted(
+                float(yk)
+                for yk, hls in _segs_by_y.items()
+                if any(float(hl.get('x0', 0)) <= table_x0 + _SPAN_TOL
+                       for hl in hls)
+                and any(float(hl.get('x1', 0)) >= table_x1 - _SPAN_TOL
+                        for hl in hls)
+            )
+
+            if not below_ys:
+                continue
+
+            # Build row (top_y, bottom_y) pairs
+            row_bounds: List[Tuple[float, float]] = []
+            prev_y = header_bottom
+            for hy in below_ys:
+                rh = hy - prev_y
+                if 8 < rh < 80:
+                    row_bounds.append((prev_y, hy))
+                prev_y = hy
+
+            if not row_bounds:
+                continue
+
+            # ---- Step 4: extract header label text per column ----
+            # Used to give each candidate a non-empty label so that
+            # AdjacentFieldMerger sees them as intentionally distinct
+            # fields (not segmented-line fragments that should be joined).
+            header_top = min(r['top'] for r in rects_sorted)
+            col_labels: Dict[float, str] = {}
+            for ci in range(len(col_x) - 1):
+                cx0_h, cx1_h = col_x[ci], col_x[ci + 1]
+                hdr_words = [
+                    w for w in pm.words
+                    if float(w.get('x0', 0)) >= cx0_h - 3
+                    and float(w.get('x1', 0)) <= cx1_h + 3
+                    and float(w.get('top', 0)) >= header_top - 3
+                    and float(w.get('top', 0)) <= header_bottom + 3
+                ]
+                col_labels[cx0_h] = ' '.join(
+                    w.get('text', '') for w in hdr_words
+                ).strip()
+
+            # ---- Step 5: create text fields for empty cells in each data row ----
+            for row_y0, row_y1 in row_bounds:
+                for ci in range(len(col_x) - 1):
+                    cell_x0 = col_x[ci]
+                    cell_x1 = col_x[ci + 1]
+                    cell_w = cell_x1 - cell_x0
+                    if cell_w < 12:
+                        continue
+
+                    # Find words in this cell area
+                    cell_words = [
+                        w for w in pm.words
+                        if float(w.get('x0', 0)) >= cell_x0 - 3
+                        and float(w.get('x1', 0)) <= cell_x1 + 3
+                        and float(w.get('top', 0)) > row_y0
+                        and float(w.get('top', 0)) < row_y1
+                    ]
+
+                    if cell_words:
+                        # Skip if text spans >40% of cell width (pre-filled column)
+                        text_x0 = min(float(w.get('x0', 0)) for w in cell_words)
+                        text_x1 = max(float(w.get('x1', 0)) for w in cell_words)
+                        text_span = text_x1 - text_x0
+                        if text_span / max(1.0, cell_w) > 0.40:
+                            continue    # pre-filled — skip
+
+                    # Create text field for this empty (or sparse) cell
+                    fx0 = cell_x0 + padding
+                    fy0 = row_y0 + padding
+                    fx1 = cell_x1 - padding
+                    fy1 = row_y1 - padding
+
+                    name_hint = 'Cell_%d_%d' % (int(cell_x0), int(row_y0))
+
+                    candidates.append(FieldCandidate(
+                        page=pm.page_num,
+                        x0=fx0, y0=fy0, x1=fx1, y1=fy1,
+                        field_type=FieldType.TEXT,
+                        source='tiling_rect_table',
+                        confidence=0.85,
+                        name_hint=name_hint,
+                        label=col_labels.get(cell_x0, ''),
+                    ))
+
+        return candidates

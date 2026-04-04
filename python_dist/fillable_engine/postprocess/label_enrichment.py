@@ -51,12 +51,8 @@ RADIO_COLUMN_KEYWORDS: Dict[str, str] = {
 }
 
 # Characters that represent checkbox glyphs -- skip when scanning beside text
-_CHECKBOX_GLYPHS = frozenset([
-    '\u2610', '\u2611', '\u2612',   # ballot box variants
-    '\u25a1', '\u25a0',             # white/black square
-    '\uf06f', '\uf063',             # Wingdings checkbox chars
-    '',                              # empty
-])
+from ..page_analyzer import _UNICODE_CHECKBOX_CHARS
+_CHECKBOX_GLYPHS = _UNICODE_CHECKBOX_CHARS | frozenset([''])
 
 
 class LabelEnricher:

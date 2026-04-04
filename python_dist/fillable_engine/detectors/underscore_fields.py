@@ -130,6 +130,31 @@ class UnderscoreFieldDetector(BaseDetector):
 
             label = ' '.join(label_parts).strip()
 
+            # If no same-line label, look 0-18pt below the underscore
+            if not label:
+                below_cands = []
+                for bw in words:
+                    bw_top = float(bw.get('top', 0))
+                    dist = bw_top - underscore_bottom
+                    if dist < 0 or dist > 18:
+                        continue
+                    bw_cx = (float(bw.get('x0', 0)) + float(bw.get('x1', 0))) / 2
+                    if bw_cx < underscore_x0 - 10 or bw_cx > underscore_x1 + 10:
+                        continue
+                    if '____' in bw.get('text', ''):
+                        continue
+                    below_cands.append(bw)
+                if below_cands:
+                    dom_y = min(float(bw.get('top', 0)) for bw in below_cands)
+                    below_cands = [bw for bw in below_cands
+                                   if abs(float(bw.get('top', 0)) - dom_y) <= 3]
+                    below_cands.sort(key=lambda bw: float(bw.get('x0', 0)))
+                    below_label = ' '.join(
+                        bw['text'].strip().rstrip(':') for bw in below_cands
+                    ).strip()
+                    if below_label and len(below_label.split()) <= 8:
+                        label = below_label
+
             # Skip garbage labels (too long)
             if label and (len(label) > 90 or len(label.split()) > 12):
                 continue

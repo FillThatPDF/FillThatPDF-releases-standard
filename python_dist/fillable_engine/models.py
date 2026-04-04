@@ -452,6 +452,7 @@ SOURCE_RANKS = {
     'grid_gap_fill': 270,
     'discovery_aligned_gap': 260,
     'cross_page_propagated': 200,
+    'tiling_rect_table': 490,
 }
 
 

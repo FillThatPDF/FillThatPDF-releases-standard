@@ -61,7 +61,7 @@ LABEL_TEXT_RATIO = 0.60
 _GRID_AWARE_SOURCES = {
     'grid_gap_fill', 'label_entry_below', 'label_entry_cell',
     'split_cell_multi_row', 'label_below_split', 'form_line_presplit',
-    'signature', 'date',
+    'signature', 'date', 'tiling_rect_table',
 }
 
 
@@ -725,6 +725,15 @@ class GridGapFill:
             # not block gap-fill from creating a proper entry field.
             fcx = (f.x0 + f.x1) / 2
             fcy = (f.y0 + f.y1) / 2
+
+            # tiling_rect_table fields are intentionally column-sized, not
+            # full-row-sized.  Any such field centred inside this cell means
+            # the row is already handled by the tiling-rect detector, so
+            # do not create an additional overlapping full-row field.
+            if f.source == 'tiling_rect_table':
+                if cx0 <= fcx <= cx1 and cy0 <= fcy <= cy1:
+                    return True
+
             if cx0 <= fcx <= cx1 and cy0 <= fcy <= cy1:
                 if f_area / cell_area > 0.15:
                     return True

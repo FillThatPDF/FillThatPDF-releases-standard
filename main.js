@@ -773,7 +773,7 @@ app.whenReady().then(() => {
                             title: 'About Fill That PDF!',
                             message: message,
                             detail: `Version: ${appConfig.version}
-Build: January 2026
+Build: April 2026
 
 Features:
 ${featuresList}

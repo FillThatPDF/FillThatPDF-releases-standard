@@ -16,6 +16,59 @@ from typing import List, Dict, Optional, Tuple
 from .models import PageModel
 from .helpers import classify_lines, merge_collinear_h_segments
 
+# ── Comprehensive Unicode checkbox/square/tick character set ──
+# Compiled from Unicode specs, Wingdings/Webdings/ZapfDingbats mappings,
+# and real-world PDF analysis. Kept as a module-level frozenset for O(1) lookup.
+_UNICODE_CHECKBOX_CHARS = frozenset([
+    # Ballot boxes
+    '\u2610', '\u2611', '\u2612',                       # ☐ ☑ ☒
+    '\u2BBD',                                            # BALLOT BOX WITH LIGHT X
+    '\U0001F5F3', '\U0001F5F5', '\U0001F5F7', '\U0001F5F9',  # Emoji ballot variants
+    # Check marks / tick marks
+    '\u2713', '\u2714',                                  # ✓ ✔
+    '\u2705',                                            # ✅ (emoji)
+    '\U0001F5F8',                                        # Light check mark
+    # X marks / cross marks
+    '\u2715', '\u2716', '\u2717', '\u2718',              # ✕ ✖ ✗ ✘
+    '\u274C', '\u274E',                                  # ❌ ❎
+    '\u2613',                                            # ☓ saltire
+    # Geometric squares
+    '\u25A0', '\u25A1', '\u25A2', '\u25A3',             # ■ □ ▢ ▣
+    '\u25AA', '\u25AB',                                  # ▪ ▫
+    '\u25FB', '\u25FC', '\u25FD', '\u25FE',             # ◻ ◼ ◽ ◾
+    '\u2B1A', '\u2B1B', '\u2B1C',                       # ⬚ ⬛ ⬜
+    '\u2B1D', '\u2B1E',                                  # Very small squares
+    # Squared operators (X/dot/plus inside box)
+    '\u229E', '\u229F', '\u22A0', '\u22A1',             # ⊞ ⊟ ⊠ ⊡
+    '\u2317',                                            # ⌗ viewdata square
+    '\u27E4', '\u27E5',                                  # ⟤ ⟥ tick in square
+    # Dingbat shadowed squares
+    '\u274F', '\u2750', '\u2751', '\u2752',              # ❏ ❐ ❑ ❒
+    # Emoji square buttons
+    '\U0001F532', '\U0001F533',                          # 🔲 🔳
+    # Combining enclosing characters (used as standalone boxes in some PDFs)
+    '\u20DE', '\u20DD',                                  # ⃞ ⃝ (enclosing square/circle)
+    # Circles (radio buttons)
+    '\u25CB', '\u25CF', '\u25CE',                       # ○ ● ◎
+    '\u25EF',                                            # ◯
+    '\u26AA', '\u26AB',                                  # ⚪ ⚫
+    '\u2B55',                                            # ⭕
+    # Halfwidth
+    '\uFFED',                                            # ﾭ halfwidth black square
+    # Square position / misc
+    '\u2BC0', '\u2BD0',                                  # ⯀ ⯐
+    '\u26F6',                                            # ⛶ square four corners
+    # PUA — Wingdings empty/checked boxes (common in embedded PDFs)
+    '\uf02a',                                            # Wingdings 2 empty box
+    '\uf051', '\uf052',                                  # Q/R boxes
+    '\uf063',                                            # checkbox variant
+    '\uf06e', '\uf06f', '\uf070', '\uf071', '\uf072',   # circle/box variants
+    '\uf073', '\uf074', '\uf075',                        # more box variants
+    '\uf085',                                            # box variant
+    '\uf0a0', '\uf0a7', '\uf0a8',                       # outlined squares
+    '\uf0fb', '\uf0fc', '\uf0fd', '\uf0fe',             # X mark, check, box+X, box+check
+])
+
 
 class PageAnalyzer:
     """Builds PageModel objects from a PDF file. Pure analysis — no field detection."""
@@ -141,6 +194,10 @@ class PageAnalyzer:
 
         # Detect existing form fields
         existing_checkboxes, existing_fields = self._detect_existing_form_fields(page)
+
+        # Correct non-square checkbox bboxes (e.g. U+2B1C ⬜ in regular fonts
+        # where pdfplumber clips `top` to the font cap-height, making height < width)
+        existing_checkboxes = self._correct_checkbox_bboxes(existing_checkboxes)
 
         # Detect square grid regions
         square_grids = self._detect_square_grid_regions(rects, page_num)
@@ -538,19 +595,7 @@ class PageAnalyzer:
             is_checkbox = False
 
             # ---- Unicode checkbox characters (any font) ----
-            if char_text in [
-                '\u2610', '\u2611', '\u2612',       # ☐ ☑ ☒
-                '\u25A1', '\u25A0',                  # □ ■
-                '\u25CB', '\u25CF',                  # ○ ●
-                '\u25FB', '\u25FC',                  # ◻ ◼
-                '\U0001F532', '\U0001F533',          # 🔲 🔳
-                '\uf06f', '\uf0fe',                  # PUA Wingdings empty/checked box
-                '\uf063',                            # PUA Wingdings checkbox variant
-                '\uf0a8',                            # PUA Wingdings outlined square
-                '\uf06e',                            # PUA Wingdings shadowed square
-                '\uf070', '\uf071', '\uf072',        # PUA Wingdings checked variants
-                '\uf0fb', '\uf0fc', '\uf0fd', '\uf0fe',  # PUA Wingdings filled/checked
-            ]:
+            if char_text in _UNICODE_CHECKBOX_CHARS:
                 is_checkbox = True
 
             # ---- CID-encoded characters ----
@@ -634,6 +679,28 @@ class PageAnalyzer:
                 x1 = float(char.get('x1', 0))
                 bottom = float(char.get('bottom', 0))
 
+                # Handle combining / zero-width characters (e.g. U+20DE)
+                # They report x0 == x1; the visual glyph is a square enclosing
+                # the preceding character, so shift left and use font size.
+                char_w = x1 - x0
+                char_h = bottom - top
+                if char_w < 1.0 and char_h > 0:
+                    size = max(char_h, float(char.get('size', char_h)))
+                    # Scale up slightly — combining enclosing glyphs render
+                    # ~1.25× the font size as the enclosing square
+                    box_size = size * 1.3
+                    # The combining enclosing square glyph (e.g. U+20DE) in
+                    # Inter-Regular has its visual center at ~25% of box_size
+                    # to the RIGHT of the character origin (left bearing ≈ -25%,
+                    # right extent ≈ +75%).  pdfplumber reports x0==x1==origin.
+                    # Place x0 at origin - 25% so the box is correctly centred.
+                    x0 = x0 - box_size / 4
+                    x1 = x0 + box_size
+                    # Vertically center too
+                    mid_y = (top + bottom) / 2
+                    top = mid_y - box_size / 2
+                    bottom = mid_y + box_size / 2
+
                 # Dedup within 5pt
                 key = (round(x0 / 5) * 5, round(top / 5) * 5)
                 if key in seen:
@@ -646,6 +713,46 @@ class PageAnalyzer:
                 })
 
         return checkboxes, fields
+
+    def _correct_checkbox_bboxes(self, checkboxes: List[Dict]) -> List[Dict]:
+        """
+        Correct non-square checkbox bounding boxes produced by the character detector.
+
+        pdfplumber derives `top` from the font's cap-height / line-top, which for large
+        Unicode square glyphs (e.g. U+2B1C ⬜ WHITE LARGE SQUARE in regular text fonts)
+        can be 3-5 pt lower than the actual rendered glyph top.  This causes the
+        interactive widget to be placed slightly below the visual glyph center.
+
+        Heuristic: when width / height > 1.3 (i.e. the character is significantly wider
+        than tall), assume the glyph fills a square of side = width, extending the top
+        upward:  corrected_top = bottom - width.
+
+        Only applied to character-sourced entries so vector/curve detections
+        (which already use full visual extents) are unaffected.
+        """
+        corrected = []
+        for cb in checkboxes:
+            if cb.get('source') != 'character':
+                corrected.append(cb)
+                continue
+            x0 = float(cb['x0'])
+            top = float(cb['top'])
+            x1 = float(cb['x1'])
+            bottom = float(cb['bottom'])
+            width = x1 - x0
+            height = bottom - top
+            if height > 0 and width / height > 1.3:
+                corrected_top = bottom - width
+                corrected.append({
+                    'x0': x0,
+                    'top': corrected_top,
+                    'x1': x1,
+                    'bottom': bottom,
+                    'source': cb.get('source', 'character'),
+                })
+            else:
+                corrected.append(cb)
+        return corrected
 
     # -------------------------------------------------------------------
     # Page classification
@@ -834,7 +941,7 @@ class PageAnalyzer:
             # Count cells with text (excluding checkbox characters)
             # Cells containing □/☐/☑/☒ or "Yes"/"No"/"N/A" patterns
             # are fillable checkboxes, not pre-filled data.
-            _CB_CHARS = set('□☐☑☒✓✗✘■◻◼▢')
+            _CB_CHARS = _UNICODE_CHECKBOX_CHARS
             _CB_WORDS = {'yes', 'no', 'n/a', 'na'}
             filled = 0
             has_checkbox_cells = False
