@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Editor - Fill That PDF!</title>
+    <style>
+        :root {
+            --bg-primary: #0a192f;
+            --bg-secondary: #112240;
+            --bg-tertiary: #1d3557;
+            --text-primary: #ccd6f6;
+            --text-secondary: #8892b0;
+            --accent: #64ffda;
+            --accent-hover: #4de3c0;
+            --danger: #e94560;
+            --warning: #ffc107;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Title Bar */
+        .title-bar {
+            height: 38px;
+            background: var(--bg-tertiary);
+            -webkit-app-region: drag;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #233554;
+            padding-left: 80px;
+        }
+        .title-bar h1 { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+        
+        .editor-container { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Page Thumbnails Sidebar */
+        .page-sidebar {
+            width: 120px;
+            min-width: 120px;
+            flex-shrink: 0;
+            background: var(--bg-primary);
+            border-right: 1px solid #233554;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            padding: 10px;
+            background: var(--bg-tertiary);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 1px solid #233554;
+        }
+        .thumbnails-list {
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .thumbnail-item {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+        .thumbnail-item:hover { border-color: var(--text-secondary); }
+        .thumbnail-item.active { border-color: var(--accent); }
+        .thumbnail-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .thumbnail-label {
+            padding: 4px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+        }
+        .thumbnail-item.active .thumbnail-label { color: var(--accent); }
+        
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+        }
+        
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid #233554;
+            -webkit-app-region: no-drag;
+        }
+        .toolbar-group { display: flex; align-items: center; gap: 8px; }
+        .toolbar-btn {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .toolbar-btn:hover { background: var(--bg-primary); color: var(--text-primary); border-color: var(--accent); }
+        .toolbar-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+        
+        /* Creation Toolbar */
+        .creation-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid #233554;
+            -webkit-app-region: no-drag;
+        }
+        .creation-toolbar-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 8px;
+        }
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .tool-btn:hover { background: var(--bg-primary); color: var(--text-primary); border-color: var(--accent); }
+        .tool-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+        .tool-btn .tool-icon { font-size: 14px; }
+        .tool-divider { width: 1px; height: 24px; background: #233554; margin: 0 4px; }
+        
+        .page-nav { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 13px; }
+        .page-nav button {
+            width: 28px; height: 28px;
+            border-radius: 4px;
+            border: 1px solid #233554;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .page-nav button:hover { background: var(--bg-primary); border-color: var(--accent); }
+        .page-input {
+            width: 45px;
+            padding: 4px 6px;
+            text-align: center;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .page-input:focus { outline: none; border-color: var(--accent); }
+        
+        .canvas-wrapper {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+        #editorCanvas {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto;       /* Center horizontally when smaller than wrapper */
+        }
+        
+        /* Properties Panel */
+        .properties-panel {
+            width: 300px;
+            min-width: 300px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #233554;
+        }
+        .panel-header {
+            padding: 12px 15px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid #233554;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .panel-content { flex: 1; overflow-y: auto; padding: 12px; }
+        
+        /* Field List Sidebar */
+        .field-list-sidebar {
+            width: 220px;
+            min-width: 220px;
+            flex-shrink: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #233554;
+        }
+        .field-list-header {
+            padding: 12px 15px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid #233554;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .field-list-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .field-list-count {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .field-item.selected {
+            background: #2d4263;
+            border-left: 3px solid var(--accent);
+        }
+        .field-item.dragging {
+            opacity: 0.5;
+            background: #2d4263;
+        }
+        .field-item.drag-over {
+            border-top: 2px solid var(--accent);
+        }
+        .field-name { font-weight: 500; font-size: 13px; margin-bottom: 2px; }
+        .field-list-filter {
+            padding: 10px;
+            border-bottom: 1px solid #233554;
+        }
+        .field-list-filter input {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+        .field-list-filter input::placeholder {
+            color: var(--text-secondary);
+        }
+        .field-list-filter input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .field-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .field-list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+        }
+        .field-list-item:hover {
+            border-color: var(--text-secondary);
+            background: var(--bg-tertiary);
+        }
+        .field-list-item.selected {
+            border-color: var(--accent);
+            background: rgba(100, 255, 218, 0.1);
+        }
+        .field-list-item.dragging {
+            opacity: 0.5;
+            border-color: var(--warning);
+        }
+        /* Green insertion-line indicator: shown on the top or bottom edge of
+           the hovered item to show exactly where the dragged field will land.
+           Replaces the old full-item highlight which was ambiguous about
+           whether the drop would go before or after the target. */
+        .field-list-item.drop-before {
+            box-shadow: inset 0 2px 0 0 var(--accent), 0 -2px 0 0 var(--accent);
+        }
+        .field-list-item.drop-after {
+            box-shadow: inset 0 -2px 0 0 var(--accent), 0 2px 0 0 var(--accent);
+        }
+        .field-list-item .field-icon {
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .field-list-item .field-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        .field-list-item .field-name {
+            font-size: 11px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .field-list-item .field-meta {
+            font-size: 9px;
+            color: var(--text-secondary);
+        }
+        .field-list-item.selected .field-name {
+            color: var(--accent);
+        }
+
+        /* v1.1.0: Radio group child indent */
+        .radio-group-child {
+            padding-left: 28px !important;
+        }
+
+        /* v1.1.0: Radio group header row */
+        .radio-group-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            background: rgba(100,255,218,0.06);
+            border: 1px solid rgba(100,255,218,0.2);
+            border-radius: 4px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .radio-group-header:hover {
+            background: rgba(100,255,218,0.12);
+        }
+        .radio-group-header.group-has-selected {
+            border-color: var(--accent);
+            background: rgba(100,255,218,0.12);
+        }
+        .group-chevron {
+            font-size: 9px;
+            color: var(--text-secondary);
+            min-width: 10px;
+        }
+        .group-radio-icon { font-size: 13px; }
+        .group-label-wrap { flex: 1; overflow: hidden; }
+        .group-label-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .group-label-meta { font-size: 9px; color: var(--text-secondary); }
+
+        /* v1.1.0: page badge in scroll mode */
+        .field-page-badge {
+            display: inline-block;
+            background: rgba(100,255,218,0.15);
+            color: var(--accent);
+            border-radius: 3px;
+            font-size: 8px;
+            padding: 0 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        /* v1.1.0: view mode toggle buttons */
+        .view-mode-toggle .toolbar-btn {
+            padding: 3px 10px;
+            font-size: 11px;
+        }
+        .view-mode-toggle .toolbar-btn.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        /* v1.1.0: DOM scroll view */
+        #scrollViewContainer { background: var(--bg-primary); }
+        .sv-page-wrap {
+            position: relative;
+            display: block;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+        }
+        .sv-page-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            user-select: none;
+        }
+        .sv-page-label {
+            position: absolute;
+            top: 4px; left: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(0,0,0,0.35);
+            pointer-events: none;
+        }
+        /* sv-field-overlay: default = text field (teal) — matches drawField() exactly */
+        .sv-field-overlay {
+            position: absolute;
+            border: 1px solid rgba(100,255,218,0.6);
+            background: rgba(100,255,218,0.15);
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background 0.1s;
+            overflow: visible;
+        }
+        .sv-field-overlay:hover { background: rgba(100,255,218,0.28); }
+        /* checkbox = yellow */
+        .sv-field-overlay.sv-checkbox {
+            border-color: rgba(255,193,7,0.6);
+            background: rgba(255,193,7,0.2);
+        }
+        .sv-field-overlay.sv-checkbox:hover { background: rgba(255,193,7,0.35); }
+        /* radio = red */
+        .sv-field-overlay.sv-radio {
+            border-color: rgba(233,69,96,0.6);
+            background: rgba(233,69,96,0.2);
+        }
+        .sv-field-overlay.sv-radio:hover { background: rgba(233,69,96,0.35); }
+        /* calc field = green */
+        .sv-field-overlay.sv-calc {
+            border-color: rgba(76,175,80,0.7);
+            background: rgba(76,175,80,0.18);
+        }
+        .sv-field-overlay.sv-calc:hover { background: rgba(76,175,80,0.3); }
+        /* link field = barely-visible dark */
+        .sv-field-overlay.sv-link {
+            border-color: rgba(100,100,100,0.35);
+            background: rgba(0,0,0,0.03);
+        }
+        /* selected state — teal for all types (overrides above) */
+        .sv-field-overlay.selected {
+            border: 2px solid #64ffda !important;
+            background: rgba(100,255,218,0.4) !important;
+        }
+        /* Resize handles on selected scroll-view fields — all 8, matching single view */
+        .sv-handle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #64ffda;
+            border: 1px solid #0a192f;
+            border-radius: 1px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+        .sv-handle-tl { top: -4px;    left: -4px;               cursor: nwse-resize; }
+        .sv-handle-tr { top: -4px;    right: -4px;              cursor: nesw-resize; }
+        .sv-handle-bl { bottom: -4px; left: -4px;               cursor: nesw-resize; }
+        .sv-handle-br { bottom: -4px; right: -4px;              cursor: nwse-resize; }
+        .sv-handle-mt { top: -4px;    left: 50%; margin-left:-4px; cursor: ns-resize; }
+        .sv-handle-mb { bottom: -4px; left: 50%; margin-left:-4px; cursor: ns-resize; }
+        .sv-handle-ml { top: 50%; margin-top:-4px; left: -4px;  cursor: ew-resize; }
+        .sv-handle-mr { top: 50%; margin-top:-4px; right: -4px; cursor: ew-resize; }
+        /* Type icon in top-left of overlay — scales with --sv-zoom so it looks
+           identical to drawField()'s "10 * zoom px" behaviour in single view. */
+        .sv-field-icon {
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            font-size: calc(10px * var(--sv-zoom, 1));
+            line-height: 1;
+            color: rgba(100,255,218,0.95);
+            pointer-events: none;
+            user-select: none;
+            z-index: 3;
+        }
+        .sv-field-overlay.sv-checkbox .sv-field-icon { color: #ffc107; }
+        .sv-field-overlay.sv-radio    .sv-field-icon { color: #e94560; }
+        .sv-field-overlay.sv-calc     .sv-field-icon { color: rgba(76,175,80,0.95); }
+        .sv-field-overlay.sv-link     .sv-field-icon { color: #333333; }
+        .sv-field-overlay.selected    .sv-field-icon { color: #64ffda; }
+        /* Tab number badge — mirrors drawField()'s teal badge in single view */
+        .sv-tab-number {
+            position: absolute;
+            top: 0; left: 0;
+            min-width: calc(16px * var(--sv-zoom, 1));
+            height: calc(14px * var(--sv-zoom, 1));
+            padding: 0 calc(3px * var(--sv-zoom, 1));
+            background: #64ffda;
+            color: #0a192f;
+            font: bold calc(10px * var(--sv-zoom, 1))/calc(14px * var(--sv-zoom, 1)) Arial, sans-serif;
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+            z-index: 4;
+            box-sizing: border-box;
+        }
+        /* Σ badge in top-right for calc fields — also scales with zoom */
+        .sv-calc-badge {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width:   calc(14px * var(--sv-zoom, 1));
+            height:  calc(14px * var(--sv-zoom, 1));
+            border-radius: 50%;
+            background: rgba(76,175,80,0.95);
+            color: #ffffff;
+            font-size:  calc(10px * var(--sv-zoom, 1));
+            font-weight: 700;
+            line-height: calc(14px * var(--sv-zoom, 1));
+            text-align: center;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Field List Toolbar */
+        .field-list-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid #233554;
+            flex-wrap: wrap;
+        }
+        .toolbar-select {
+            flex: 1;
+            min-width: 80px;
+            padding: 4px 6px;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .toolbar-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .toolbar-btn-small {
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            color: var(--text-primary);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+        .toolbar-btn-small:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: #233554;
+        }
+        .toolbar-toggle {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+        .toolbar-toggle input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+        .toolbar-toggle:hover {
+            color: var(--text-primary);
+        }
+        .toggle-label {
+            white-space: nowrap;
+        }
+        .tab-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 3px;
+            margin-right: 4px;
+        }
+        
+        .property-section {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #233554;
+        }
+        .property-section:last-child { border-bottom: none; }
+        .section-title {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .property-group { margin-bottom: 12px; }
+        .property-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .property-label { font-size: 12px; color: var(--text-secondary); }
+        .property-value {
+            font-size: 13px;
+            color: var(--text-primary);
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+        .property-input {
+            width: 100%;
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .property-input:focus { outline: none; border-color: var(--accent); }
+        .property-input-small {
+            width: 90px;
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .property-input-small:focus { outline: none; border-color: var(--accent); }
+        input[type="color"].property-input-small {
+            width: 40px; height: 28px; padding: 2px; cursor: pointer;
+        }
+        input[type="color"].property-input-small::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"].property-input-small::-webkit-color-swatch { border: none; border-radius: 3px; }
+        
+        /* Custom Color Picker Popup */
+        .color-picker-popup {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 9999;
+            width: 280px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        .color-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .color-picker-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .color-picker-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .color-picker-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .color-picker-tab {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 11px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .color-picker-tab.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+        .color-picker-content { margin-bottom: 12px; }
+        .color-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .color-slider-label {
+            width: 20px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .color-slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #000, #fff);
+            border-radius: 4px;
+        }
+        .color-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #333;
+            cursor: pointer;
+        }
+        .color-slider-value {
+            width: 35px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+        .color-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #233554;
+        }
+        .color-preview-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #233554;
+            background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                              linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                              linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 8px 8px;
+            background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+        }
+        .color-preview-color {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        .color-hex-input {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-family: 'Consolas', monospace;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+        .color-picker-apply {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #64ffda, #00d4aa);
+            border: none;
+            border-radius: 6px;
+            color: var(--bg-primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .color-picker-apply:hover { filter: brightness(1.1); }
+        .color-swatch-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .color-swatch-preview {
+            width: 28px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .color-swatch-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Consolas', monospace;
+        }
+        
+        .no-selection { text-align: center; color: var(--text-secondary); padding: 30px 15px; }
+        .no-selection-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+        
+        .field-list { max-height: 120px; overflow-y: auto; margin-top: 8px; }
+        .field-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .field-item:hover { background: var(--bg-primary); }
+        .field-item.selected { background: var(--accent); color: var(--bg-primary); }
+        .field-type-icon { width: 14px; text-align: center; }
+        .field-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .panel-actions {
+            padding: 12px;
+            border-top: 1px solid #233554;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary { background: var(--accent); color: var(--bg-primary); }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid #233554; }
+        .btn-secondary:hover { background: var(--bg-primary); border-color: var(--accent); }
+        
+        /* Footer */
+        .editor-footer {
+            padding: 12px 20px;
+            background: var(--bg-tertiary);
+            border-top: 1px solid #233554;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-info { color: var(--text-secondary); font-size: 12px; display: flex; align-items: center; gap: 15px; }
+        .footer-actions { display: flex; gap: 10px; }
+        .footer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s, background 0.2s;
+        }
+        .footer-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #d63350;
+        }
+        
+        /* Loading */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 25, 47, 0.9);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .loading-spinner {
+            width: 50px; height: 50px;
+            border: 3px solid var(--bg-tertiary);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; color: var(--text-secondary); font-size: 14px; }
+        
+        .tooltip {
+            position: fixed;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            white-space: pre-line;
+        }
+        
+        /* Modal/Panel Shared Styles */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #233554;
+            background: var(--bg-tertiary);
+            border-radius: 12px 12px 0 0;
+            cursor: move; /* Indicates draggable */
+        }
+        .modal-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0; }
+        .modal-close {
+            background: none; border: none;
+            color: var(--text-secondary); font-size: 24px;
+            cursor: pointer; line-height: 1;
+        }
+        .modal-close:hover { color: var(--danger); }
+        
+        .modal-tabs {
+            display: flex;
+            background: var(--bg-primary);
+            border-bottom: 1px solid #233554;
+            overflow-x: auto;
+        }
+        .modal-tab {
+            padding: 10px 16px;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 13px; font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        .modal-tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+        .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        
+        .modal-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+        }
+        .modal-tab-content { display: none; }
+        .modal-tab-content.active { display: block; }
+        
+        .modal-section-title {
+            font-size: 11px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .modal-form-group { margin-bottom: 14px; }
+        .modal-form-group.half { flex: 1; min-width: 0; }
+        .modal-form-row { display: flex; gap: 12px; }
+        .modal-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        .modal-input, .modal-select {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .modal-input:focus, .modal-select:focus { outline: none; border-color: var(--accent); }
+        .modal-color {
+            width: 50px; height: 32px;
+            padding: 2px; cursor: pointer;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 5px;
+        }
+        .modal-color::-webkit-color-swatch-wrapper { padding: 0; }
+        .modal-color::-webkit-color-swatch { border: none; border-radius: 3px; }
+        
+        .modal-checkbox-group { margin: 14px 0; display: flex; flex-wrap: wrap; gap: 12px; }
+        .modal-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .modal-checkbox input[type="checkbox"] {
+            width: 16px; height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        
+        /* Calculation Tab Styles */
+        .calc-search-results {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+            max-height: 300px; overflow-y: hidden;
+            background: var(--bg-primary); border: 1px solid #233554;
+            border-radius: 0 0 6px 6px; box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+        .calc-search-item {
+            padding: 6px 12px; cursor: pointer; font-size: 12px;
+            color: var(--text-secondary); border-bottom: 1px solid #1a2a44;
+            display: flex; justify-content: space-between;
+        }
+        .calc-search-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .calc-search-item .page-label { font-size: 10px; opacity: 0.5; }
+        .calc-source-list {
+            max-height: 150px; overflow-y: auto;
+            border: 1px solid #233554; border-radius: 6px;
+            background: var(--bg-primary);
+        }
+        .calc-source-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 5px 10px; font-size: 12px; color: var(--text-primary);
+            border-bottom: 1px solid #1a2a44;
+        }
+        .calc-source-item:last-child { border-bottom: none; }
+        .calc-source-item .source-letter {
+            font-weight: 700; color: var(--accent); margin-right: 8px;
+            font-size: 13px; min-width: 16px;
+        }
+        .calc-source-item .source-name { flex: 1; }
+        .calc-source-item .source-page { font-size: 10px; color: var(--text-secondary); margin-right: 8px; }
+        .calc-source-item .source-remove {
+            cursor: pointer; color: var(--danger); font-size: 14px;
+            padding: 0 4px; opacity: 0.7;
+        }
+        .calc-source-item .source-remove:hover { opacity: 1; }
+        .calc-formula-legend {
+            font-size: 11px; color: var(--text-secondary);
+            padding: 6px 0; line-height: 1.8;
+        }
+        .calc-formula-legend .legend-item { margin-right: 12px; }
+        .calc-formula-legend .legend-letter { font-weight: 700; color: var(--accent); }
+        .calc-preview-box {
+            background: var(--bg-primary); border: 1px solid #233554;
+            border-radius: 8px; padding: 12px;
+        }
+        .calc-formula-preview {
+            font-size: 12px; color: var(--text-secondary);
+            margin-bottom: 10px; font-style: italic;
+        }
+        .calc-test-inputs {
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            margin-bottom: 10px;
+        }
+        .calc-test-inputs .test-input-group {
+            display: flex; align-items: center; gap: 4px;
+        }
+        .calc-test-inputs .test-label {
+            font-size: 11px; font-weight: 600; color: var(--accent);
+        }
+        .calc-test-inputs .test-input {
+            width: 60px; padding: 3px 6px; font-size: 12px;
+            background: var(--bg-secondary); border: 1px solid #233554;
+            border-radius: 4px; color: var(--text-primary); text-align: center;
+        }
+        .calc-test-inputs .test-operator {
+            font-size: 14px; color: var(--text-secondary); padding: 0 2px;
+        }
+        .calc-test-result {
+            display: flex; align-items: center; gap: 10px;
+            padding-top: 8px; border-top: 1px solid #1a2a44;
+        }
+        .calc-empty-msg {
+            padding: 12px; text-align: center; color: var(--text-secondary);
+            font-size: 12px; font-style: italic;
+        }
+
+        /* Floating Calculations Manager Panel */
+        .calc-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 700px;
+            max-height: 85vh;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            border: 1px solid #233554;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            resize: both;
+            overflow: hidden;
+            min-width: 350px;
+            min-height: 200px;
+        }
+        .calc-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid #233554;
+            background: var(--bg-tertiary);
+            cursor: grab;
+            user-select: none;
+            border-radius: 12px 12px 0 0;
+        }
+        .calc-panel-header:active { cursor: grabbing; }
+        .calc-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .calc-panel-footer {
+            padding: 10px 16px;
+            border-top: 1px solid #233554;
+            display: flex;
+            justify-content: flex-end;
+            background: var(--bg-tertiary);
+            border-radius: 0 0 12px 12px;
+        }
+        /* Resizable column handles */
+        .calc-col-resizer {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            cursor: col-resize;
+            background: transparent;
+            transition: background 0.15s;
+            z-index: 1;
+        }
+        .calc-col-resizer:hover,
+        .calc-col-resizer.dragging {
+            background: var(--accent);
+        }
+        #calcManagerTableEl td {
+            white-space: nowrap;
+        }
+        .calc-panel.minimized .calc-panel-body,
+        .calc-panel.minimized .calc-panel-footer { display: none; }
+        .calc-panel.minimized {
+            max-height: unset;
+            width: 280px !important;
+            min-width: 280px;
+            resize: none;
+        }
+
+        /* Generic Floating Panel (non-blocking) */
+        .float-panel {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 85vh;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            border: 1px solid #233554;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            resize: both;
+            overflow: hidden;
+            min-width: 300px;
+            min-height: 150px;
+        }
+        .float-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-bottom: 1px solid #233554;
+            background: var(--bg-tertiary);
+            cursor: grab;
+            user-select: none;
+            border-radius: 12px 12px 0 0;
+        }
+        .float-panel-header:active { cursor: grabbing; }
+        .float-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+        }
+        .float-panel-footer {
+            padding: 10px 16px;
+            border-top: 1px solid #233554;
+            display: flex;
+            justify-content: flex-end;
+            background: var(--bg-tertiary);
+            border-radius: 0 0 12px 12px;
+        }
+        .float-panel.minimized .float-panel-body,
+        .float-panel.minimized .float-panel-footer { display: none; }
+        .float-panel.minimized {
+            max-height: unset;
+            width: 280px !important;
+            min-width: 280px;
+            resize: none;
+        }
+
+        /* Properties Floating Panel (non-blocking) */
+        .prop-panel {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 520px;
+            max-height: 85vh;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            border: 1px solid #233554;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            resize: both;
+            overflow: hidden;
+            min-width: 380px;
+            min-height: 250px;
+        }
+        .prop-panel .modal-header {
+            cursor: grab;
+            user-select: none;
+        }
+        .prop-panel .modal-header:active { cursor: grabbing; }
+        .prop-panel .modal-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .prop-panel.minimized .modal-tabs,
+        .prop-panel.minimized .modal-content,
+        .prop-panel.minimized .modal-tab-content,
+        .prop-panel.minimized .modal-footer { display: none; }
+        .prop-panel.minimized {
+            max-height: unset;
+            width: 280px !important;
+            min-width: 280px;
+            resize: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 14px 20px;
+            border-top: 1px solid #233554;
+            background: var(--bg-tertiary);
+            border-radius: 0 0 12px 12px;
+        }
+        /* Pick-from-canvas mode (Calculate tab) */
+        #btnPickFromCanvas.active {
+            background: #e94560;
+            animation: pickPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pickPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(233, 69, 96, 0); }
+        }
+        .canvas-pick-mode { cursor: crosshair !important; }
+
+        /* Dropdown Options List Styles */
+        .option-list-container {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: rgba(0,0,0,0.2);
+            height: 120px;
+            overflow-y: auto;
+            margin-bottom: 8px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+        .option-item:hover { background: rgba(255,255,255,0.05); }
+        .option-item.selected { background: rgba(100, 255, 218, 0.1); border-left: 2px solid var(--accent); }
+        .option-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .option-value { color: var(--text-secondary); font-size: 11px; margin-left: 8px; }
+        
+        .option-editor-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
+        .option-editor-input-group { flex: 1; }
+        
+        .option-actions { display: flex; gap: 4px; flex-direction: column; }
+        .option-btn-small {
+            padding: 4px 8px;
+            font-size: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            flex: 1;
+            min-width: 50px;
+        }
+        .option-btn-small:hover { color: var(--text-primary); border-color: var(--accent); }
+        .option-btn-small:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-btn-primary { background: var(--accent); color: var(--bg-primary); }
+        .modal-btn-primary:hover { background: var(--accent-hover); }
+        .modal-btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid #233554; }
+        .modal-btn-secondary:hover { background: var(--bg-primary); border-color: var(--accent); }
+        
+        .format-options { margin-top: 12px; padding-top: 12px; border-top: 1px solid #233554; }
+        
+        /* Arrange buttons */
+        .arrange-btn {
+            width: 36px; height: 32px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .arrange-btn:hover { background: var(--bg-primary); border-color: var(--accent); }
+        .arrange-btn-wide {
+            padding: 6px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 4px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.15s;
+            flex: 1;
+            min-width: 70px;
+        }
+        .arrange-btn-wide:hover { background: var(--bg-primary); border-color: var(--accent); color: var(--accent); }
+        
+        /* Preview mode */
+        .preview-btn { background: var(--bg-tertiary); }
+        .preview-btn.active { 
+            background: #ff6b6b !important; 
+            color: white !important;
+            border: 2px solid #ff6b6b !important;
+        }
+        .preview-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            pointer-events: auto;
+            z-index: 10;
+        }
+        
+        .preview-input {
+            position: absolute;
+            box-sizing: border-box;
+            border: 1px solid #999;
+            background: #fff;
+            font-family: Arial, sans-serif;
+            padding: 2px 4px;
+        }
+        .preview-checkbox {
+            position: absolute;
+            cursor: pointer;
+        }
+        .preview-banner {
+            position: fixed;
+            top: 60px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: var(--bg-primary);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* AI Chat Panel */
+        .chat-toggle-btn {
+            padding: 10px 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            margin-right: auto;
+        }
+        .chat-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .chat-toggle-btn .icon {
+            font-size: 14px;
+        }
+        
+        .chat-panel {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            width: 380px;
+            height: 500px;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 199;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-panel.open {
+            display: flex;
+        }
+        
+        .chat-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .chat-close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .chat-settings-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .chat-message {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .chat-message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.assistant {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-message.error {
+            background: var(--danger);
+            color: white;
+        }
+        .chat-message.system {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            max-width: 100%;
+        }
+        .chat-message.action {
+            background: linear-gradient(135deg, #1a365d 0%, #2a4a7f 100%);
+            border: 1px solid #667eea;
+            max-width: 95%;
+        }
+        .action-description {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .action-icon {
+            font-size: 18px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn-apply {
+            flex: 1;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #64ffda, #00d4aa);
+            color: #0a192f;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn-apply:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.3);
+        }
+        .action-btn-cancel {
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn-cancel:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .action-result {
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .action-result.success {
+            color: var(--success);
+        }
+        .action-result.error {
+            color: var(--danger);
+        }
+        .action-cancelled {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .chat-input-area {
+            padding: 12px;
+            border-top: 1px solid #233554;
+            display: flex;
+            gap: 8px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 13px;
+            resize: none;
+            max-height: 80px;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .chat-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-send-btn:hover {
+            opacity: 0.9;
+        }
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* API Key Setup */
+        .api-key-setup {
+            padding: 20px;
+            text-align: center;
+        }
+        .api-key-setup h3 {
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .api-key-setup p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .api-key-input {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid #233554;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .api-key-save-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Context Menu Styles */
+        .context-menu {
+            position: fixed;
+            display: none;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            min-width: 220px;
+            z-index: 10000;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+        .context-menu-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            transition: background 0.15s;
+            position: relative;
+        }
+        .context-menu-item:hover {
+            background: var(--bg-tertiary);
+        }
+        .context-menu-item.disabled {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .context-menu-item .shortcut {
+            color: var(--text-secondary);
+            font-size: 11px;
+            margin-left: 20px;
+        }
+        .context-menu-separator {
+            height: 1px;
+            background: #233554;
+            margin: 6px 0;
+        }
+        .context-menu-item.has-submenu::after {
+            content: '▶';
+            font-size: 8px;
+            color: var(--text-secondary);
+            margin-left: 10px;
+        }
+        .context-submenu {
+            position: absolute;
+            left: 100%;
+            top: -6px;
+            background: var(--bg-secondary);
+            border: 1px solid #233554;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            min-width: 200px;
+            padding: 6px 0;
+            display: none;
+        }
+        .context-menu-item.has-submenu:hover > .context-submenu {
+            display: block;
+        }
+        .context-submenu .context-menu-item {
+            padding: 8px 16px;
+        }
+        
+        .context-submenu.submenu-flip-x {
+            left: auto;
+            right: 100%;
+        }
+        
+        .context-submenu.submenu-flip-y {
+            top: auto;
+            bottom: -6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Loading PDF...</div>
+    </div>
+    
+    <!-- Custom Input Modal (replaces window.prompt which doesn't work in Electron) -->
+    <div class="loading-overlay" id="inputModal" style="display: none;">
+        <div style="background: var(--bg-secondary); padding: 24px; border-radius: 12px; min-width: 300px; text-align: center;">
+            <h3 style="margin: 0 0 16px; color: var(--text-primary);" id="inputModalTitle">Enter Value</h3>
+            <input type="text" id="inputModalValue" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); font-size: 14px; box-sizing: border-box;">
+            <div style="margin-top: 16px; display: flex; gap: 10px; justify-content: center;">
+                <button onclick="resolveInputModal(null)" style="padding: 8px 20px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); border-radius: 6px; cursor: pointer;">Cancel</button>
+                <button onclick="resolveInputModal(document.getElementById('inputModalValue').value)" style="padding: 8px 20px; border: none; background: var(--accent); color: var(--bg-primary); border-radius: 6px; cursor: pointer; font-weight: bold;">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="title-bar"><h1>🔧 Field Editor</h1></div>
+    
+    <div class="editor-container">
+        <!-- Page Thumbnails Sidebar -->
+        <div class="page-sidebar">
+            <div class="sidebar-header">Pages</div>
+            <div class="thumbnails-list" id="thumbnailsList">
+                <!-- Thumbnails added by JS -->
+            </div>
+        </div>
+        
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div class="toolbar" style="position: relative;">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn active" id="btnSelect" title="Select">↖️ Select</button>
+                    <button class="toolbar-btn" id="btnFitPage" title="Fit to Page">📐 Fit</button>
+                </div>
+                
+                <!-- Centered navigation and zoom controls -->
+                <div class="toolbar-center" style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px;">
+                    <div class="page-nav">
+                        <button id="btnPrevPage">‹</button>
+                        <span>Page</span>
+                        <input type="number" class="page-input" id="pageInput" value="1" min="1">
+                        <span>of <span id="totalPages">1</span></span>
+                        <button id="btnNextPage">›</button>
+                    </div>
+                    
+                    <div class="toolbar-group" style="display: flex; align-items: center; gap: 4px;">
+                        <button class="toolbar-btn" id="btnZoomOut">−</button>
+                        <span id="zoomLevel" style="color: var(--text-secondary); min-width: 50px; text-align: center;">100%</span>
+                        <button class="toolbar-btn" id="btnZoomIn">+</button>
+                    </div>
+                </div>
+                
+                <!-- v1.1.0: View mode toggle -->
+                <div class="toolbar-group view-mode-toggle" style="margin-left: auto; margin-right: 8px;">
+                    <button class="toolbar-btn active" id="btnViewSingle" title="Single Page View">📄 Single</button>
+                    <button class="toolbar-btn" id="btnViewScroll" title="Scrolling View — all pages">📜 Scroll</button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="toolbar-btn preview-btn" id="btnPreview" title="Toggle Preview Mode">
+                        👁️ Preview
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Creation Toolbar -->
+            <div class="creation-toolbar">
+                <span class="creation-toolbar-label">Tools:</span>
+                <button class="tool-btn active" id="toolSelect" data-tool="select" title="Select and edit fields">
+                    <span class="tool-icon">↖️</span> Select
+                </button>
+                <div class="tool-divider"></div>
+                <button class="tool-btn" id="toolText" data-tool="text" title="Create text field">
+                    <span class="tool-icon">📝</span> Text
+                </button>
+                <button class="tool-btn" id="toolCheckbox" data-tool="checkbox" title="Create checkbox">
+                    <span class="tool-icon">☑️</span> Checkbox
+                </button>
+                <button class="tool-btn" id="toolRadio" data-tool="radio" title="Create radio button">
+                    <span class="tool-icon">🔘</span> Radio
+                </button>
+                <button class="tool-btn" id="toolDropdown" data-tool="dropdown" title="Create dropdown list">
+                    <span class="tool-icon">📋</span> Dropdown
+                </button>
+                <button class="tool-btn" id="toolSignature" data-tool="signature" title="Create signature field">
+                    <span class="tool-icon">✍️</span> Signature
+                </button>
+                <button class="tool-btn" id="toolDate" data-tool="date" title="Create date field">
+                    <span class="tool-icon">📅</span> Date
+                </button>
+            </div>
+            
+            <div class="canvas-wrapper" id="canvasWrapper" style="position: relative;">
+                <canvas id="editorCanvas"></canvas>
+                <!-- v1.1.0: DOM-based scroll view — shown instead of canvas in scroll mode -->
+                <div id="scrollViewContainer" style="display:none; overflow:auto; height:100%; padding:16px; box-sizing:border-box; position:relative;"></div>
+                <div id="previewOverlay" class="preview-overlay" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Field List Sidebar -->
+        <div class="field-list-sidebar">
+            <div class="field-list-header">
+                <span class="field-list-title">📋 Fields</span>
+                <span class="field-list-count" id="fieldListCount">0</span>
+            </div>
+            
+            <!-- Toolbar Options -->
+            <div class="field-list-toolbar" style="gap: 12px;">
+                <div class="toolbar-option" title="Tab Order & Sort">
+                     <!-- Added margin-right for spacing -->
+                    <select id="fieldSortOrder" class="toolbar-select" style="width: 170px; margin-right: 5px;">
+                        <optgroup label="Order Tabs By">
+                            <option value="structure">📐 By Structure</option>
+                            <option value="row">↔️ By Row</option>
+                            <option value="column">↕️ By Column</option>
+                        </optgroup>
+                        <optgroup label="Sort By Name">
+                            <option value="alphabetic">🔤 A-Z</option>
+                            <option value="reverse-alpha">🔡 Z-A</option>
+                        </optgroup>
+                        <optgroup label="Manual">
+                            <option value="manual" selected>✋ Manual Order</option>
+                            <option value="unspecified">⚪ Unspecified</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <!-- Button Removed -->
+                
+                <button class="toolbar-btn-small" id="btnCalcManager" title="Manage all calculations" style="color: #64ffda;">
+                    🧮 Calculations
+                </button>
+                <button class="toolbar-btn-small" id="btnVersionHistory" title="View version history and snapshots">
+                    🕐 History
+                </button>
+                <div class="toolbar-divider"></div>
+                <label class="toolbar-toggle" title="Highlight fields on PDF">
+                    <input type="checkbox" id="highlightFields" checked>
+                    <span class="toggle-label">Highlight</span>
+                </label>
+                <label class="toolbar-toggle" title="Show tab order numbers">
+                    <input type="checkbox" id="showTabNumbers">
+                    <span class="toggle-label">Tab #</span>
+                </label>
+                <label class="toolbar-toggle" title="Show alignment guides when dragging">
+                    <input type="checkbox" id="showAlignmentGuides" checked>
+                    <span class="toggle-label">Guides</span>
+                </label>
+            </div>
+            
+            <div class="field-list-filter">
+                <input type="text" id="fieldListSearch" placeholder="🔍 Search fields...">
+            </div>
+            <div class="field-list-container" id="fieldListContainer">
+                <!-- Field items will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Properties Panel -->
+        <div class="properties-panel">
+            <div class="panel-header">📋 Field Properties</div>
+            
+            <div class="panel-content">
+                <div class="no-selection" id="noSelection">
+                    <div class="no-selection-icon">📝</div>
+                    <div>Click a field to select</div>
+                    <div style="margin-top: 5px; font-size: 11px;">Shift+click for multi-select</div>
+                </div>
+                
+                <!-- Single Selection -->
+                <div id="singleSelection" style="display: none;">
+                    <!-- Basic Info -->
+                    <div class="property-section">
+                        <div class="section-title">Basic Info</div>
+                        <div class="property-group">
+                            <div class="property-label">Name</div>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" class="property-input" id="propName" placeholder="Field name" style="flex: 1;">
+                                <button id="btnApplyName" title="Apply Name" class="btn-secondary" style="padding: 0 8px; font-size: 11px;">Apply</button>
+                                <button id="btnAutoNameSidebar" title="✨ Auto-Name" class="btn-secondary" style="padding: 0 6px;">✨</button>
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <div class="property-label">Tooltip</div>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" class="property-input" id="propTooltip" placeholder="Hover text for users" style="flex: 1;">
+                                <button id="btnApplyTooltip" title="Apply Tooltip" class="btn-secondary" style="padding: 0 8px; font-size: 11px;">Apply</button>
+                            </div>
+                        </div>
+                        <!-- v1.1.0: Radio Group Name row — directly under Tooltip, matches modal label -->
+                        <div class="property-group" id="propRadioGroupRow" style="display:none;">
+                            <div class="property-label" style="white-space:nowrap;">🔘 Radio Group Name</div>
+                            <div style="display:flex; gap:5px;">
+                                <input type="text" class="property-input" id="propRadioGroupName"
+                                       placeholder="Group name" style="flex:1;">
+                                <button id="btnApplyRadioGroup" title="Rename group"
+                                        class="btn-secondary" style="padding:0 8px; font-size:11px;">Apply</button>
+                            </div>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Type</span>
+                            <span class="property-value" id="propType" style="font-size: 12px;">Text</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Page</span>
+                            <span class="property-value" id="propPage" style="font-size: 12px;">1</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Position & Size -->
+                    <div class="property-section">
+                        <div class="section-title">Position & Size</div>
+                        <div class="property-row">
+                            <span class="property-label">X / Y</span>
+                            <span id="propPosition" style="font-size: 11px; color: var(--text-secondary);">0, 0</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">W / H</span>
+                            <span id="propSize" style="font-size: 11px; color: var(--text-secondary);">0, 0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Field Styling -->
+                    <div class="property-section" id="textFieldStyling">
+                        <div class="section-title">Styling</div>
+                        <div class="property-row">
+                            <span class="property-label">Font</span>
+                            <select class="property-input-small" id="propFontFamily">
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Courier">Courier</option>
+                                <option value="Times-Roman">Times</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Size</span>
+                            <input type="number" class="property-input-small" id="propFontSize" value="9" min="6" max="24" style="width: 55px;">
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Color</span>
+                            <button class="color-swatch-btn" id="btn_propFontColor" data-target="propFontColor" data-label="Font Color">
+                                <span class="color-swatch-preview" id="preview_propFontColor" style="background: #000000;"></span>
+                                <span class="color-swatch-text" id="text_propFontColor">#000000</span>
+                            </button>
+                            <input type="hidden" id="propFontColor" value="#000000">
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Align</span>
+                            <select class="property-input-small" id="propTextAlign">
+                                <option value="left">Left</option>
+                                <option value="center">Center</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Fill</span>
+                            <button class="color-swatch-btn" id="btn_propFillColor" data-target="propFillColor" data-label="Fill Color">
+                                <span class="color-swatch-preview" id="preview_propFillColor" style="background: #EDF4FF;"></span>
+                                <span class="color-swatch-text" id="text_propFillColor">#EDF4FF</span>
+                            </button>
+                            <input type="hidden" id="propFillColor" value="#EDF4FF">
+                        </div>
+                    </div>
+                    
+                    <!-- Formatting (Date/Currency/Phone) -->
+                    <div class="property-section" id="formattingStyling" style="display: none;">
+                        <div class="section-title" id="formatSectionTitle">Formatting</div>
+                        
+                        <!-- Format Type Selector -->
+                        <div class="property-row">
+                            <span class="property-label">Format As</span>
+                            <select class="property-input-small" id="propFormatType" style="width: 100px;">
+                                <option value="">— None —</option>
+                                <option value="date">📅 Date</option>
+                                <option value="currency">💵 Currency</option>
+                                <option value="phone">📞 Phone</option>
+                                <option value="number"># Number</option>
+                                <option value="zip">📮 ZIP Code</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Date Format -->
+                        <div id="dateFormatOptions" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Date Format</span>
+                                <select class="property-input-small" id="propDateFormat">
+                                    <option value="" disabled selected>-- Choose Date Style --</option>
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Currency Format -->
+                        <div id="currencyFormatOptions" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Symbol</span>
+                                <select class="property-input-small" id="propCurrencySymbol" style="width: 55px; margin-right: 5px;">
+                                    <option value="">None</option>
+                                    <option value="$">$</option>
+                                    <option value="€">€</option>
+                                    <option value="£">£</option>
+                                    <option value="¥">¥</option>
+                                    <option value="CHF">CHF</option>
+                                    <option value="kr">kr</option>
+                                    <option value="TL">TL</option>
+                                    <option value="R">R</option>
+                                    <option value="zł">zł</option>
+                                    <option value="R$">R$</option>
+                                    <option value="NT$">NT$</option>
+                                    <option value="₩">₩</option>
+                                    <option value="Kč">Kč</option>
+                                    <option value="Ft">Ft</option>
+                                    <option value="Lt">Lt</option>
+                                    <option value="Ls">Ls</option>
+                                    <option value="лв">лв</option>
+                                    <option value="lei">lei</option>
+                                    <option value="₫">₫</option>
+                                    <option value="руб">руб</option>
+                                    <option value="р.">р.</option>
+                                    <option value="kn">kn</option>
+                                </select>
+                                <span class="property-label" style="font-size: 12px; margin-right: 4px;">Dec</span>
+                                <input type="number" class="property-input-small" id="propCurrencyDecimals" value="2" min="0" max="4" style="width: 40px;">
+                            </div>
+                            <div class="property-row">
+                                <span class="property-label">Location</span>
+                                <select class="property-input-small" id="propSymbolLocation" style="width: 140px;">
+                                    <option value="before-space">Before with space</option>
+                                    <option value="before-nospace">Before no space</option>
+                                    <option value="after-space">After with space</option>
+                                    <option value="after-nospace">After no space</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Phone Format -->
+                        <div id="phoneFormatOptions" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Format</span>
+                                <select class="property-input-small" id="propPhoneFormat">
+                                    <option value="(XXX) XXX-XXXX">(XXX) XXX-XXXX</option>
+                                    <option value="XXX-XXX-XXXX">XXX-XXX-XXXX</option>
+                                    <option value="XXX.XXX.XXXX">XXX.XXX.XXXX</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Number Format -->
+                        <div id="numberFormatOptions" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Decimals</span>
+                                <input type="number" class="property-input-small" id="propNumberDecimals" value="0" min="0" max="6" style="width: 55px; margin-right: 5px;">
+                                <select class="property-input-small" id="propThousandSep" style="width: 60px;">
+                                    <option value=",">1,000</option>
+                                    <option value=".">1.000</option>
+                                    <option value=" ">1 000</option>
+                                    <option value="">1000</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- ZIP Format -->
+                        <div id="zipFormatOptions" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Zip Format</span>
+                                <select class="property-input-small" id="propZipFormat">
+                                    <option value="XXXXX">5-digit</option>
+                                    <option value="XXXXX-XXXX">ZIP+4</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Apply Format Button -->
+                        <button class="action-btn btn-secondary" id="btnApplyFormat" style="width: 100%; margin-top: 6px; padding: 5px; font-size: 11px; border-color: rgba(33,150,243,0.5); color: #2196f3;">
+                            ✓ Apply to Selected Field
+                        </button>
+                    </div>
+                    
+                    <!-- Checkbox Styling -->
+                    <div class="property-section" id="checkboxStyling" style="display: none;">
+                        <div class="section-title">Checkbox Options</div>
+                        <div class="property-row">
+                            <span class="property-label">Mark Style</span>
+                            <select class="property-input-small" id="propCheckboxStyle">
+                                <option value="check">✓ Check</option>
+                                <option value="circle">● Circle</option>
+                                <option value="cross">✗ Cross</option>
+                                <option value="square">■ Square</option>
+                                <option value="diamond">◆ Diamond</option>
+                                <option value="star">★ Star</option>
+                            </select>
+                        </div>
+                        <div class="property-group" style="margin-top: 8px;">
+                            <div class="property-label" style="font-size: 11px;">Export Value <span style="font-size: 10px; color: var(--text-secondary); font-weight: normal;">(for radio behavior)</span></div>
+                            <div style="display: flex; gap: 6px; margin-top: 4px;">
+                                <input type="text" class="property-input" id="propExportValue" placeholder="Yes" style="flex: 1;">
+                                <button class="action-btn btn-secondary" id="btnApplyExportValue" style="padding: 4px 10px; font-size: 11px;">Apply</button>
+                            </div>
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 4px;">Tip: Give multiple checkboxes the same name but different export values to make them act like a radio group (only one selectable, but can uncheck).</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown Options -->
+                    <div class="property-section" id="dropdownStyling" style="display: none;">
+                        <div class="section-title">Dropdown Options</div>
+                        <div style="padding: 0 10px;">
+                            <div class="option-editor-vertical" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                                <div class="option-editor-input-group">
+                                    <label class="property-label" style="margin-bottom: 2px; font-size: 10px; color: var(--text-secondary);">Item Name</label>
+                                    <input type="text" id="propDropdownItemName" class="property-input-small" style="width: 100%; height: 28px;" placeholder="e.g. Yes">
+                                </div>
+                                <div class="option-editor-input-group">
+                                    <label class="property-label" style="margin-bottom: 2px; font-size: 10px; color: var(--text-secondary);">Export Value</label>
+                                    <input type="text" id="propDropdownExportValue" class="property-input-small" style="width: 100%; height: 28px;" placeholder="Optional">
+                                </div>
+                                <button id="btnAddDropdownOption" class="action-btn btn-primary" style="width: 100%; height: 28px; font-size: 11px; padding: 0;">+ ADD ITEM</button>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                <div id="propDropdownList" class="option-list-container" style="flex: 1; height: 110px;">
+                                    <!-- Options will be listed here -->
+                                </div>
+                                <div class="option-actions">
+                                    <button id="btnDeleteDropdownOption" class="option-btn-small" style="padding: 4px 0;">Delete</button>
+                                    <button id="btnMoveUpDropdownOption" class="option-btn-small" style="padding: 4px 0;">Up</button>
+                                    <button id="btnMoveDownDropdownOption" class="option-btn-small" style="padding: 4px 0;">Down</button>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 15px;">
+                                <label class="property-checkbox" style="font-size: 11px;">
+                                    <input type="checkbox" id="propDropdownSort"> Sort items
+                                </label>
+                                <label class="property-checkbox" style="font-size: 11px;">
+                                    <input type="checkbox" id="propDropdownEditable"> Custom text
+                                </label>
+                                <label class="property-checkbox" style="font-size: 11px;">
+                                    <input type="checkbox" id="propDropdownSpellCheck" checked> Spell check
+                                </label>
+                                <label class="property-checkbox" style="font-size: 11px;">
+                                    <input type="checkbox" id="propDropdownCommit"> Commit now
+                                </label>
+                            </div>
+
+                            <button id="btnApplyDropdownOptions" class="action-btn btn-primary" style="
+                                height: 32px;
+                                background: linear-gradient(135deg, #64ffda, #00d4aa);
+                                color: #0a192f;
+                                font-size: 11px;
+                                width: 100%;
+                            ">✓ SAVE ALL OPTIONS</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Multi Selection -->
+                <div id="multiSelection" style="display: none;">
+                    <div class="property-section">
+                        <div class="section-title">Selection</div>
+                        <div class="property-row">
+                            <span class="property-label">Count</span>
+                            <span class="property-value" id="selectedCount" style="font-size: 12px;">0</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Types</span>
+                            <span id="selectedTypes" style="font-size: 11px; color: var(--text-secondary);">-</span>
+                        </div>
+                    </div>
+                    <div class="field-list" id="selectedFieldList"></div>
+                    
+                    <!-- Batch Editing -->
+                    <div class="property-section" id="batchEditSection">
+                        <div class="section-title">Batch Edit</div>
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 10px;">
+                            Changes apply to all selected fields
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Font</span>
+                            <select class="property-input-small" id="batchFontFamily" style="width: 100px;">
+                                <option value="">—</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times-Roman">Times New Roman</option>
+                                <option value="Courier">Courier</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Font Size</span>
+                            <input type="number" class="property-input-small" id="batchFontSize" placeholder="—" min="6" max="24" style="width: 55px;">
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Align</span>
+                            <select class="property-input-small" id="batchTextAlign">
+                                <option value="">—</option>
+                                <option value="left">Left</option>
+                                <option value="center">Center</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Font Color</span>
+                            <button class="color-swatch-btn" id="btn_batchFontColor" data-target="batchFontColor" data-label="Font Color">
+                                <span class="color-swatch-preview" id="preview_batchFontColor" style="background: #000000;"></span>
+                                <span class="color-swatch-text" id="text_batchFontColor">#000000</span>
+                            </button>
+                            <input type="hidden" id="batchFontColor" value="#000000">
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Fill Color</span>
+                            <button class="color-swatch-btn" id="btn_batchFillColor" data-target="batchFillColor" data-label="Fill Color">
+                                <span class="color-swatch-preview" id="preview_batchFillColor" style="background: #EDF4FF;"></span>
+                                <span class="color-swatch-text" id="text_batchFillColor">#EDF4FF</span>
+                            </button>
+                            <input type="hidden" id="batchFillColor" value="#EDF4FF">
+                        </div>
+                        <!-- Batch Checkbox Style -->
+                        <div class="property-row" id="batchCheckboxStyleRow" style="display: none;">
+                            <span class="property-label">Mark Style</span>
+                            <select class="property-input-small" id="batchCheckboxStyle" style="width: 100px;">
+                                <option value="">— Use Current —</option>
+                                <option value="check">✓ Check</option>
+                                <option value="circle">● Circle</option>
+                                <option value="cross">✖ Cross</option>
+                                <option value="square">■ Square</option>
+                                <option value="diamond">◆ Diamond</option>
+                                <option value="star">★ Star</option>
+                            </select>
+                        </div>
+                        <!-- Batch Formatting (for text/dropdown fields) -->
+                        <div class="property-row" id="batchFormatRow" style="display: none;">
+                            <span class="property-label">Format As</span>
+                            <select class="property-input-small" id="batchFormat" style="width: 100px;">
+                                <option value="" selected>— No Change —</option>
+                                <option value="none">❌ None / Remove</option>
+                                <option value="date">📅 Date</option>
+                                <option value="currency">💵 Currency</option>
+                                <option value="phone">📞 Phone</option>
+                                <option value="number"># Number</option>
+                                <option value="zip">📮 ZIP Code</option>
+                            </select>
+                        </div>
+                        <!-- Sub-format options (shown based on format type selection) -->
+                        <div id="batchSubFormatRow" style="display: none;">
+                            <div class="property-row" id="batchDateFormatRow" style="display: none;">
+                                <span class="property-label">Date Format</span>
+                                <select class="property-input-small" id="batchDateFormat" style="width: 100px;">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="property-row" id="batchCurrencyRow" style="display: none;">
+                                <span class="property-label">Symbol</span>
+                                <select class="property-input-small" id="batchCurrencySymbol" style="width: 55px; margin-right: 5px;">
+                                    <option value="">None</option>
+                                    <option value="$">$</option>
+                                    <option value="€">€</option>
+                                    <option value="£">£</option>
+                                    <option value="¥">¥</option>
+                                    <option value="CHF">CHF</option>
+                                    <option value="kr">kr</option>
+                                    <option value="TL">TL</option>
+                                    <option value="R">R</option>
+                                    <option value="zł">zł</option>
+                                    <option value="R$">R$</option>
+                                    <option value="NT$">NT$</option>
+                                    <option value="₩">₩</option>
+                                    <option value="Kč">Kč</option>
+                                    <option value="Ft">Ft</option>
+                                    <option value="Lt">Lt</option>
+                                    <option value="Ls">Ls</option>
+                                    <option value="лв">лв</option>
+                                    <option value="lei">lei</option>
+                                    <option value="₫">₫</option>
+                                    <option value="руб">руб</option>
+                                    <option value="р.">р.</option>
+                                    <option value="kn">kn</option>
+                                </select>
+                                <span class="property-label" style="font-size: 12px; margin-right: 4px;">Dec</span>
+                                <input type="number" class="property-input-small" id="batchCurrencyDecimals" value="2" min="0" max="4" style="width: 40px;">
+                            </div>
+                            <div class="property-row" id="batchSymbolLocationRow" style="display: none;">
+                                <span class="property-label">Location</span>
+                                <select class="property-input-small" id="batchSymbolLocation" style="width: 140px;">
+                                    <option value="before-space">Before with space</option>
+                                    <option value="before-nospace">Before no space</option>
+                                    <option value="after-space">After with space</option>
+                                    <option value="after-nospace">After no space</option>
+                                </select>
+                            </div>
+                            <div class="property-row" id="batchPhoneRow" style="display: none;">
+                                <span class="property-label">Format</span>
+                                <select class="property-input-small" id="batchPhoneFormat" style="width: 110px;">
+                                    <option value="(XXX) XXX-XXXX">(XXX) XXX-XXXX</option>
+                                    <option value="XXX-XXX-XXXX">XXX-XXX-XXXX</option>
+                                </select>
+                            </div>
+                            <!-- Number Format Options -->
+                            <div class="property-row" id="batchNumberRow" style="display: none;">
+                                <span class="property-label">Decimals</span>
+                                <input type="number" class="property-input-small" id="batchNumberDecimals" value="0" min="0" max="6" style="width: 55px; margin-right: 5px;">
+                                <select class="property-input-small" id="batchThousandSep" style="width: 60px;">
+                                    <option value=",">1,000</option>
+                                    <option value=".">1.000</option>
+                                    <option value=" ">1 000</option>
+                                    <option value="">1000</option>
+                                </select>
+                            </div>
+                            <!-- Zip Format Options -->
+                            <div class="property-row" id="batchZipRow" style="display: none;">
+                                <span class="property-label">Zip Format</span>
+                                <select class="property-input-small" id="batchZipFormat" style="width: 100px;">
+                                    <option value="XXXXX">5-digit</option>
+                                    <option value="XXXXX-XXXX">ZIP+4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Batch Calculation Assignment -->
+                        <div class="property-row" id="batchCalcRow" style="display: none;">
+                            <span class="property-label">🧮 Calc</span>
+                            <select class="property-input-small" id="batchCalcType" style="width: 100px;">
+                                <option value="" selected>— No Calc —</option>
+                                <option value="SUM">➕ Sum</option>
+                                <option value="MULTIPLY">✖️ Multiply</option>
+                                <option value="SUBTRACT">➖ Subtract</option>
+                                <option value="DIVIDE">➗ Divide</option>
+                                <option value="AVERAGE">📊 Average</option>
+                                <option value="MIN">⬇️ Min</option>
+                                <option value="MAX">⬆️ Max</option>
+                                <option value="CONSTANT_MULTIPLY">🔢 × Constant</option>
+                            </select>
+                        </div>
+                        <div id="batchCalcConstantRow" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Multiply by</span>
+                                <input type="number" class="property-input-small" id="batchCalcConstant" placeholder="e.g. 35" step="any" style="width: 80px;">
+                            </div>
+                        </div>
+                        <div id="batchCalcSourceRow" style="display: none;">
+                            <div class="property-row">
+                                <span class="property-label">Sources</span>
+                                <select class="property-input-small" id="batchCalcSourceMode" style="width: 100px;">
+                                    <option value="other_selected">Other Selected</option>
+                                    <option value="same_row">Same-Row Fields</option>
+                                    <option value="pick_columns">Pick Columns</option>
+                                </select>
+                            </div>
+                            <div style="font-size: 10px; color: var(--text-secondary); padding: 2px 0 6px 0;">
+                                <span id="batchCalcSourceHint">Each field's sources = all other selected fields</span>
+                            </div>
+                            <div id="batchCalcColumnPicker" style="display: none; max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; padding: 6px; margin: 4px 0;">
+                                <!-- Dynamically populated with column checkboxes -->
+                            </div>
+                            <div class="property-row" style="gap: 4px;">
+                                <label style="font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
+                                    <input type="checkbox" id="batchCalcReadOnly" checked style="accent-color: var(--accent);"> Read-only
+                                </label>
+                                <span class="property-label" style="margin-left: auto;">Decimals</span>
+                                <input type="number" class="property-input-small" id="batchCalcDecimals" value="2" min="0" max="10" style="width: 45px;">
+                            </div>
+                            <button class="action-btn btn-secondary" id="btnApplyBatchCalc" style="width: 100%; margin-top: 6px; padding: 5px; font-size: 11px; border-color: rgba(76,175,80,0.5); color: #4caf50;">
+                                🧮 Apply Calculation to Selected
+                            </button>
+                        </div>
+
+                        <button class="action-btn btn-primary" id="btnApplyBatch" style="margin-top: 10px; width: 100%;">
+                            ✓ Apply to All Selected
+                        </button>
+                        <button class="action-btn btn-secondary" id="btnAutoNameBatch" style="margin-top: 8px; width: 100%;">
+                            ✨ Auto-Name All Selected
+                        </button>
+                    </div>
+                    
+                    <!-- Arrange Section -->
+                    <div class="property-section" id="arrangeSection">
+                        <div class="section-title">📐 Arrange</div>
+                        
+                        <!-- Align Buttons -->
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 6px;">Align</div>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <button class="arrange-btn" id="btnAlignLeft" title="Align Left">⬅️</button>
+                            <button class="arrange-btn" id="btnAlignCenterH" title="Align Center Horizontal">↔️</button>
+                            <button class="arrange-btn" id="btnAlignRight" title="Align Right">➡️</button>
+                            <button class="arrange-btn" id="btnAlignTop" title="Align Top">⬆️</button>
+                            <button class="arrange-btn" id="btnAlignCenterV" title="Align Center Vertical">↕️</button>
+                            <button class="arrange-btn" id="btnAlignBottom" title="Align Bottom">⬇️</button>
+                        </div>
+                        
+                        <!-- Match Size Buttons -->
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 6px;">Match Size</div>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <button class="arrange-btn-wide" id="btnMatchWidth">⟷ Width</button>
+                            <button class="arrange-btn-wide" id="btnMatchHeight">⟺ Height</button>
+                            <button class="arrange-btn-wide" id="btnMatchBoth">◻ Both</button>
+                        </div>
+                        
+                        <!-- Distribute Buttons -->
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 6px;">Distribute</div>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <button class="arrange-btn-wide" id="btnDistributeH">⋯ Horizontal</button>
+                            <button class="arrange-btn-wide" id="btnDistributeV">⋮ Vertical</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-actions" id="panelActions" style="display: none;">
+                <button class="action-btn btn-secondary" id="btnProperties">⚙️ Properties...</button>
+                <button class="action-btn btn-secondary" id="btnDuplicate">📋 Duplicate (⌘D)</button>
+                <button class="action-btn btn-primary" id="btnGroupRadio" style="display: none;">🔘 Create Radio Group</button>
+                <button class="action-btn btn-secondary" id="btnUngroupRadio" style="display: none;">☐ Ungroup to Checkboxes</button>
+                <button class="action-btn btn-danger" id="btnDeleteField">🗑️ Delete Selected</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="editor-footer">
+        <div class="footer-info">
+            <button class="chat-toggle-btn" id="chatToggleBtn" title="AI Assistant">
+                <span class="icon">💬</span>
+                <span id="chatBtnText">Need Help?</span>
+            </button>
+            <span id="fieldCount">0 fields</span>
+            <span id="changesMade" style="color: var(--warning); display: none;">● Unsaved changes</span>
+        </div>
+        <div class="footer-actions">
+            <button class="footer-btn btn-primary" id="btnSave" disabled>💾 Save Changes</button>
+            <button class="footer-btn btn-danger" id="btnExit">Exit</button>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+    
+    <!-- Version History Panel (non-blocking) -->
+    <div class="float-panel" id="historyModal" style="display: none; width: 500px;">
+        <div class="float-panel-header" id="historyPanelHeader">
+            <h2 class="modal-title">🕐 Version History</h2>
+            <button class="modal-close" onclick="closeHistoryModal()" title="Close">&times;</button>
+        </div>
+        <div class="float-panel-body">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="action-btn btn-primary" id="btnCreateSnapshot" style="flex: 1;">
+                    📸 Create Snapshot
+                </button>
+            </div>
+
+            <div class="modal-section-title" style="margin-bottom: 10px;">Saved Snapshots</div>
+            <div id="snapshotsList" style="max-height: 300px; overflow-y: auto;">
+                <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <div style="font-size: 36px; margin-bottom: 10px;">📷</div>
+                    <div>No snapshots yet</div>
+                    <div style="font-size: 12px; margin-top: 5px;">Create a snapshot to save the current state</div>
+                </div>
+            </div>
+        </div>
+        <div class="float-panel-footer">
+            <button class="action-btn btn-secondary" onclick="closeHistoryModal()">Close</button>
+        </div>
+    </div>
+
+    
+    <!-- Calculations Manager Modal -->
+    <!-- Calculations Manager — Floating Panel (non-blocking, draggable) -->
+    <div class="calc-panel" id="calcManagerPanel" style="display: none;">
+        <div class="calc-panel-header" id="calcPanelHeader">
+            <h2 class="modal-title" style="font-size: 14px; margin: 0;">🧮 Calculations Manager</h2>
+            <div style="display: flex; gap: 4px; align-items: center;">
+                <button class="modal-close" onclick="closeCalcManager()" title="Close">&times;</button>
+            </div>
+        </div>
+        <div class="calc-panel-body">
+            <!-- Auto-Detect Section -->
+            <div style="background: linear-gradient(135deg, #0f3460, #16213e); border: 1px solid #233554; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div style="font-weight: 600; color: var(--accent); font-size: 13px;">🪄 Auto-Detect Calculations</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Scans field names AND nearby PDF text for patterns</div>
+                    </div>
+                    <button class="action-btn btn-secondary" id="btnAutoDetectCalcs" style="padding: 6px 16px; font-size: 12px;">
+                        Scan Now
+                    </button>
+                </div>
+                <div id="autoDetectResults" style="display: none; margin-top: 12px;">
+                    <!-- Auto-detect suggestions will appear here -->
+                </div>
+            </div>
+
+            <!-- Existing Calculations Table -->
+            <div class="modal-section-title">Active Calculations</div>
+            <div style="margin-bottom: 8px;">
+                <input type="text" class="modal-input" id="calcManagerFilter" placeholder="🔍 Filter calculations..." style="font-size: 12px; padding: 6px 10px;">
+            </div>
+            <div id="calcManagerTable" style="border: 1px solid #233554; border-radius: 6px; overflow: hidden; display: flex;">
+                <!-- Scrollable data columns -->
+                <div id="calcDataScroll" style="flex: 1; overflow-x: auto; min-width: 0;">
+                    <table id="calcManagerTableEl" style="border-collapse: collapse; font-size: 12px; min-width: 600px; width: 100%;">
+                        <thead>
+                            <tr style="background: var(--bg-tertiary);">
+                                <th class="calc-col-resizable" data-col="0" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 45%; position: relative; white-space: nowrap;">Target Field<span class="calc-col-resizer"></span></th>
+                                <th class="calc-col-resizable" data-col="1" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 20%; position: relative; white-space: nowrap;">Type<span class="calc-col-resizer"></span></th>
+                                <th class="calc-col-resizable" data-col="2" style="text-align: left; padding: 8px 10px; color: var(--text-secondary); font-weight: 500; width: 35%; position: relative; white-space: nowrap;">Sources<span class="calc-col-resizer"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="calcManagerBody">
+                            <tr><td colspan="3" class="calc-empty-msg">No calculations configured yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Fixed actions column -->
+                <div id="calcActionsCol" style="flex-shrink: 0; border-left: 1px solid #233554; background: var(--bg-secondary);">
+                    <table style="border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: var(--bg-tertiary);">
+                                <th style="width: 64px; padding: 8px 10px; text-align: center; color: var(--text-secondary); font-weight: 500; white-space: nowrap;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calcActionsBody">
+                            <tr><td style="padding: 6px 10px;">&nbsp;</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Calculation Order -->
+            <div class="modal-section-title" style="margin-top: 16px;">Calculation Order</div>
+            <p class="modal-hint" style="margin-bottom: 8px;">Fields calculate in dependency order (auto-sorted).</p>
+            <div id="calcOrderList" style="border: 1px solid #233554; border-radius: 6px; background: var(--bg-primary); max-height: 200px; overflow-y: auto;">
+                <div class="calc-empty-msg">No calculations to order</div>
+            </div>
+        </div>
+        <div class="calc-panel-footer">
+            <button class="action-btn btn-secondary" onclick="closeCalcManager()">Close</button>
+        </div>
+    </div>
+
+    <!-- Properties Floating Panel (non-blocking) -->
+    <div class="prop-panel" id="propertiesModal" style="display: none;">
+            <div class="modal-header" id="propPanelHeader">
+                <h2 class="modal-title" id="modalTitle">📋 <span id="modalFieldName">Field Properties</span></h2>
+                <button class="modal-close" onclick="closePropertiesModal()" title="Close">&times;</button>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-tab="general">General</button>
+                <button class="modal-tab" data-tab="appearance">Appearance</button>
+                <button class="modal-tab" data-tab="position">Position</button>
+                <button class="modal-tab" data-tab="options">Options</button>
+                <button class="modal-tab" data-tab="format">Format</button>
+                <button class="modal-tab" data-tab="calculate">🧮 Calculate</button>
+                <button class="modal-tab" data-tab="actions">Actions</button>
+            </div>
+            
+            <div class="modal-content">
+                <!-- General Tab -->
+                <div class="modal-tab-content active" id="tab-general">
+                    <div class="modal-form-group">
+                        <label class="modal-label">Name</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" class="modal-input" id="modalPropName" style="flex: 1;">
+                            <button id="btnAutoNameModal" title="✨ Auto-Name" class="btn-secondary" style="padding: 0 10px;">✨ Auto Name</button>
+                        </div>
+                    </div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Type</label>
+                            <input type="text" class="modal-input" id="modalPropType" readonly style="background: var(--bg-primary); cursor: default;">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Page</label>
+                            <input type="text" class="modal-input" id="modalPropPage" readonly style="background: var(--bg-primary); cursor: default;">
+                        </div>
+                    </div>
+                    <div class="modal-form-group">
+                        <label class="modal-label">Tooltip (hover help text)</label>
+                        <input type="text" class="modal-input" id="modalPropTooltip" placeholder="Help text shown on hover">
+                    </div>
+                    <!-- v1.1.0: Radio group name (shown only when type = radio) -->
+                    <div class="modal-form-group" id="modalPropRadioGroupRow" style="display:none;">
+                        <label class="modal-label">🔘 Radio Group Name</label>
+                        <input type="text" class="modal-input" id="modalPropRadioGroup"
+                               placeholder="Shared name for all buttons in this group">
+                        <div style="font-size:10px; color:var(--text-secondary); margin-top:3px;">
+                            Renaming here updates <strong>all</strong> buttons in the group.
+                        </div>
+                    </div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Visibility</label>
+                            <select class="modal-select" id="modalPropVisibility">
+                                <option value="visible">Visible</option>
+                                <option value="hidden">Hidden</option>
+                            </select>
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Orientation</label>
+                            <select class="modal-select" id="modalPropOrientation">
+                                <option value="0">0°</option>
+                                <option value="90">90°</option>
+                                <option value="180">180°</option>
+                                <option value="270">270°</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-checkbox-group">
+                        <label class="modal-checkbox"><input type="checkbox" id="modalPropReadOnly"> Read Only</label>
+                        <label class="modal-checkbox"><input type="checkbox" id="modalPropRequired"> Required</label>
+                        <label class="modal-checkbox"><input type="checkbox" id="modalPropLocked"> Locked (editor only)</label>
+                    </div>
+                </div>
+                
+                <!-- Appearance Tab -->
+                <div class="modal-tab-content" id="tab-appearance">
+                    <div class="modal-section-title">Borders and Colors</div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Border Color</label>
+                            <button class="color-swatch-btn" id="btn_modalPropBorderColor" data-target="modalPropBorderColor" data-label="Border Color">
+                                <span class="color-swatch-preview" id="preview_modalPropBorderColor" style="background: #000000;"></span>
+                                <span class="color-swatch-text" id="text_modalPropBorderColor">#000000</span>
+                            </button>
+                            <input type="hidden" id="modalPropBorderColor" value="#000000">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Fill Color</label>
+                            <button class="color-swatch-btn" id="btn_modalPropFillColor" data-target="modalPropFillColor" data-label="Fill Color">
+                                <span class="color-swatch-preview" id="preview_modalPropFillColor" style="background: #FFFFFF;"></span>
+                                <span class="color-swatch-text" id="text_modalPropFillColor">#FFFFFF</span>
+                            </button>
+                            <input type="hidden" id="modalPropFillColor" value="#FFFFFF">
+                        </div>
+                    </div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Line Thickness</label>
+                            <select class="modal-select" id="modalPropLineThickness">
+                                <option value="0">None</option>
+                                <option value="1" selected>Thin</option>
+                                <option value="2">Medium</option>
+                                <option value="3">Thick</option>
+                            </select>
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Line Style</label>
+                            <select class="modal-select" id="modalPropLineStyle">
+                                <option value="solid">Solid</option>
+                                <option value="dashed">Dashed</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-section-title" style="margin-top: 16px;">Text</div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Font Size</label>
+                            <input type="number" class="modal-input" id="modalPropFontSize" value="9" min="6" max="72">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Text Color</label>
+                            <button class="color-swatch-btn" id="btn_modalPropTextColor" data-target="modalPropTextColor" data-label="Text Color">
+                                <span class="color-swatch-preview" id="preview_modalPropTextColor" style="background: #000000;"></span>
+                                <span class="color-swatch-text" id="text_modalPropTextColor">#000000</span>
+                            </button>
+                            <input type="hidden" id="modalPropTextColor" value="#000000">
+                        </div>
+                    </div>
+                    <div class="modal-form-group">
+                        <label class="modal-label">Font</label>
+                        <select class="modal-select" id="modalPropFont">
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Courier">Courier</option>
+                            <option value="Times-Roman">Times Roman</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Position Tab -->
+                <div class="modal-tab-content" id="tab-position">
+                    <div class="modal-form-group">
+                        <label class="modal-label">Units</label>
+                        <select class="modal-select" id="modalPropUnits" style="width: 120px;">
+                            <option value="pt">Points</option>
+                            <option value="in">Inches</option>
+                            <option value="mm">Millimeters</option>
+                        </select>
+                    </div>
+                    <div class="modal-section-title" style="margin-top: 12px;">Position</div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Left</label>
+                            <input type="number" class="modal-input" id="modalPropLeft" step="0.01">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Right</label>
+                            <input type="number" class="modal-input" id="modalPropRight" step="0.01">
+                        </div>
+                    </div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Top</label>
+                            <input type="number" class="modal-input" id="modalPropTop" step="0.01">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Bottom</label>
+                            <input type="number" class="modal-input" id="modalPropBottom" step="0.01">
+                        </div>
+                    </div>
+                    <div class="modal-form-row">
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Width</label>
+                            <input type="number" class="modal-input" id="modalPropWidth" step="0.01">
+                        </div>
+                        <div class="modal-form-group half">
+                            <label class="modal-label">Height</label>
+                            <input type="number" class="modal-input" id="modalPropHeight" step="0.01">
+                        </div>
+                    </div>
+                    <div class="modal-checkbox-group" style="margin-top: 15px;">
+                        <label class="modal-checkbox"><input type="checkbox" id="modalPropNoResize"> Do not change height and width when changing the position</label>
+                        <label class="modal-checkbox"><input type="checkbox" id="modalPropPositionLocked"> Locked</label>
+                    </div>
+                </div>
+                
+                <!-- Options Tab -->
+                <div class="modal-tab-content" id="tab-options">
+                    <div class="modal-form-group">
+                        <label class="modal-label">Alignment</label>
+                        <select class="modal-select" id="modalPropAlignment">
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+
+                    <!-- Dropdown Specific Options -->
+                    <div id="modalDropdownOptionsGroup" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; margin-top: 15px;">
+                        <div class="modal-section-title">Dropdown Options</div>
+                        
+                        <div class="option-editor-row" style="margin-bottom: 15px;">
+                            <div class="option-editor-input-group">
+                                <label class="modal-label">Item Name</label>
+                                <input type="text" id="modalPropDropdownItemName" class="modal-input" placeholder="e.g. Yes">
+                            </div>
+                            <div class="option-editor-input-group">
+                                <label class="modal-label">Export Value</label>
+                                <input type="text" id="modalPropDropdownExportValue" class="modal-input" placeholder="e.g. 1">
+                            </div>
+                            <button id="modalBtnAddDropdownOption" class="modal-btn modal-btn-secondary" style="height: 38px; padding: 0 15px;">Add</button>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                            <div id="modalPropDropdownList" class="option-list-container" style="flex: 1; height: 150px; background: rgba(0,0,0,0.3);">
+                                <!-- Options will be listed here -->
+                            </div>
+                            <div class="option-actions" style="width: 80px;">
+                                <button id="modalBtnDeleteDropdownOption" class="option-btn-small" style="padding: 8px; margin-bottom: 4px;">Delete</button>
+                                <button id="modalBtnMoveUpDropdownOption" class="option-btn-small" style="padding: 8px; margin-bottom: 4px;">Up</button>
+                                <button id="modalBtnMoveDownDropdownOption" class="option-btn-small" style="padding: 8px;">Down</button>
+                            </div>
+                        </div>
+
+                        <div class="modal-checkbox-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropDropdownSort"> Sort items</label>
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropDropdownEditable"> Allow custom text</label>
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropDropdownSpellCheck"> Check spelling</label>
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropDropdownCommit"> Commit immediately</label>
+                        </div>
+                    </div>
+
+                    <div id="modalPropCheckboxStyleGroup" style="display: none;">
+                        <label class="modal-label">Checkbox Style</label>
+                        <select class="modal-select" id="modalPropCheckboxStyle">
+                            <option value="check">Checkmark (✓)</option>
+                            <option value="circle">Circle (●)</option>
+                            <option value="cross">Cross (✖)</option>
+                            <option value="square">Square (■)</option>
+                            <option value="diamond">Diamond (◆)</option>
+                            <option value="star">Star (★)</option>
+                        </select>
+                    </div>
+                    
+                    <div id="modalPropTextOptionsGroup">
+                        <div class="modal-form-group">
+                            <label class="modal-label">Default Value</label>
+                            <input type="text" class="modal-input" id="modalPropDefaultValue" placeholder="Pre-filled text">
+                        </div>
+                        <div class="modal-checkbox-group">
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropMultiline"> Multi-line</label>
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropScrollText"> Scroll long text</label>
+                            <label class="modal-checkbox"><input type="checkbox" id="modalPropPassword"> Password field</label>
+                        </div>
+                        <div class="modal-form-row" style="margin-top: 12px;">
+                            <div class="modal-form-group half">
+                                <label class="modal-label">Character Limit</label>
+                                <input type="number" class="modal-input" id="modalPropMaxLen" min="0" placeholder="0 = no limit">
+                            </div>
+                            <div class="modal-form-group half">
+                                <label class="modal-checkbox" style="margin-top: 24px;"><input type="checkbox" id="modalPropComb"> Comb of characters</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Format Tab -->
+                <div class="modal-tab-content" id="tab-format">
+                    <div class="modal-form-group">
+                        <label class="modal-label">Format Category</label>
+                        <select class="modal-select" id="modalFormatCategory">
+                            <option value="none">None</option>
+                            <option value="number">Number</option>
+                            <option value="currency">Currency</option>
+                            <option value="date">Date</option>
+                            <option value="phone">Phone</option>
+                            <option value="zip">ZIP Code</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Number Format Options -->
+                    <div id="modalFormatNumber" class="format-options" style="display: none;">
+                        <div class="modal-form-row">
+                            <div class="modal-form-group half">
+                                <label class="modal-label">Decimal Places</label>
+                                <input type="number" class="modal-input" id="modalNumberDecimals" value="2" min="0" max="10">
+                            </div>
+                            <div class="modal-form-group half">
+                                <label class="modal-label">Separator</label>
+                                <select class="modal-select" id="modalNumberSeparator">
+                                    <option value=",">1,234.56</option>
+                                    <option value=".">1.234,56</option>
+                                    <option value=" ">1 234.56</option>
+                                    <option value="">1234.56</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Currency Format Options -->
+                    <div id="modalFormatCurrency" class="format-options" style="display: none;">
+                        <div class="modal-form-row">
+                            <div class="modal-form-group half">
+                                <label class="modal-label">Symbol</label>
+                                <select class="modal-select" id="modalCurrencySymbol">
+                                    <option value="">None</option>
+                                    <option value="$">$ Dollar</option>
+                                    <option value="€">€ Euro</option>
+                                    <option value="£">£ Pound</option>
+                                    <option value="¥">¥ Yen/Yuan</option>
+                                    <option value="CHF">CHF Franc</option>
+                                    <option value="kr">kr Krone/Krona</option>
+                                    <option value="TL">TL Lira</option>
+                                    <option value="R">R Rand</option>
+                                    <option value="zł">zł Zloty</option>
+                                    <option value="R$">R$ Real</option>
+                                    <option value="NT$">NT$ Dollar</option>
+                                    <option value="₩">₩ Won</option>
+                                    <option value="Kč">Kč Koruna</option>
+                                    <option value="Ft">Ft Forint</option>
+                                    <option value="Lt">Lt Litas</option>
+                                    <option value="Ls">Ls Lats</option>
+                                    <option value="лв">лв Lev</option>
+                                    <option value="lei">lei Leu</option>
+                                    <option value="₫">₫ Dong</option>
+                                    <option value="руб">руб Ruble</option>
+                                    <option value="р.">р. Ruble</option>
+                                    <option value="kn">kn Kuna</option>
+                                </select>
+                            </div>
+                            <div class="modal-form-group half">
+                                <label class="modal-label">Decimals</label>
+                                <input type="number" class="modal-input" id="modalCurrencyDecimals" value="2" min="0" max="4">
+                            </div>
+                        </div>
+                        <div class="modal-form-group">
+                            <label class="modal-label">Symbol Location</label>
+                            <select class="modal-select" id="modalSymbolLocation">
+                                <option value="before-space">Before with space</option>
+                                <option value="before-nospace">Before no space</option>
+                                <option value="after-space">After with space</option>
+                                <option value="after-nospace">After no space</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Date Format Options -->
+                    <div id="modalFormatDate" class="format-options" style="display: none;">
+                        <div class="modal-form-group">
+                            <label class="modal-label">Date Format</label>
+                            <select class="modal-select" id="modalDateFormat">
+                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone Format Options -->
+                    <div id="modalFormatPhone" class="format-options" style="display: none;">
+                        <div class="modal-form-group">
+                            <label class="modal-label">Phone Format</label>
+                            <select class="modal-select" id="modalPhoneFormat">
+                                <option value="(XXX) XXX-XXXX">(XXX) XXX-XXXX</option>
+                                <option value="XXX-XXX-XXXX">XXX-XXX-XXXX</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- ZIP Format Options -->
+                    <div id="modalFormatZip" class="format-options" style="display: none;">
+                        <div class="modal-form-group">
+                            <label class="modal-label">ZIP Code Format</label>
+                            <select class="modal-select" id="modalZipFormat">
+                                <option value="XXXXX">5-digit (XXXXX)</option>
+                                <option value="XXXXX-XXXX">ZIP+4 (XXXXX-XXXX)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calculate Tab -->
+                <div class="modal-tab-content" id="tab-calculate">
+                    <p class="modal-hint">
+                        Set up automatic calculations for this field. The result will update whenever source fields change.
+                    </p>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">Calculation Type</label>
+                        <select class="modal-select" id="modalCalcType">
+                            <option value="">None</option>
+                            <option value="SUM">➕ Sum (add fields together)</option>
+                            <option value="SUBTRACT">➖ Subtract (first minus others)</option>
+                            <option value="MULTIPLY">✖️ Multiply (fields together)</option>
+                            <option value="DIVIDE">➗ Divide (first by others)</option>
+                            <option value="AVERAGE">📊 Average</option>
+                            <option value="MIN">⬇️ Minimum</option>
+                            <option value="MAX">⬆️ Maximum</option>
+                            <option value="PRODUCT">✖️ Product (all multiplied)</option>
+                            <option value="CONSTANT_MULTIPLY">🔢 × Constant (field × fixed number)</option>
+                            <option value="CUSTOM">🔧 Custom Formula</option>
+                            <option value="CUSTOM_SCRIPT">💻 Custom Script (Advanced)</option>
+                        </select>
+                    </div>
+
+                    <!-- Source Fields Section -->
+                    <div id="calcSourceSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Source Fields</div>
+                        <div class="modal-form-group">
+                            <div style="position: relative;">
+                                <input type="text" class="modal-input" id="calcFieldSearch" placeholder="🔍 Search fields to add..." autocomplete="off">
+                                <div id="calcFieldSearchResults" class="calc-search-results" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div id="calcSourceList" class="calc-source-list">
+                            <!-- Source field items added dynamically -->
+                        </div>
+                        <button class="action-btn btn-tertiary" id="btnAddCanvasSelection" style="width: 100%; margin-top: 6px; padding: 6px; font-size: 11px;">
+                            + Add Selected Fields from Canvas
+                        </button>
+                        <button class="action-btn btn-primary" id="btnPickFromCanvas" style="width: 100%; margin-top: 4px; padding: 8px; font-size: 12px;">
+                            🎯 Click Fields on Canvas to Add
+                        </button>
+                    </div>
+
+                    <!-- Constant Multiplier Section -->
+                    <div id="calcConstantSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Constant Multiplier</div>
+                        <div class="modal-form-group">
+                            <label class="modal-label">Multiply each source field's value by:</label>
+                            <input type="number" class="modal-input" id="calcConstantValue" placeholder="e.g. 35" step="any" style="font-family: monospace; width: 120px;">
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary); padding: 2px 0;">
+                            Result = constant × source field(s)
+                        </div>
+                    </div>
+
+                    <!-- Custom Formula Section -->
+                    <div id="calcCustomSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Custom Formula</div>
+                        <div class="modal-form-group">
+                            <label class="modal-label">Formula (use letters A, B, C... for source fields)</label>
+                            <input type="text" class="modal-input" id="calcCustomFormula" placeholder="e.g. A * B / 1000" style="font-family: monospace;">
+                        </div>
+                        <div id="calcFormulaLegend" class="calc-formula-legend">
+                            <!-- A = FieldName, B = FieldName... populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Custom Script Section -->
+                    <div id="calcCustomScriptSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Custom Script</div>
+                        <div class="modal-form-group">
+                            <label class="modal-label">Raw JavaScript (assign to event.value)</label>
+                            <textarea class="modal-input" id="calcCustomScriptCode" style="height: 120px; font-family: monospace; font-size: 11px; resize: vertical;" placeholder="var A = Number(this.getField('FieldA').value);&#10;if (A > 10) event.value = A;&#10;else event.value = 0;"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div id="calcOptionsSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Options</div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <label class="modal-checkbox" style="margin: 0;">
+                                <input type="checkbox" id="calcRoundResult"> Round result
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <label class="modal-label" style="margin: 0; white-space: nowrap;">Decimals</label>
+                                <input type="number" class="modal-input" id="calcDecimals" value="2" min="0" max="10" style="width: 60px;">
+                            </div>
+                        </div>
+                        <label class="modal-checkbox" style="margin-top: 4px;">
+                            <input type="checkbox" id="calcReadOnly" checked> Make read-only (prevent manual entry)
+                        </label>
+                    </div>
+
+                    <!-- Live Preview -->
+                    <div id="calcPreviewSection" style="display: none;">
+                        <div class="modal-section-title" style="margin-top: 12px;">Live Test</div>
+                        <div class="calc-preview-box">
+                            <div id="calcFormulaPreview" class="calc-formula-preview">
+                                <!-- Human-readable formula -->
+                            </div>
+                            <div id="calcTestInputs" class="calc-test-inputs">
+                                <!-- Test value inputs for each source field -->
+                            </div>
+                            <div class="calc-test-result">
+                                <span style="color: var(--text-secondary);">Result:</span>
+                                <span id="calcTestResult" style="font-weight: 700; font-size: 16px; color: var(--accent);">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remove Calculation -->
+                    <div id="calcRemoveSection" style="display: none; margin-top: 8px;">
+                        <button class="action-btn btn-tertiary" id="btnRemoveCalc" style="width: 100%; border: 1px solid var(--danger); color: var(--danger); font-size: 11px; padding: 6px;">
+                            🗑 Remove Calculation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Actions Tab -->
+                <div class="modal-tab-content" id="tab-actions">
+                    <div class="modal-section-title">JavaScript Actions</div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">
+                        Add JavaScript code to execute on field events. Leave blank for no action.
+                    </p>
+                    
+                    <div class="modal-form-group">
+                        <label class="modal-label">Select Trigger</label>
+                        <select class="modal-select" id="modalActionTrigger">
+                            <option value="mouseUp">Mouse Up</option>
+                            <option value="mouseDown">Mouse Down</option>
+                            <option value="mouseEnter">Mouse Enter</option>
+                            <option value="mouseExit">Mouse Exit</option>
+                            <option value="onFocus">On Focus</option>
+                            <option value="onBlur">On Blur</option>
+                            <option value="keystroke">Keystroke</option>
+                            <option value="format">Format</option>
+                            <option value="validate">Validate</option>
+                            <option value="calculate">Calculate</option>
+                        </select>
+                    </div>
+                    
+                    <div class="modal-form-group">
+                        <label class="modal-label">JavaScript Code</label>
+                        <textarea class="modal-input" id="modalActionScript" style="height: 120px; font-family: monospace; font-size: 11px; resize: vertical;" placeholder="// Example: app.alert('Hello!');"></textarea>
+                    </div>
+                    
+                    <button class="modal-btn modal-btn-secondary" onclick="addActionToField()" style="margin-bottom: 12px;">
+                        + Add Action
+                    </button>
+                    
+                    <div class="modal-section-title">Current Actions</div>
+                    <div id="modalActionsList" style="max-height: 150px; overflow-y: auto; background: var(--bg-tertiary); border-radius: 6px; padding: 8px;">
+                        <p style="font-size: 11px; color: var(--text-secondary);">No actions defined</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closePropertiesModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="savePropertiesModal()">Save</button>
+            </div>
+    </div> <!-- close prop-panel -->
+
+    <!-- AI Chat Panel -->
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <span>🤖</span>
+                <span>AI Assistant</span>
+            </div>
+            <button class="chat-close-btn" id="chatCloseBtn" title="Close">✕</button>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- API Key Setup (shown when no key) -->
+            <div class="api-key-setup" id="apiKeySetup">
+                <h3>🔑 Quick Setup (30 seconds)</h3>
+                <div style="text-align: left; font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
+                    <p style="margin-bottom: 8px;"><strong>Step 1:</strong> <a href="https://aistudio.google.com/apikey" target="_blank" style="color: #667eea;">Click here to get a free API key →</a></p>
+                    <p style="margin-bottom: 8px;"><strong>Step 2:</strong> Sign in with your Google account</p>
+                    <p style="margin-bottom: 8px;"><strong>Step 3:</strong> Click "Create API key" button</p>
+                    <p><strong>Step 4:</strong> Copy the key and paste it below</p>
+                </div>
+                <input type="password" class="api-key-input" id="apiKeyInput" placeholder="Paste your API key here...">
+                <button class="api-key-save-btn" id="apiKeySaveBtn">✓ Save & Connect</button>
+                <p style="font-size: 10px; color: var(--text-secondary); margin-top: 10px;">Your key is stored locally and never shared.</p>
+            </div>
+            
+            <!-- Welcome message (shown after key is set) -->
+            <div class="chat-message system" id="chatWelcome" style="display: none;">
+                👋 Hi! I'm your AI assistant. I can help you troubleshoot PDF fields, explain features, and answer questions. Ask me anything!
+            </div>
+        </div>
+        
+        <div class="chat-input-area" id="chatInputArea" style="display: none;">
+            <textarea class="chat-input" id="chatInput" placeholder="Ask about your PDF fields..." rows="1"></textarea>
+            <button class="chat-send-btn" id="chatSendBtn">➤</button>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+    
+    <!-- Custom Color Picker Popup (hidden by default) -->
+    <div id="colorPickerPopup" class="color-picker-popup" style="display: none;">
+        <div class="color-picker-header">
+            <span class="color-picker-title" id="colorPickerLabel">Select Color</span>
+            <button class="color-picker-close" id="colorPickerClose">✕</button>
+        </div>
+        
+        <div class="color-picker-tabs">
+            <button class="color-picker-tab active" data-mode="rgb">RGB</button>
+            <button class="color-picker-tab" data-mode="cmyk">CMYK</button>
+            <button class="color-picker-tab" data-mode="gray">Gray</button>
+        </div>
+        
+        <!-- RGB Mode -->
+        <div class="color-picker-content" id="colorModeRGB">
+            <div class="color-slider-row">
+                <span class="color-slider-label">R</span>
+                <input type="range" class="color-slider" id="cpSliderR" min="0" max="255" value="0" style="background: linear-gradient(to right, #000, #f00);">
+                <span class="color-slider-value" id="cpValueR">0</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">G</span>
+                <input type="range" class="color-slider" id="cpSliderG" min="0" max="255" value="0" style="background: linear-gradient(to right, #000, #0f0);">
+                <span class="color-slider-value" id="cpValueG">0</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">B</span>
+                <input type="range" class="color-slider" id="cpSliderB" min="0" max="255" value="0" style="background: linear-gradient(to right, #000, #00f);">
+                <span class="color-slider-value" id="cpValueB">0</span>
+            </div>
+        </div>
+        
+        <!-- CMYK Mode -->
+        <div class="color-picker-content" id="colorModeCMYK" style="display: none;">
+            <div class="color-slider-row">
+                <span class="color-slider-label">C</span>
+                <input type="range" class="color-slider" id="cpSliderC" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #0ff);">
+                <span class="color-slider-value" id="cpValueC">0%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">M</span>
+                <input type="range" class="color-slider" id="cpSliderM" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #f0f);">
+                <span class="color-slider-value" id="cpValueM">0%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">Y</span>
+                <input type="range" class="color-slider" id="cpSliderY" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #ff0);">
+                <span class="color-slider-value" id="cpValueY">0%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">K</span>
+                <input type="range" class="color-slider" id="cpSliderK" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #000);">
+                <span class="color-slider-value" id="cpValueK">0%</span>
+            </div>
+        </div>
+        
+        <!-- Grayscale Mode -->
+        <div class="color-picker-content" id="colorModeGray" style="display: none;">
+            <div class="color-slider-row">
+                <span class="color-slider-label" style="width: 50px;">Gray</span>
+                <input type="range" class="color-slider" id="cpSliderGray" min="0" max="100" value="0" style="background: linear-gradient(to right, #000, #fff);">
+                <span class="color-slider-value" id="cpValueGray">0%</span>
+            </div>
+        </div>
+        
+        <!-- Opacity & Transparent -->
+        <div class="color-slider-row" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #233554; display: flex; align-items: center; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-right: 4px;">
+                <input type="checkbox" id="cpTransparent" style="accent-color: var(--danger);">
+                <span style="font-size: 11px; color: #a0a0a0;">Transparent</span>
+            </label>
+            <div style="width: 1px; height: 16px; background: #233554; margin: 0 4px;"></div>
+            <span class="color-slider-label" style="width: auto;">Alpha</span>
+            <input type="range" class="color-slider" id="cpSliderA" min="0" max="100" value="100" style="background: linear-gradient(to right, transparent, #fff); flex: 1; min-width: 0;">
+            <span class="color-slider-value" id="cpValueA" style="width: 35px; text-align: right;">100%</span>
+        </div>
+        
+        <!-- Preview and Hex -->
+        <div class="color-preview-row">
+            <div class="color-preview-swatch">
+                <div class="color-preview-color" id="cpPreview" style="background: rgba(0, 0, 0, 1);"></div>
+            </div>
+            <input type="text" class="color-hex-input" id="cpHexInput" value="#000000" placeholder="#RRGGBB">
+        </div>
+        
+        <button class="color-picker-apply" id="cpApply">Apply Color</button>
+    </div>
+    
+    <script src="editor.js"></script>
+</body>
+</html>
