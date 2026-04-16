@@ -1,0 +1,172 @@
+{
+  "name": "fill-that-pdf",
+  "productName": "Fill That PDF!",
+  "isPro": true,
+  "version": "1.1.2",
+  "description": "Create fillable PDFs and test fill them with dummy data",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FillThatPDF/FillThatPDF-releases-pro.git"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:dmg": "electron-builder --mac dmg",
+    "build:standard": "node build.js standard",
+    "build:pro": "node build.js pro",
+    "build:demo": "node build.js demo",
+    "build:win:pro": "node build.js pro --platform win",
+    "build:win:standard": "node build.js standard --platform win",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "PDF Tools",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/notarize": "^3.1.1",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "electron-store": "^7.0.3",
+    "electron-updater": "^6.1.7",
+    "pdf-lib": "^1.17.1"
+  },
+  "build": {
+    "appId": "com.fillthatpdf.standard",
+    "productName": "Fill That PDF!",
+    "afterPack": "scripts/fix-framework-signing.js",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "identity": "E8934069A73A7841583014D9461E31188D2358CB",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "notarize": {
+        "teamId": "9VRW78GQHM"
+      }
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Fill That PDF!"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "FillThatPDF",
+      "repo": "FillThatPDF-releases-standard"
+    },
+    "dmg": {
+      "title": "Fill That PDF!",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "icon": "assets/icon.png",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "files": [
+      "*.js",
+      "*.json",
+      "*.html",
+      "*.css",
+      "assets/**/*",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp}",
+      "!**/._*",
+      "!**/.DS_Store"
+    ],
+    "extraResources": [
+      {
+        "from": "python_dist/dist_arm64",
+        "to": "python_dist/dist_arm64"
+      },
+      {
+        "from": "python_dist/dist_x64",
+        "to": "python_dist/dist_x64"
+      },
+      {
+        "from": "python_dist/dist_win",
+        "to": "python_dist/dist_win"
+      },
+      {
+        "from": "python_dist/smart_fillable_v24.py",
+        "to": "smart_fillable_v24.py"
+      },
+      {
+        "from": "python_dist/fillable_engine",
+        "to": "fillable_engine",
+        "filter": [
+          "**/*.py"
+        ]
+      },
+      {
+        "from": "python_dist/smart_fillable_v23.py",
+        "to": "smart_fillable_v23.py"
+      },
+      {
+        "from": "python_dist/fill_pdf_v3.py",
+        "to": "fill_pdf_v3.py"
+      },
+      {
+        "from": "python_dist/extract_fields.py",
+        "to": "extract_fields.py"
+      },
+      {
+        "from": "python_dist/modify_fields.py",
+        "to": "modify_fields.py"
+      },
+      {
+        "from": "python_dist/apply_acroform_fix.py",
+        "to": "apply_acroform_fix.py"
+      },
+      {
+        "from": "python_dist/fix_checkbox_appearances.py",
+        "to": "fix_checkbox_appearances.py"
+      },
+      {
+        "from": "python_dist/auto_name_field.py",
+        "to": "auto_name_field.py"
+      },
+      {
+        "from": "python_dist/auto_rename_all.py",
+        "to": "auto_rename_all.py"
+      },
+      {
+        "from": "python_dist/garbage_field_cleanup.py",
+        "to": "garbage_field_cleanup.py"
+      }
+    ],
+    "asar": true
+  }
+}
