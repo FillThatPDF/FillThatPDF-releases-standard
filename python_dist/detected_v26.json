@@ -1,0 +1,22 @@
+[
+  {
+    "page": 13,
+    "x0": 306.0,
+    "y0": 747.9936,
+    "x1": 412.345,
+    "y1": 757.9936,
+    "type": "underline",
+    "score": 0.9,
+    "source": "enhanced_line"
+  },
+  {
+    "page": 14,
+    "x0": 35.82,
+    "y0": 82.25,
+    "x1": 576.2510000000001,
+    "y1": 92.25,
+    "type": "underline",
+    "score": 0.9,
+    "source": "enhanced_line"
+  }
+]
