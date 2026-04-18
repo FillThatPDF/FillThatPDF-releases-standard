@@ -1,0 +1,189 @@
+name: Build Windows Installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Build variant'
+        required: true
+        default: 'pro'
+        type: choice
+        options:
+          - pro
+          - standard
+          - demo
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      # ── 1. Checkout ──
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ──
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # ── 3. Setup Python 3.11 ──
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # ── 4. Install Python dependencies ──
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller==6.11.1
+          pip install pikepdf pdfplumber pypdfium2 Pillow numpy lxml psutil cryptography cffi pdf2image
+
+      # ── 5. Build all PyInstaller binaries ──
+      - name: Build PyInstaller binaries
+        working-directory: python_dist
+        env:
+          PYTHONPATH: .
+        shell: cmd
+        run: |
+          mkdir dist_win
+
+          echo === Building --onefile binaries ===
+
+          echo --- extract_fields ---
+          pyinstaller --clean --noconfirm extract_fields.spec
+          copy /Y dist\extract_fields.exe dist_win\extract_fields.exe
+
+          echo --- modify_fields ---
+          pyinstaller --clean --noconfirm modify_fields.spec
+          copy /Y dist\modify_fields.exe dist_win\modify_fields.exe
+
+          echo --- apply_acroform_fix ---
+          pyinstaller --clean --noconfirm apply_acroform_fix.spec
+          copy /Y dist\apply_acroform_fix.exe dist_win\apply_acroform_fix.exe
+
+          echo --- fix_checkbox_appearances ---
+          pyinstaller --clean --noconfirm fix_checkbox_appearances.spec
+          copy /Y dist\fix_checkbox_appearances.exe dist_win\fix_checkbox_appearances.exe
+
+          echo --- auto_name_field ---
+          pyinstaller --clean --noconfirm auto_name_field.spec
+          copy /Y dist\auto_name_field.exe dist_win\auto_name_field.exe
+
+          echo --- auto_rename_all ---
+          pyinstaller --clean --noconfirm auto_rename_all.spec
+          copy /Y dist\auto_rename_all.exe dist_win\auto_rename_all.exe
+
+          echo --- garbage_field_cleanup ---
+          pyinstaller --clean --noconfirm garbage_field_cleanup.spec
+          copy /Y dist\garbage_field_cleanup.exe dist_win\garbage_field_cleanup.exe
+
+          echo --- fill_pdf_v3 ---
+          pyinstaller --clean --noconfirm fill_pdf_v3.spec
+          copy /Y dist\fill_pdf_v3.exe dist_win\fill_pdf_v3.exe
+
+          echo --- smart_fillable (v24 with full hiddenimports) ---
+          pyinstaller --clean --noconfirm smart_fillable_v24.spec
+          copy /Y dist\smart_fillable.exe dist_win\smart_fillable.exe
+
+          echo === Building --onedir server ===
+          echo --- smart_fillable_server ---
+          pyinstaller --clean --noconfirm smart_fillable_server.spec
+
+          echo Copying server directory...
+          if exist dist_win\smart_fillable_server rmdir /s /q dist_win\smart_fillable_server
+          xcopy /E /I /Y dist\smart_fillable_server dist_win\smart_fillable_server
+
+          echo === All binaries built ===
+          dir dist_win
+
+      # ── 6. Install Node dependencies ──
+      - name: Install Node dependencies
+        run: npm ci
+
+      # ── 7. Build Electron app ──
+      - name: Build Windows installer
+        run: node build.js ${{ github.event.inputs.version_type }} --platform win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── 8. Upload artifact (always available as backup) ──
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FillThatPDF-Windows-${{ github.event.inputs.version_type }}
+          path: |
+            dist/*.exe
+            dist/*.yml
+          retention-days: 30
+
+      # ── 9. Determine target release repo ──
+      - name: Set release repo
+        id: release-repo
+        shell: bash
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" = "pro" ]; then
+            echo "repo=FillThatPDF-releases-pro" >> $GITHUB_OUTPUT
+          else
+            echo "repo=FillThatPDF-releases-standard" >> $GITHUB_OUTPUT
+          fi
+
+      # ── 10. Read version from package.json ──
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      # ── 11. Create GitHub Release with Windows installer ──
+      #
+      # This uploads the .exe and latest.yml to the correct releases repo
+      # so electron-updater can find and serve Windows auto-updates.
+      #
+      # Requires a RELEASE_TOKEN secret (PAT with repo scope) that has
+      # write access to FillThatPDF-releases-pro and FillThatPDF-releases-standard.
+      #
+      - name: Upload to release repo
+        if: github.event.inputs.version_type != 'demo'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          REPO="FillThatPDF/${{ steps.release-repo.outputs.repo }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="v${VERSION}"
+
+          echo "Uploading Windows installer to ${REPO} as ${TAG}..."
+
+          # Check if a release with this tag already exists
+          EXISTING=$(gh release view "$TAG" --repo "$REPO" 2>&1 || true)
+
+          if echo "$EXISTING" | grep -q "release not found"; then
+            # Create new release
+            echo "Creating new release ${TAG}..."
+            gh release create "$TAG" \
+              --repo "$REPO" \
+              --title "v${VERSION}" \
+              --notes "Windows installer for FillThatPDF v${VERSION}" \
+              dist/*.exe dist/latest.yml
+          else
+            # Release exists — upload Windows assets alongside existing macOS assets
+            echo "Release ${TAG} exists, uploading Windows assets..."
+
+            # Upload .exe (overwrite if exists)
+            for f in dist/*.exe; do
+              gh release upload "$TAG" "$f" --repo "$REPO" --clobber
+            done
+
+            # Upload latest.yml (Windows auto-update manifest)
+            if [ -f "dist/latest.yml" ]; then
+              gh release upload "$TAG" "dist/latest.yml" --repo "$REPO" --clobber
+            fi
+          fi
+
+          echo "Done! Windows installer uploaded to ${REPO} release ${TAG}"

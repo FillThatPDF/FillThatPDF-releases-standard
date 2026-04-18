@@ -1,0 +1,122 @@
+[
+  {
+    "file": "29174_DTE_INWIN_Field_Inspection_Report_Form_v2_AI_fillable.pdf",
+    "recall": 82.03,
+    "precision": 69.54
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01_AI_fillable_AI_fillable.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "14792_ConEd_Gas_HVAC_Tune-Up_Contractor_Application_v03_FINAL_RELEASE_Web.pdf",
+    "recall": 72.55,
+    "precision": 52.11
+  },
+  {
+    "file": "12310_ConEd_Res_Appliance_Application_v03_FINAL_RELEASE_print.pdf",
+    "recall": 5.05,
+    "precision": 11.36
+  },
+  {
+    "file": "12310_ConEd_Res_Appliance_Application_v03_FINAL_RELEASE_print.pdf",
+    "recall": 0,
+    "precision": 0
+  },
+  {
+    "file": "53252_DTE_EEA_Field_Inspection_Report_v11.pdf",
+    "recall": 44.11,
+    "precision": 53.41
+  },
+  {
+    "file": "9787_ConEd_Res_HVAC_Gas_Rebate_Appl_v01_FINAL_RELEASE.pdf",
+    "recall": 74.75,
+    "precision": 71.15
+  },
+  {
+    "file": "32775_DTE_2022_HVAC_Customer_SelfSubmission_Application_v01_AI_fillable.pdf",
+    "recall": 83.87,
+    "precision": 60.47
+  },
+  {
+    "file": "57561_DTE_INSUL_HP_Rebate_Worksheet_v1_AI_fillable.pdf",
+    "recall": 75.0,
+    "precision": 50.0
+  },
+  {
+    "file": "57561_DTE_INSUL_HP_Rebate_Worksheet_v1_AI_fillable.pdf",
+    "recall": 0.83,
+    "precision": 2.08
+  },
+  {
+    "file": "12310_ConEd_Res_Appliance_Application_v03_FINAL_RELEASE_print.pdf",
+    "recall": 1.45,
+    "precision": 6.82
+  },
+  {
+    "file": "56380_DTE_2026_PartnerGuidelines_v18.pdf",
+    "recall": 87.51,
+    "precision": 72.08
+  },
+  {
+    "file": "55570_DTE_SEEL_Contractor_Onboarding _Packet_v26_AI_fillable.pdf",
+    "recall": 20.77,
+    "precision": 10.41
+  },
+  {
+    "file": "57561_DTE_INSUL_HP_Rebate_Worksheet_v1_AI_fillable.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01_AI_fillable_AI_fillable.pdf",
+    "recall": 2.44,
+    "precision": 2.04
+  },
+  {
+    "file": "57769_CH_Res_NYS_Clean_Heat_Completion_Acknowledgement_Form_v2.pdf",
+    "recall": 70.0,
+    "precision": 31.46
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01.pdf",
+    "recall": 85.0,
+    "precision": 80.95
+  },
+  {
+    "file": "57618_NGRID_New_York_Ack_Form_v03_Release.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01_AI_fillable_AI_fillable.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "57026_Avangrid_Clean_Heat_2026_BE_Incentive_Application_v05.pdf",
+    "recall": 10.61,
+    "precision": 13.21
+  },
+  {
+    "file": "11691_ConEd_Distributor_Application_Form_v10.pdf",
+    "recall": 100.0,
+    "precision": 73.33
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01_AI_fillable_AI_fillable.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "34062_DTE_HVAC_RES_Contractor_Agreement_v01_AI_fillable_AI_fillable.pdf",
+    "recall": 0.0,
+    "precision": 0.0
+  },
+  {
+    "file": "32987_OPRE_C_v05_AI_fillable.pdf",
+    "recall": 53.75,
+    "precision": 60.56
+  }
+]
