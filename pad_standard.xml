@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+  <MASTER_PAD_VERSION_INFO>
+    <MASTER_PAD_VERSION>4.0</MASTER_PAD_VERSION>
+    <MASTER_PAD_EDITOR>Hand-crafted</MASTER_PAD_EDITOR>
+    <MASTER_PAD_INFO>Portable Application Description for Fill That PDF! Standard</MASTER_PAD_INFO>
+  </MASTER_PAD_VERSION_INFO>
+
+  <Company_Info>
+    <Company_Name>FillThatPDF!</Company_Name>
+    <Address_1></Address_1>
+    <City_Town></City_Town>
+    <State_Province></State_Province>
+    <Zip_Postal_Code></Zip_Postal_Code>
+    <Country>United States</Country>
+    <Company_WebSite_URL>https://fillthatpdf.com</Company_WebSite_URL>
+    <Contact_Info>
+      <Author_First_Name>Alex</Author_First_Name>
+      <Author_Last_Name>Gordon</Author_Last_Name>
+      <Author_Email>alexthebritgordon@gmail.com</Author_Email>
+      <Contact_First_Name>Alex</Contact_First_Name>
+      <Contact_Last_Name>Gordon</Contact_Last_Name>
+      <Contact_Email>alexthebritgordon@gmail.com</Contact_Email>
+    </Contact_Info>
+    <Support_Info>
+      <Sales_Email>alexthebritgordon@gmail.com</Sales_Email>
+      <Support_Email>alexthebritgordon@gmail.com</Support_Email>
+      <General_Email>alexthebritgordon@gmail.com</General_Email>
+    </Support_Info>
+  </Company_Info>
+
+  <Program_Info>
+    <Program_Name>Fill That PDF!</Program_Name>
+    <Program_Version>1.0.0</Program_Version>
+    <Program_Release_Month>03</Program_Release_Month>
+    <Program_Release_Day>02</Program_Release_Day>
+    <Program_Release_Year>2026</Program_Release_Year>
+    <Program_Cost_Dollars>59.99</Program_Cost_Dollars>
+    <Program_Cost_Other_Code>USD</Program_Cost_Other_Code>
+    <Program_Type>Commercialware</Program_Type>
+    <Program_Release_Status>Major Release</Program_Release_Status>
+    <Program_OS_Support>Mac OS X</Program_OS_Support>
+    <Program_Language>English</Program_Language>
+    <Program_Change_Info>Version 1.0.0 - Initial Release</Program_Change_Info>
+    <Program_System_Requirements>macOS 10.12 or later, Intel or Apple Silicon Mac, 700 MB disk space</Program_System_Requirements>
+    <Program_Category>Business</Program_Category>
+    <File_Info>
+      <Filename_Versioned>FillThatPDF_Standard_v1.0.0.dmg</Filename_Versioned>
+      <File_Size_Bytes>732076564</File_Size_Bytes>
+      <File_Size_K>714918</File_Size_K>
+      <File_Size_MB>698.0</File_Size_MB>
+    </File_Info>
+    <Expire_Info>
+      <Expire_Count>0</Expire_Count>
+      <Expire_Based_On>Never</Expire_Based_On>
+      <Expire_Other_Info>License does not expire</Expire_Other_Info>
+    </Expire_Info>
+  </Program_Info>
+
+  <Program_Descriptions>
+    <English>
+      <Char_Desc_45>Smart PDF form field detection tool</Char_Desc_45>
+      <Char_Desc_80>Automatically detect and create fillable form fields in any PDF document</Char_Desc_80>
+      <Char_Desc_250>Fill That PDF! uses intelligent detection to automatically find and create fillable form fields in PDF documents. It identifies text fields, checkboxes, radio buttons, and dropdowns, then generates a professionally formatted fillable PDF ready for distribution.</Char_Desc_250>
+      <Char_Desc_450>Fill That PDF! is a desktop application that transforms static PDF documents into interactive fillable forms. Using intelligent field detection, it automatically identifies text inputs, checkboxes, radio buttons, and dropdown menus within your PDF layouts. It applies proper formatting including date, phone, ZIP code, and currency masks, and outputs a standards-compliant fillable PDF that works in any PDF viewer. Perfect for businesses handling forms, applications, and paperwork.</Char_Desc_450>
+      <Char_Desc_2000>Fill That PDF! is a powerful desktop application for macOS that transforms static PDF documents into fully interactive fillable forms with just a few clicks.
+
+Using advanced intelligent detection, Fill That PDF! automatically analyzes your PDF layouts and identifies form elements including text input fields, checkboxes, radio buttons, and dropdown menus. The engine understands common form patterns and accurately places fillable fields over the detected areas.
+
+Key features include:
+- Automatic field detection for text fields, checkboxes, radio buttons, and dropdowns
+- Smart field formatting with built-in support for dates, phone numbers, ZIP codes, currency, and custom number formats
+- Batch processing to convert multiple PDFs at once
+- Field naming that automatically assigns meaningful names based on nearby labels
+- Customizable global settings for font family, size, color, borders, and field appearance
+- Test fill mode to verify forms with sample data before distribution
+- Standards-compliant output that works in Adobe Acrobat, Preview, and all major PDF viewers
+
+Fill That PDF! runs natively on both Intel and Apple Silicon Macs as a universal application. It includes a bundled Python engine for field detection so no additional software installation is required.
+
+Whether you are digitizing paper forms, creating application packets, or building document workflows, Fill That PDF! saves hours of manual form creation work and produces professional results every time.</Char_Desc_2000>
+      <Keywords>pdf, fillable pdf, form fields, pdf forms, create fillable pdf, pdf editor, form creator, checkbox, radio button, dropdown, pdf tool, document automation, mac pdf</Keywords>
+    </English>
+  </Program_Descriptions>
+
+  <Web_Info>
+    <Application_URLs>
+      <Application_Info_URL>https://fillthatpdf.com</Application_Info_URL>
+      <Application_Order_URL>https://fillthatpdf.com</Application_Order_URL>
+      <Application_Screenshot_URL>https://fillthatpdf.com/screenshot.png</Application_Screenshot_URL>
+      <Application_Icon_URL>https://fillthatpdf.com/icon.png</Application_Icon_URL>
+      <Application_XML_File_URL>https://fillthatpdf.com/pad_standard.xml</Application_XML_File_URL>
+    </Application_URLs>
+    <Download_URLs>
+      <Primary_Download_URL>https://github.com/FillThatPDF/FillThatPDF-releases-standard/releases/download/v1.0.0/FillThatPDF_Standard_v1.0.0.dmg</Primary_Download_URL>
+    </Download_URLs>
+  </Web_Info>
+
+  <Permissions>
+    <Distribution_Permissions>This software may not be redistributed without written permission from FillThatPDF!</Distribution_Permissions>
+    <Copyright_Holder>FillThatPDF!</Copyright_Holder>
+    <Copyright_Year>2026</Copyright_Year>
+  </Permissions>
+</XML_DIZ_INFO>

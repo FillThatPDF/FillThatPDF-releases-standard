@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill That PDF!</title>
+    <style>
+        :root {
+            /* Dark Theme (Default) */
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --text-tertiary: #ccd6f6;
+            --text-accent: #64ffda;
+            
+            --input-bg: #112240;
+            --input-border: #233554;
+            --input-text: #ccd6f6;
+            --input-placeholder: #495670;
+            
+            --btn-primary-grad: linear-gradient(135deg, #e94560, #ff6b6b);
+            --btn-secondary-bg: linear-gradient(135deg, #0f3460, #16213e);
+            --btn-secondary-border: #64ffda;
+            --btn-tertiary-bg: #233554;
+            --btn-tertiary-hover: #2d4a6f;
+            
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --modal-bg: #112240;
+            --modal-header-border: #233554;
+            
+            --progress-container: #112240;
+            --log-bg: #0a192f;
+            --log-text: #64ffda;
+            --log-scroll-track: #0a192f;
+            --log-scroll-thumb: #233554;
+            
+            --stats-bg: rgba(16, 33, 62, 0.5);
+            --stat-card-bg: #112240;
+            --stat-value: #ccd6f6;
+            
+            --table-header: #1d3557;
+            --table-border: #233554;
+            --table-row-hover: rgba(100, 255, 218, 0.05);
+            --editable-cell-bg: #0a192f;
+            
+            --accent-pink: #e94560;
+            --status-success-bg: rgba(100, 255, 218, 0.1);
+            --status-success-text: #64ffda;
+            --status-error-bg: rgba(233, 69, 96, 0.1);
+            --status-error-text: #e94560;
+        }
+
+        [data-theme="light"] {
+            /* Light Theme Overrides */
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-tertiary: #2d3748;
+            --text-accent: #319795; /* Teal-600 */
+            
+            --input-bg: #ffffff;
+            --input-border: #cbd5e0;
+            --input-text: #2d3748;
+            --input-placeholder: #a0aec0;
+            
+            --btn-primary-grad: linear-gradient(135deg, #e53e3e, #fc8181);
+            --btn-secondary-bg: #edf2f7;
+            --btn-secondary-border: #319795;
+            --btn-tertiary-bg: #e2e8f0;
+            --btn-tertiary-hover: #cbd5e0;
+            
+            --modal-overlay: rgba(0, 0, 0, 0.5);
+            --modal-bg: #ffffff;
+            --modal-header-border: #e2e8f0;
+            
+            --progress-container: #edf2f7;
+            --log-bg: #2d3748; /* Keep log dark for contrast */
+            --log-text: #64ffda;
+            --log-scroll-track: #1a202c;
+            --log-scroll-thumb: #4a5568;
+            
+            --stats-bg: rgba(255, 255, 255, 0.8);
+            --stat-card-bg: #ffffff;
+            --stat-value: #2d3748;
+            
+            --table-header: #2c5282;
+            --table-border: #e2e8f0;
+            --table-row-hover: rgba(49, 151, 149, 0.1);
+            --editable-cell-bg: #f7fafc;
+            
+            --accent-pink: #e53e3e;
+            --status-success-bg: #f0fff4;
+            --status-success-text: #2f855a;
+            --status-error-bg: #fff5f5;
+            --status-error-text: #c53030;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-gradient);
+            height: 100vh;
+            color: var(--text-primary);
+            -webkit-app-region: drag;
+            user-select: none;
+            overflow: hidden;
+            transition: color 0.3s;
+        }
+        
+        .container {
+            padding: 15px 30px;
+            -webkit-app-region: no-drag;
+            height: calc(100vh - 22px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 51px;
+            padding-top: 8px;
+            -webkit-app-region: drag;
+        }
+        
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            background: var(--btn-primary-grad);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+        
+        .input-section {
+            margin-bottom: 18px;
+        }
+        
+        .input-group {
+            margin-bottom: 12px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-field {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        
+        .input-field:focus {
+            border-color: var(--accent-pink);
+        }
+        
+        .input-field::placeholder {
+            color: var(--input-placeholder);
+        }
+        
+        .browse-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: var(--btn-tertiary-bg);
+            color: var(--text-accent);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .browse-btn:hover {
+            background: var(--btn-tertiary-hover);
+        }
+        
+        /* Drag-over highlight for drag-and-drop PDF files */
+        .input-row.drag-over {
+            outline: 2px dashed var(--text-accent);
+            outline-offset: 2px;
+            background: rgba(0, 173, 144, 0.1);
+            border-radius: 6px;
+        }
+        
+        .output-note {
+            font-size: 12px;
+            color: var(--text-accent);
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .buttons-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--btn-primary-grad);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--text-accent);
+            border: 2px solid var(--btn-secondary-border);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        
+        .btn-tertiary {
+            background: var(--btn-tertiary-bg);
+            color: var(--text-secondary);
+        }
+        
+        .btn-tertiary:hover {
+            background: var(--btn-tertiary-hover);
+            color: var(--text-tertiary);
+        }
+        
+        /* Uniform blue button style for main action buttons */
+        .btn-uniform {
+            background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+            color: var(--text-accent);
+            border: 2px solid #4a90c2;
+        }
+        
+        .btn-uniform:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2d5a87, #3d7ab7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 144, 194, 0.3);
+        }
+        
+        .btn-uniform.selected {
+            background: var(--btn-primary-grad);
+            border-color: #e94560;
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+        
+        /* Separator line between button groups */
+        .button-separator {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #233554, transparent);
+            margin: 8px 0;
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Visual disabled state that still allows clicks for popup */
+        .action-btn.btn-disabled-look {
+            opacity: 0.5;
+            cursor: pointer;
+            transform: none !important;
+        }
+        
+        .action-btn.btn-disabled-look:hover {
+            filter: none;
+            transform: none !important;
+        }
+        
+        /* Pulsing animation for Edit Fields button */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(100, 255, 218, 0.8), 0 0 30px rgba(100, 255, 218, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+            }
+        }
+        
+        .action-btn.pulse-ready {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+            border-color: #64ffda !important;
+        }
+        
+        .icon {
+            font-size: 16px;
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            margin-top: 25px;
+            display: none;
+        }
+        
+        .progress-section.active {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;  /* Important for flex child scrolling */
+        }
+        
+        .progress-bar-container {
+            background: var(--progress-container);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #64ffda);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            max-width: 100%;
+            padding: 0 10px;
+        }
+        
+        .log-container {
+            margin-top: 20px;
+            background: #0f0f1a;
+            border-radius: 8px;
+            padding: 12px;
+            padding-bottom: 20px; /* Extra padding at bottom to prevent cut-off */
+            min-height: 100px;
+            flex: 1;  /* Grow to fill available space */
+            overflow-y: auto;
+            color: #a8b2d1;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            border: 1px solid var(--input-border);
+            white-space: pre-wrap;
+            scroll-behavior: smooth;
+            user-select: text;
+            -webkit-user-select: text;
+            -webkit-app-region: no-drag;
+        }
+        
+        .log-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .log-container::-webkit-scrollbar-track {
+            background: var(--log-scroll-track);
+        }
+        
+        .log-container::-webkit-scrollbar-thumb {
+            background: var(--log-scroll-thumb);
+            border-radius: 3px;
+        }
+        
+        /* Status indicator */
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .status.success {
+            display: block;
+            background: var(--status-success-bg);
+            border: 1px solid var(--status-success-text);
+            color: var(--status-success-text);
+        }
+        
+        .status.error {
+            display: block;
+            background: var(--status-error-bg);
+            border: 1px solid var(--status-error-text);
+            color: var(--status-error-text);
+        }
+        
+        /* Settings Modal */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-overlay);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .settings-content {
+            background: var(--modal-bg);
+            width: 500px;
+            max-height: 80vh;
+            border-radius: 12px;
+            border: 1px solid var(--modal-header-border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s;
+        }
+        
+        .settings-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--modal-header-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .settings-header h2 {
+            color: var(--text-tertiary);
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .settings-body {
+            padding: 20px;
+            padding-bottom: 60px; /* Extra padding to ensure bottom buttons are seen */
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .settings-section {
+            margin-bottom: 25px;
+        }
+        
+        .settings-section h3 {
+            color: var(--text-accent);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+        
+        .setting-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .setting-label-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .setting-hint {
+            color: var(--text-tertiary);
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        
+        .setting-input {
+            width: 120px;
+            padding: 6px 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+        
+        /* Color picker styling - make it a solid filled square */
+        .setting-input[type="color"] {
+            width: 40px;
+            height: 32px;
+            padding: 2px;
+            cursor: pointer;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+        }
+        
+        .setting-input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        .setting-input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+        
+        .setting-toggle {
+            width: 50px;
+            height: 26px;
+            background: var(--input-border);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .setting-toggle.active {
+            background: var(--text-accent);
+        }
+        
+        .setting-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.2s;
+        }
+        
+        .setting-toggle.active::after {
+            left: 17px;
+        }
+        
+        /* Info icon tooltip styles - replaces .setting-helper */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--input-border);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 600;
+            font-style: italic;
+            cursor: pointer;
+            margin-left: 6px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .info-icon:hover {
+            background: var(--text-accent);
+            color: var(--modal-bg);
+        }
+        
+        .info-tooltip {
+            position: absolute;
+            background: var(--modal-bg);
+            border: 1px solid var(--text-accent);
+            color: var(--text-tertiary);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            max-width: 250px;
+            z-index: 3000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.15s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .info-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 20px;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--text-accent);
+        }
+        
+        /* Custom Color Picker Popup */
+        .color-picker-popup {
+            position: fixed;
+            background: var(--modal-bg);
+            border: 1px solid var(--text-accent);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 3100;
+            width: 280px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.15s ease;
+        }
+        
+        .color-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .color-picker-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+        }
+        
+        .color-picker-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .color-picker-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        
+        .color-picker-tab {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 11px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .color-picker-tab.active {
+            background: var(--text-accent);
+            color: var(--modal-bg);
+            border-color: var(--text-accent);
+        }
+        
+        .color-picker-content {
+            margin-bottom: 12px;
+        }
+        
+        .color-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .color-slider-label {
+            width: 20px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        .color-slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #000, #fff);
+            border-radius: 4px;
+        }
+        
+        .color-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #333;
+            cursor: pointer;
+        }
+        
+        .color-slider-value {
+            width: 35px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+        
+        .color-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--input-border);
+        }
+        
+        .color-preview-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid var(--input-border);
+            background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), 
+                              linear-gradient(-45deg, #ccc 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #ccc 75%), 
+                              linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 8px 8px;
+            background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+        }
+        
+        .color-preview-color {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .color-hex-input {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 12px;
+            font-family: 'Consolas', monospace;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+        
+        .color-picker-apply {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #64ffda, #00d4aa);
+            border: none;
+            border-radius: 6px;
+            color: var(--modal-bg);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .color-picker-apply:hover {
+            filter: brightness(1.1);
+        }
+        
+        /* Color swatch button for triggering picker */
+        .color-swatch-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .color-swatch-preview {
+            width: 24px;
+            height: 18px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .color-swatch-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Consolas', monospace;
+        }
+        
+
+        .settings-footer {
+            padding: 20px;
+            border-top: 1px solid var(--modal-header-border);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .settings-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .btn-reset {
+            background: var(--btn-tertiary-bg);
+            color: var(--text-secondary);
+        }
+        
+        .btn-reset:hover {
+            background: var(--btn-tertiary-hover);
+        }
+        
+        .btn-cancel {
+            background: var(--btn-tertiary-bg);
+            color: var(--text-tertiary);
+        }
+        
+        .btn-cancel:hover {
+            background: var(--btn-tertiary-hover);
+        }
+        
+        .btn-save {
+            background: var(--text-accent);
+            color: #0a192f;
+            flex: 1;
+        }
+        
+        .btn-save:hover {
+            filter: brightness(1.1);
+        }
+        
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--modal-header-border);
+        }
+        
+        .settings-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .settings-tab:hover {
+            color: var(--text-tertiary);
+            background: var(--table-row-hover);
+        }
+        
+        .settings-tab.active {
+            color: var(--text-accent);
+            border-bottom-color: var(--text-accent);
+            background: var(--table-row-hover);
+        }
+        
+        .tab-content {
+            display: none;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .btn-add-category {
+            background: var(--btn-tertiary-bg);
+            color: var(--text-accent);
+            border: 1px dashed var(--text-accent);
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .btn-add-category:hover {
+            background: var(--table-row-hover);
+        }
+        
+        /* Test Fill Spreadsheet */
+        .spreadsheet-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--table-border);
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .spreadsheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .spreadsheet-table th {
+            background: var(--table-header);
+            color: var(--text-accent);
+            padding: 10px 8px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        .spreadsheet-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--table-border);
+            vertical-align: top;
+        }
+        
+        .spreadsheet-table tr:hover {
+            background: var(--table-row-hover);
+        }
+        
+        .spreadsheet-table .category-name {
+            color: var(--text-tertiary);
+            font-weight: 500;
+            width: 100px;
+        }
+        
+        .spreadsheet-table .editable-cell {
+            background: var(--editable-cell-bg);
+            border: 1px solid var(--table-border);
+            border-radius: 4px;
+            padding: 6px 8px;
+            color: var(--text-tertiary);
+            width: 100%;
+            min-height: 50px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 12px;
+        }
+        
+        .spreadsheet-table .editable-cell:focus {
+            border-color: var(--text-accent);
+            outline: none;
+        }
+        
+        .spreadsheet-help {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--table-row-hover);
+            border-radius: 6px;
+        }
+        
+        /* Stats Dashboard */
+        .stats-dashboard {
+            margin-top: 20px;
+            background: var(--stats-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            padding: 15px;
+            display: none; /* Initially hidden until populated */
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .stats-title {
+            color: var(--text-accent);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .stat-card {
+            background: var(--stat-card-bg);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--stat-value);
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+        
+        .mode-btn {
+            padding: 8px 16px; 
+            border-radius: 6px; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 600; 
+            background: transparent; 
+            color: var(--text-secondary); 
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--text-accent);
+            color: var(--modal-bg);
+        }
+        
+        .mode-btn:hover:not(.active) {
+            color: var(--text-tertiary);
+            background: var(--btn-tertiary-hover);
+        }
+        .update-notification {
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid #64ffda;
+            color: #64ffda;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none; /* Hidden by default */
+            font-size: 13px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .update-notification a {
+            color: #64ffda;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        
+        .pro-badge {
+            font-size: 9px;
+            color: #64ffda;
+            -webkit-text-fill-color: #64ffda;
+            background: transparent;
+            border: 1px solid #64ffda;
+            padding: 1px 6px;
+            border-radius: 50px;
+            vertical-align: top;
+            margin-left: 3px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .pro-badge-small {
+            font-size: 8px;
+            color: #64ffda;
+            background: transparent;
+            border: 1px solid #64ffda;
+            padding: 1px 5px;
+            border-radius: 50px;
+            margin-left: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .setting-row.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .setting-row.pro-restricted {
+            position: relative;
+        }
+        
+        .setting-row.pro-restricted::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            cursor: not-allowed;
+        }
+        
+        /* Custom Logo Icon */
+        .logo-icon {
+            display: inline-block;
+            position: relative;
+            width: 32px;
+            height: 36px;
+            margin-right: 8px;
+            vertical-align: middle;
+            overflow: visible;
+        }
+        .logo-paper {
+            width: 25px;
+            height: 30px;
+            background: #e94560;
+            border-radius: 3px;
+            position: absolute;
+            top: 4px;
+            left: 0;
+            overflow: visible;
+        }
+        .logo-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 8px 8px 0;
+            border-color: transparent #1a1a2e transparent transparent;
+        }
+        .logo-check {
+            position: absolute;
+            top: 8px;
+            left: 4px;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            -webkit-text-fill-color: white;
+            text-shadow: 1px 2px 4px rgba(0,0,0,0.4);
+            z-index: 1;
+        }
+        /* Collapsible Settings Sections */
+        .settings-section h3 {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+        
+        .settings-section h3 .chev {
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+        
+        .settings-section.collapsed h3 .chev {
+            transform: rotate(-90deg);
+        }
+        
+        .settings-section.collapsed .setting-row,
+        .settings-section.collapsed p,
+        .settings-section.collapsed .spreadsheet-container,
+        .settings-section.collapsed .spreadsheet-help {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Update Notification -->
+        <div id="updateNotification" class="update-notification">
+            <span>🚀 New version available! <span id="updateVersion"></span></span>
+            <span id="updateLink" style="font-weight:600; cursor:default;">Downloading...</span>
+        </div>
+
+        <div class="header">
+            <h1><span class="logo-icon"><span class="logo-paper"></span><span class="logo-check">✓</span></span>Fill That PDF! <span class="pro-badge" id="headerProBadge">PRO</span></h1>
+            <p>Create fillable PDFs & test fill them instantly</p>
+        </div>
+        
+        <div class="input-section">
+            <div id="singleInputGroup" class="input-group">
+                <label id="inputLabel">Input PDF or Batch Folder</label>
+                <div id="singleInputRow" class="input-row">
+                    <input type="text" id="inputPath" class="input-field" placeholder="Select a PDF file or folder..." readonly>
+                    <button class="browse-btn" id="browseInput">Browse</button>
+                </div>
+                <p class="output-note" id="fieldDetectionStatus" style="display: none; margin-top: 4px;"></p>
+                <p class="output-note" id="batchCount" style="display: none; margin-top: 4px;"></p>
+            </div>
+            
+            <div class="input-group">
+                <label>Output Folder (Optional)</label>
+                <div id="outputInputRow" class="input-row">
+                    <input type="text" id="outputPath" class="input-field" placeholder="Same as input" readonly>
+                    <button class="browse-btn" id="browseOutput">Browse</button>
+                </div>
+                <p class="output-note">💡 Leave empty to save in same folder (files will be suffixed)</p>
+            </div>
+        </div>
+        
+        <div class="buttons-section">
+            <button class="action-btn btn-uniform" id="btnBoth" disabled>
+                <span class="icon">🚀</span>
+                Make Fillable + Test Fill
+            </button>
+            
+            <button class="action-btn btn-uniform" id="btnFillable" disabled>
+                <span class="icon">📝</span>
+                Make Fillable Only
+            </button>
+            
+            <button class="action-btn btn-uniform" id="btnTestFill" disabled>
+                <span class="icon">✏️</span>
+                Test Fill Only
+            </button>
+            
+            <div class="button-separator"></div>
+            
+            <button class="action-btn btn-tertiary btn-disabled-look" id="btnEditFields">
+                <span class="icon">🔧</span>
+                Edit Fields
+            </button>
+
+            <!-- Loading indicator for field scanning (Already Filled PDF mode) -->
+            <div id="fieldScanProgress" style="display: none; margin: 8px 0 4px 0;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="scan-spinner"></div>
+                    <span id="fieldScanText" style="font-size: 12px; color: var(--text-secondary);">Scanning for fields...</span>
+                </div>
+                <div style="background: var(--progress-container); border-radius: 6px; height: 4px; overflow: hidden; margin-top: 6px;">
+                    <div id="fieldScanBar" style="height: 100%; background: linear-gradient(90deg, #e94560, #64ffda); width: 0%; border-radius: 6px; transition: width 0.5s ease;"></div>
+                </div>
+            </div>
+            <style>
+                .scan-spinner {
+                    width: 14px; height: 14px;
+                    border: 2px solid var(--progress-container);
+                    border-top-color: #e94560;
+                    border-radius: 50%;
+                    animation: spin 0.8s linear infinite;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+            </style>
+
+            <button class="action-btn btn-tertiary" id="btnOpenSettings">
+                <span class="icon">⚙️</span>
+                Settings
+            </button>
+        </div>
+        
+        <!-- Stats Dashboard -->
+        <div class="stats-dashboard" id="statsDashboard">
+            <div class="stats-header" id="statsHeader">
+                <div class="stats-title">
+                    <span class="icon">📊</span> Stats Dashboard
+                </div>
+                <div style="font-size: 12px; transform: rotate(0deg); transition: transform 0.3s;" id="statsArrow">▼</div>
+            </div>
+            <div id="statsContent">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statPdfs">0</div>
+                        <div class="stat-label">PDFs Processed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statFields">0</div>
+                        <div class="stat-label">Total Fields</div>
+                    </div>
+                </div>
+                <div class="stats-footer">
+                    <span id="statText">0 text fields</span> • <span id="statChecks">0 checkboxes</span> • <span id="statRadios">0 radio groups</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <p class="progress-text" id="progressText" style="margin: 0;">Processing...</p>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button id="btnCancelProcessing" title="Cancel current operation" style="display: none; background: none; border: 1px solid var(--accent-pink, #e94560); color: var(--accent-pink, #e94560); cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 11px; transition: all 0.2s;" onmouseenter="this.style.background='var(--accent-pink, #e94560)';this.style.color='#fff'" onmouseleave="this.style.background='none';this.style.color='var(--accent-pink, #e94560)'">✕ Cancel</button>
+                    <button id="btnCopyLog" title="Copy log to clipboard" style="background: none; border: 1px solid var(--border-color, #233554); color: var(--text-secondary, #8892b0); cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 11px; opacity: 0.7; transition: opacity 0.2s;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.7'">Copy Log</button>
+                </div>
+            </div>
+
+            <div class="log-container" id="logContainer"></div>
+        </div>
+        
+        <!-- Validation Modal -->
+        <div id="validationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: #112240; width: 600px; max-height: 80vh; border-radius: 12px; border: 1px solid #233554; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div style="padding: 20px; border-bottom: 1px solid #233554;">
+                    <h2 style="color: #e94560; font-size: 20px; display: flex; align-items: center; gap: 10px;">
+                        ⚠️ Validation Issues Found
+                    </h2>
+                    <p style="color: #8892b0; font-size: 13px; margin-top: 5px;">Review potential issues before finalizing the PDF.</p>
+                </div>
+                
+                <div id="validationList" style="flex: 1; overflow-y: auto; padding: 20px;">
+                    <!-- Issues will be injected here -->
+                </div>
+                
+                <div style="padding: 20px; border-top: 1px solid #233554; background: #0a192f; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btnSelectAll" style="background: none; border: none; color: #64ffda; font-size: 12px; cursor: pointer;">Select All</button>
+                            <button id="btnSelectNone" style="background: none; border: none; color: #8892b0; font-size: 12px; cursor: pointer;">Select None</button>
+                        </div>
+                        <span id="fixCountText" style="color: #8892b0; font-size: 12px;">0 issues selected</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btnFixSelected" class="action-btn btn-primary" style="flex: 2; padding: 12px; font-size: 14px;">
+                            Fix Selected & Continue
+                        </button>
+                        <button id="btnIgnoreAll" class="action-btn btn-secondary" style="flex: 1; padding: 12px; font-size: 14px; border: 1px solid #233554; background: #112240;">
+                            Ignore All
+                        </button>
+                        <button id="btnCancelValidation" class="action-btn btn-tertiary" style="flex: 1; padding: 12px; font-size: 14px;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status" id="statusMessage"></div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>⚙️ Settings</h2>
+                <div class="template-controls" style="display: flex; gap: 10px; align-items: center;">
+                    <select id="templateSelect" class="setting-input" style="width: 180px; height: 32px; padding: 0 8px;">
+                        <option value="">Select Preset...</option>
+                        <option value="__create__">➕ Create New Preset</option>
+                    </select>
+                    <button id="btnSavePreset" class="setting-input" style="width: 32px; height: 32px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.5;" title="Save changes to current preset">💾</button>
+                    <button id="btnDeleteTemplate" class="setting-input" style="width: 32px; height: 32px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.5;" title="Delete selected preset">🗑️</button>
+                </div>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="settings-tabs">
+                <button class="settings-tab active" data-tab="fillable">📝 Fillable PDF</button>
+                <button class="settings-tab" data-tab="testfill">✏️ Test Fill Data</button>
+            </div>
+
+            <!-- Settings Search -->
+            <div style="padding: 8px 20px 0 20px;">
+                <input type="text" id="settingsSearch" placeholder="🔍 Search settings..." style="width: 100%; padding: 8px 12px; border: 1px solid var(--input-border, #233554); border-radius: 8px; background: var(--input-bg, #112240); color: var(--input-text, #ccd6f6); font-size: 13px; outline: none; box-sizing: border-box;" />
+            </div>
+
+            <!-- Tab 1: Fillable PDF Settings -->
+            <div id="tabFillable" class="tab-content active">
+            <div class="settings-body">
+                <!-- Output File Naming (MOVED TO TOP) -->
+                <div class="settings-section">
+                    <h3>Output File Naming</h3>
+                    <div class="setting-row">
+                        <span class="setting-label">Fillable PDF Suffix <span class="info-icon" data-info="Text appended to filename for the fillable PDF output (e.g., document_fillable.pdf).">i</span></span>
+                        <input type="text" id="setting_output_suffix" class="setting-input" value="_fillable" placeholder="_fillable">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Test Fill Suffix <span class="info-icon" data-info="Text appended to filename for test-filled PDF output (e.g., document_testfill.pdf).">i</span></span>
+                        <input type="text" id="setting_testfill_suffix" class="setting-input" value="_testfill" placeholder="_testfill">
+                    </div>
+                    <div class="setting-row" id="autoImproveRow">
+                        <span class="setting-label">Auto-improve field names <span class="info-icon" data-info="Runs AI-powered smart naming on all fields before final output to generate cleaner, more readable field names.">i</span> <span class="pro-badge-small" id="autoImproveProBadge" style="display: none;">PRO</span></span>
+                        <div id="setting_auto_improve_names" class="setting-toggle"></div>
+                    </div>
+                </div>
+                
+                <!-- Detection Controls -->
+                <div class="settings-section">
+                    <h3>Detection Controls</h3>
+                    
+                    <!-- NEW: Auto-Calibration Toggle -->
+                    <div class="setting-row">
+                        <div class="setting-label-group">
+                            <span class="setting-label">Auto-Calibration</span>
+                            <span class="setting-hint">Automatically optimize detection settings (Recommended)</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <div class="setting-toggle active" id="setting_auto_calibrate"></div>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Detection Sensitivity <span class="info-icon" data-info="Conservative: Fewer fields, higher accuracy. Aggressive: More fields, may include false positives.">i</span></span>
+                        <select id="setting_detection_sensitivity" class="setting-input" style="width: 130px;">
+                            <option value="conservative">🎯 Conservative</option>
+                            <option value="standard" selected>⚖️ Standard</option>
+                            <option value="aggressive">🔍 Aggressive</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Detect Image Placeholder Boxes <span class="info-icon" data-info="Find empty rectangles often used for photos, logos, or signature images.">i</span></span>
+                        <div id="setting_enable_empty_box_detection" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Detect Signature/Text Lines <span class="info-icon" data-info="Find underscored lines (___) commonly used for signatures and handwritten entries.">i</span></span>
+                        <div id="setting_enable_underscore_detection" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Auto-group Radio Buttons <span class="info-icon" data-info="Automatically group nearby checkboxes with similar labels into mutually exclusive radio button groups.">i</span></span>
+                        <div id="setting_enable_radio_grouping" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Detect Table Cells <span class="info-icon" data-info="Create fields for cells in detected tables. Disable if tables are being incorrectly parsed.">i</span></span>
+                        <div id="setting_enable_table_detection" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Skip Fields Near Page Edges <span class="info-icon" data-info="Ignore potential fields within the page margin area to avoid header/footer false positives.">i</span></span>
+                        <div id="setting_skip_page_edges" class="setting-toggle"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Clean Up Garbage Fields <span class="info-icon" data-info="Automatically remove erroneous fields on text-only/instructional pages.">i</span></span>
+                        <div id="setting_enable_garbage_field_cleanup" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row" id="row_garbage_cleanup_sensitivity">
+                        <span class="setting-label" style="padding-left: 20px;">Cleanup Sensitivity <span class="info-icon" data-info="Conservative: Keywords only. Standard: Text Collision > 15%. Aggressive: Text Collision > 5%.">i</span></span>
+                        <select id="setting_garbage_cleanup_sensitivity" class="setting-input" style="width: 140px;">
+                            <option value="conservative">🛡️ Conservative</option>
+                            <option value="standard" selected>⚖️ Standard</option>
+                            <option value="aggressive">🧹 Aggressive</option>
+                        </select>
+                    </div>
+
+                </div>
+                
+                <!-- Checkbox Settings -->
+                <div class="settings-section">
+                    <h3>Checkbox Settings</h3>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Checkbox Size (pt) <span class="info-icon" data-info="Minimum size for a square to be detected as a checkbox.">i</span></span>
+                        <input type="number" id="setting_checkbox_size_min" class="setting-input" value="8" min="4" max="15">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Max Checkbox Size (pt) <span class="info-icon" data-info="Maximum size for a square to be detected as a checkbox.">i</span></span>
+                        <input type="number" id="setting_checkbox_size_max" class="setting-input" value="18" min="10" max="30">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Checkbox Widget Size (pt) <span class="info-icon" data-info="Size of the interactive checkbox widget in the final PDF.">i</span></span>
+                        <input type="number" id="setting_checkbox_field_size" class="setting-input" value="10" min="6" max="20">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Checkbox Mark Style <span class="info-icon" data-info="The symbol shown when a checkbox is checked.">i</span></span>
+                        <select id="setting_checkbox_style" class="setting-input" style="width: 130px;">
+                            <option value="check">✓ Checkmark</option>
+                            <option value="circle">● Circle</option>
+                            <option value="cross">✗ Cross</option>
+                            <option value="square">■ Square</option>
+                            <option value="diamond">◆ Diamond</option>
+                            <option value="star">★ Star</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Checkbox Border Thickness</span>
+                        <select id="setting_checkbox_border_thickness" class="setting-input" style="width: 130px;">
+                            <option value="0">None (0pt)</option>
+                            <option value="1">Thin (1pt)</option>
+                            <option value="2">Medium (2pt)</option>
+                            <option value="3">Thick (3pt)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Background Color <span class="info-icon" data-info="The fill color inside checkboxes. Use the Alpha slider in the picker for transparency.">i</span></span>
+                        <button class="color-swatch-btn" id="btn_checkbox_bg_color" data-target="setting_checkbox_bg_color" data-label="Checkbox Background">
+                            <span class="color-swatch-preview" id="preview_checkbox_bg_color" style="background: #FFFFFF;"></span>
+                            <span class="color-swatch-text" id="text_checkbox_bg_color">#FFFFFF</span>
+                        </button>
+                        <input type="hidden" id="setting_checkbox_bg_color" value="#FFFFFF">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Border Color <span class="info-icon" data-info="The stroke/border color around checkboxes. Use the Alpha slider in the picker for transparency.">i</span></span>
+                        <button class="color-swatch-btn" id="btn_checkbox_border_color" data-target="setting_checkbox_border_color" data-label="Checkbox Border">
+                            <span class="color-swatch-preview" id="preview_checkbox_border_color" style="background: #000000;"></span>
+                            <span class="color-swatch-text" id="text_checkbox_border_color">#000000</span>
+                        </button>
+                        <input type="hidden" id="setting_checkbox_border_color" value="#000000">
+                    </div>
+                </div>
+                
+                <!-- Visual Settings -->
+                <div class="settings-section">
+                    <h3>Visual / Styling</h3>
+                    <div class="setting-row">
+                        <span class="setting-label">App Theme <span class="info-icon" data-info="Changes the visual appearance of this application.">i</span></span>
+                        <select id="setting_theme" class="setting-input">
+                            <option value="dark">🌙 Dark</option>
+                            <option value="light">☀️ Light</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Field Background Color <span class="info-icon" data-info="Fill color of text fields in the final PDF. Light colors help users identify fillable areas.">i</span></span>
+                        <button class="color-swatch-btn" id="btn_field_background_color" data-target="setting_field_background_color" data-label="Field Background Color">
+                            <span class="color-swatch-preview" id="preview_field_background_color" style="background: #EDF4FF;"></span>
+                            <span class="color-swatch-text" id="text_field_background_color">#EDF4FF</span>
+                        </button>
+                        <input type="hidden" id="setting_field_background_color" value="#EDF4FF">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Show Field Borders <span class="info-icon" data-info="When enabled, draws a visible rectangle around each fillable area.">i</span></span>
+                        <div id="setting_field_border_visible" class="setting-toggle"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Field Border Color <span class="info-icon" data-info="The color of the border drawn around fillable fields.">i</span></span>
+                        <button class="color-swatch-btn" id="btn_field_border_color" data-target="setting_field_border_color" data-label="Field Border Color">
+                            <span class="color-swatch-preview" id="preview_field_border_color" style="background: #000000;"></span>
+                            <span class="color-swatch-text" id="text_field_border_color">#000000</span>
+                        </button>
+                        <input type="hidden" id="setting_field_border_color" value="#000000">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Line Thickness <span class="info-icon" data-info="The thickness of field borders. None hides the border entirely.">i</span></span>
+                        <select id="setting_field_border_thickness" class="setting-input" style="width: 130px;">
+                            <option value="0">None</option>
+                            <option value="1" selected>Thin</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Thick</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Line Style <span class="info-icon" data-info="The style of field borders - solid or dashed.">i</span></span>
+                        <select id="setting_field_border_style" class="setting-input" style="width: 130px;">
+                            <option value="solid" selected>Solid</option>
+                            <option value="dashed">Dashed</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Font Size (pt) <span class="info-icon" data-info="Default text size for text fields in the final PDF.">i</span></span>
+                        <input type="number" id="setting_field_font_size" class="setting-input" value="9" min="6" max="18">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Font Family <span class="info-icon" data-info="The font used for the text users type into the fields.">i</span></span>
+                        <select id="setting_field_font_family" class="setting-input" style="width: 130px;">
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Courier">Courier</option>
+                            <option value="Times-Roman">Times Roman</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Font Color <span class="info-icon" data-info="The color of the text users type into the fields.">i</span></span>
+                        <button class="color-swatch-btn" id="btn_field_font_color" data-target="setting_field_font_color" data-label="Font Color">
+                            <span class="color-swatch-preview" id="preview_field_font_color" style="background: #000000;"></span>
+                            <span class="color-swatch-text" id="text_field_font_color">#000000</span>
+                        </button>
+                        <input type="hidden" id="setting_field_font_color" value="#000000">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Small Field Threshold <span class="info-icon" data-info="Maximum width for a field to be considered 'small' (like date parts).">i</span></span>
+                        <select id="setting_small_field_threshold" class="setting-input" style="width: 140px;">
+                            <option value="50">Strict (50pt)</option>
+                            <option value="100" selected>Normal (100pt)</option>
+                            <option value="150">Relaxed (150pt)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Display tooltips <span class="info-icon" data-info="When enabled, fields will show their name or description when hovered. Disable for a cleaner UI in the final PDF.">i</span></span>
+                        <div id="setting_display_tooltips" class="setting-toggle active"></div>
+                    </div>
+                </div>
+                
+                <!-- JavaScript Auto-Formatting -->
+                <div class="settings-section">
+                    <h3>Auto-Formatting</h3>
+                    
+                    <!-- Currency Formatting -->
+                    <div class="setting-row">
+                        <span class="setting-label">Currency Formatting <span class="info-icon" data-info="Auto-formats fields with 'price', 'cost', 'amount', etc. in their name as currency.">i</span></span>
+                        <div id="setting_enable_currency_formatting" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Symbol</span>
+                        <select id="setting_currency_symbol" class="setting-input" style="width: 80px;">
+                            <option value="">None</option>
+                            <option value="$">$ (USD)</option>
+                            <option value="€">€ (EUR)</option>
+                            <option value="£">£ (GBP)</option>
+                            <option value="¥">¥ (JPY)</option>
+                            <option value="C$">C$ (CAD)</option>
+                            <option value="A$">A$ (AUD)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Symbol Position</span>
+                        <select id="setting_currency_symbol_position" class="setting-input" style="width: 100px;">
+                            <option value="before">Before ($100)</option>
+                            <option value="after">After (100$)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Decimal Places</span>
+                        <select id="setting_currency_decimal_places" class="setting-input" style="width: 80px;">
+                            <option value="0">0</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Number Formatting -->
+                    <div class="setting-row" style="margin-top: 15px;">
+                        <span class="setting-label">Number Formatting <span class="info-icon" data-info="Auto-formats fields with 'quantity', 'count', 'number', etc. in their name with proper separators.">i</span></span>
+                        <div id="setting_enable_number_formatting" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Decimal Places</span>
+                        <select id="setting_number_decimal_places" class="setting-input" style="width: 80px;">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Thousands Separator</span>
+                        <select id="setting_number_thousands_separator" class="setting-input" style="width: 100px;">
+                            <option value=",">Comma (1,000)</option>
+                            <option value=".">Period (1.000)</option>
+                            <option value=" ">Space (1 000)</option>
+                            <option value="">None (1000)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Negative Numbers</span>
+                        <select id="setting_number_negative_style" class="setting-input" style="width: 100px;">
+                            <option value="minus">Minus (-100)</option>
+                            <option value="parens">Parens (100)</option>
+                            <option value="red">Red Color</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Date Formatting -->
+                    <div class="setting-row" style="margin-top: 15px;">
+                        <span class="setting-label">Date Picker <span class="info-icon" data-info="Adds a date picker dropdown to fields with 'date', 'dob', 'birth', etc. in their name.">i</span></span>
+                        <div id="setting_enable_date_picker" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Date Format</span>
+                        <select id="setting_date_format" class="setting-input" style="width: 140px;">
+                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                            <option value="MMM DD, YYYY">MMM DD, YYYY</option>
+                            <option value="DD MMM YYYY">DD MMM YYYY</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Phone Formatting -->
+                    <div class="setting-row" style="margin-top: 15px;">
+                        <span class="setting-label">Phone Formatting <span class="info-icon" data-info="Auto-formats fields with 'phone', 'fax', 'cell', 'mobile', 'tel' in their name.">i</span></span>
+                        <div id="setting_enable_phone_formatting" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row" style="padding-left: 20px;">
+                        <span class="setting-label">Phone Format</span>
+                        <select id="setting_phone_format" class="setting-input" style="width: 160px;">
+                            <option value="(XXX) XXX-XXXX">(XXX) XXX-XXXX</option>
+                            <option value="XXX-XXX-XXXX">XXX-XXX-XXXX</option>
+                            <option value="XXX.XXX.XXXX">XXX.XXX.XXXX</option>
+                            <option value="+1 (XXX) XXX-XXXX">+1 (XXX) XXX-XXXX</option>
+                            <option value="XXXXXXXXXX">No Format</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Advanced Layout -->
+                <div class="settings-section">
+                    <h3>Advanced Layout</h3>
+                    <div class="setting-row high-prio-setting" style="background: rgba(100, 255, 218, 0.05); border: 1px solid rgba(100, 255, 218, 0.2); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+                        <span class="setting-label" style="color: #64ffda; font-weight: 700;">⭐ Single Line Field Height (in) <span class="info-icon" data-info="Force all single-line text fields to a specific height (in inches). If the existing space is smaller than this value, the smaller space will be kept. Does not affect multiline or grid fields.">i</span></span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div id="setting_enable_global_single_line_height" class="setting-toggle"></div>
+                            <input type="number" id="setting_global_single_line_height" class="setting-input" value="0.25" min="0.05" max="1.0" step="0.01" style="width: 65px; border-color: rgba(100, 255, 218, 0.3); background: rgba(0,0,0,0.2);">
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Field Gap (pt) <span class="info-icon" data-info="Minimum space required between fields. Increase this if adjacent fields are merging together.">i</span></span>
+                        <input type="number" id="setting_field_gap" class="setting-input" value="0.5" min="0" max="5" step="0.5">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Field Width (pt) <span class="info-icon" data-info="Fields narrower than this will be ignored or expanded.">i</span></span>
+                        <input type="number" id="setting_min_field_width" class="setting-input" value="20" min="5" max="50">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Field Height (pt) <span class="info-icon" data-info="Ignore any detected areas smaller than these dimensions to reduce noise.">i</span></span>
+                        <input type="number" id="setting_min_field_height" class="setting-input" value="10" min="5" max="30">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Cell Coverage Threshold (%) <span class="info-icon" data-info="Percentage of overlap required to assign a text box to a table cell.">i</span></span>
+                        <input type="number" id="setting_cell_coverage_threshold" class="setting-input" value="70" min="30" max="100">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Table Cell Padding (pt) <span class="info-icon" data-info="Padding inset inside detected table cells when expanding fields to fill the cell.">i</span></span>
+                        <input type="number" id="setting_table_cell_padding" class="setting-input" value="0" min="0" max="20" step="0.5">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Auto-expand Small Fields <span class="info-icon" data-info="Automatically increase the size of fields that are too small to fit text comfortably.">i</span></span>
+                        <div id="setting_auto_expand_fields" class="setting-toggle active"></div>
+                    </div>
+                </div>
+                
+                <!-- Detection Thresholds (Advanced) -->
+                <div class="settings-section">
+                    <h3>Detection Thresholds</h3>
+                    <p style="color: var(--text-secondary); font-size: 11px; margin-bottom: 12px;">
+                        Fine-tune these to reduce unwanted field detection
+                    </p>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Underscore Length (chars) <span class="info-icon" data-info="Minimum consecutive underscores needed to detect a signature/text line.">i</span></span>
+                        <input type="number" id="setting_min_underscore_length" class="setting-input" value="3" min="2" max="10">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Empty Box Width (pt) <span class="info-icon" data-info="Minimum width for a rectangle to be detected as an image placeholder.">i</span></span>
+                        <input type="number" id="setting_min_empty_box_width" class="setting-input" value="100" min="50" max="300">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Min Empty Box Height (pt) <span class="info-icon" data-info="Minimum height for a rectangle to be detected as an image placeholder.">i</span></span>
+                        <input type="number" id="setting_min_empty_box_height" class="setting-input" value="30" min="15" max="100">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Page Edge Margin (pt) <span class="info-icon" data-info="Distance from page edges where fields will be ignored when 'Skip Fields Near Page Edges' is enabled.">i</span></span>
+                        <input type="number" id="setting_page_edge_margin" class="setting-input" value="30" min="10" max="72">
+                    </div>
+                </div>
+                
+                <!-- Debug / Developer -->
+                <div class="settings-section">
+                    <h3>Debug / Developer</h3>
+                    <div class="setting-row">
+                        <span class="setting-label">Check for Software Updates <span class="info-icon" data-info="Automatically check for new versions when the app starts.">i</span></span>
+                        <div id="setting_check_for_updates" class="setting-toggle active"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Verbose Logging <span class="info-icon" data-info="Show detailed processing information in the console for debugging.">i</span></span>
+                        <div id="setting_verbose_logging" class="setting-toggle"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Preserve Existing Widgets <span class="info-icon" data-info="Keep form fields that already exist in the PDF instead of replacing them.">i</span></span>
+                        <div id="setting_preserve_existing_widgets" class="setting-toggle"></div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Generate QA Overlays <span class="info-icon" data-info="Create a visual overlay PDF showing detected vs. generated fields for quality assurance.">i</span></span>
+                        <div id="setting_generate_qa_overlays" class="setting-toggle active"></div>
+                    </div>
+                </div>
+                
+                <!-- AI Assistant Account -->
+                <div class="settings-section">
+                    <h3>AI Assistant Account</h3>
+                    <div class="setting-row">
+                        <span class="setting-label">AI Key Management <span class="info-icon" data-info="Remove the stored AI Assistant API key from this computer.">i</span></span>
+                        <button id="btnSignOut" class="btn-secondary" style="padding: 6px 12px; font-size: 12px; border-radius: 4px; border: 1px solid var(--status-error-text); color: var(--status-error-text); background: transparent;">
+                            Clear Saved API Key
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </div><!-- End Tab 1 -->
+            
+            <!-- Tab 2: Test Fill Data -->
+            <div id="tabTestFill" class="tab-content">
+                <div class="settings-body">
+                    <!-- Test Fill always uses Smart (Python) mode -->
+                    
+                    <p class="spreadsheet-help">
+                        <strong>💡 How it works:</strong> When a field name contains any keyword in the "Keywords" column, 
+                        the Test Fill script will randomly select a value from the "Sample Data" column.
+                        Separate multiple items with commas.
+                    </p>
+                    
+                    <div class="spreadsheet-container">
+                        <table class="spreadsheet-table" id="testFillTable">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Keywords (triggers)</th>
+                                    <th>Sample Data (values)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="testFillTableBody">
+                                <!-- Rows populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="text" id="newCategoryName" class="setting-input" placeholder="Enter category name..." style="flex: 1;">
+                        <button id="btnAddCategory" class="btn-add-category" style="width: auto; margin-top: 0;">➕ Add</button>
+                    </div>
+                    
+                    <p class="spreadsheet-help" style="margin-top: 15px;">
+                        <strong>🔢 Numeric Patterns:</strong> Fields matching these keywords get numeric values instead of text.
+                    </p>
+                    
+                    <div class="setting-row" style="margin-top: 10px;">
+                        <span class="setting-label">Numeric Keywords</span>
+                    </div>
+                    <textarea id="setting_numeric_patterns" class="editable-cell" style="width: 100%; min-height: 80px; margin-top: 5px;">rvalue, btuh, btu, afue, seer, hspf, cfm, kwh, sq ft, temperature, quantity</textarea>
+                </div>
+            </div><!-- End Tab 2 -->
+            
+            <div class="settings-footer">
+                <div style="display: flex; gap: 10px;">
+                    <button class="action-btn btn-tertiary" id="btnImportSettings" style="padding: 8px 12px; font-size: 13px;">
+                        📥 Import
+                    </button>
+                    <button class="action-btn btn-tertiary" id="btnExportSettings" style="padding: 8px 12px; font-size: 13px;">
+                        📤 Export
+                    </button>
+                </div>
+                <div style="flex: 1;"></div>
+                <button id="btnResetSettings" class="btn-reset">Reset to Defaults</button>
+                <button id="btnCancelSettings" class="btn-cancel">Cancel</button>
+                <button id="btnSaveSettings" class="btn-save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Modal -->
+    <div id="aboutModal" class="settings-modal">
+        <div class="settings-content" style="width: 400px; max-height: 450px;">
+            <div class="settings-header">
+                <h2>ℹ️ About</h2>
+                <button id="btnCloseAbout" class="btn-cancel" style="padding: 5px 10px;">✕</button>
+            </div>
+            <div class="settings-body" style="text-align: center; padding: 30px;">
+                <div style="font-size: 48px; margin-bottom: 10px;">📄</div>
+                <h1 style="font-size: 24px; margin-bottom: 5px; background: linear-gradient(135deg, #e94560, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Fill That PDF!</h1>
+                <span class="pro-badge" style="font-size: 12px; padding: 4px 12px;">PRO</span>
+                
+                <div style="margin-top: 25px; color: var(--text-secondary);">
+                    <div style="font-size: 14px; margin-bottom: 8px;">
+                        <strong>Version:</strong> 4.0.0
+                    </div>
+                    <div style="font-size: 14px; margin-bottom: 8px;">
+                        <strong>Build:</strong> December 2024
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; padding: 15px; background: var(--stats-bg); border-radius: 8px; text-align: left;">
+                    <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                        <strong style="color: var(--text-accent);">Features:</strong><br>
+                        • AI-powered field detection<br>
+                        • Batch PDF processing<br>
+                        • Visual field editor<br>
+                        • Instant test fill<br>
+                        • Smart formatting
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 12px; color: var(--text-secondary);">
+                    © 2024 Fill That PDF! All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Color Picker Popup (hidden by default) -->
+    <div id="colorPickerPopup" class="color-picker-popup" style="display: none;">
+        <div class="color-picker-header">
+            <span class="color-picker-title" id="colorPickerLabel">Select Color</span>
+            <button class="color-picker-close" id="colorPickerClose">✕</button>
+        </div>
+        
+        <div class="color-picker-tabs">
+            <button class="color-picker-tab active" data-mode="rgb">RGB</button>
+            <button class="color-picker-tab" data-mode="cmyk">CMYK</button>
+            <button class="color-picker-tab" data-mode="gray">Gray</button>
+        </div>
+        
+        <!-- RGB Mode -->
+        <div class="color-picker-content" id="colorModeRGB">
+            <div class="color-slider-row">
+                <span class="color-slider-label">R</span>
+                <input type="range" class="color-slider" id="cpSliderR" min="0" max="255" value="237" style="background: linear-gradient(to right, #000, #f00);">
+                <span class="color-slider-value" id="cpValueR">237</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">G</span>
+                <input type="range" class="color-slider" id="cpSliderG" min="0" max="255" value="244" style="background: linear-gradient(to right, #000, #0f0);">
+                <span class="color-slider-value" id="cpValueG">244</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">B</span>
+                <input type="range" class="color-slider" id="cpSliderB" min="0" max="255" value="255" style="background: linear-gradient(to right, #000, #00f);">
+                <span class="color-slider-value" id="cpValueB">255</span>
+            </div>
+        </div>
+        
+        <!-- CMYK Mode -->
+        <div class="color-picker-content" id="colorModeCMYK" style="display: none;">
+            <div class="color-slider-row">
+                <span class="color-slider-label">C</span>
+                <input type="range" class="color-slider" id="cpSliderC" min="0" max="100" value="7" style="background: linear-gradient(to right, #fff, #0ff);">
+                <span class="color-slider-value" id="cpValueC">7%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">M</span>
+                <input type="range" class="color-slider" id="cpSliderM" min="0" max="100" value="4" style="background: linear-gradient(to right, #fff, #f0f);">
+                <span class="color-slider-value" id="cpValueM">4%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">Y</span>
+                <input type="range" class="color-slider" id="cpSliderY" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #ff0);">
+                <span class="color-slider-value" id="cpValueY">0%</span>
+            </div>
+            <div class="color-slider-row">
+                <span class="color-slider-label">K</span>
+                <input type="range" class="color-slider" id="cpSliderK" min="0" max="100" value="0" style="background: linear-gradient(to right, #fff, #000);">
+                <span class="color-slider-value" id="cpValueK">0%</span>
+            </div>
+        </div>
+        
+        <!-- Grayscale Mode -->
+        <div class="color-picker-content" id="colorModeGray" style="display: none;">
+            <div class="color-slider-row">
+                <span class="color-slider-label" style="width: 50px;">Gray</span>
+                <input type="range" class="color-slider" id="cpSliderGray" min="0" max="100" value="95" style="background: linear-gradient(to right, #000, #fff);">
+                <span class="color-slider-value" id="cpValueGray">95%</span>
+            </div>
+        </div>
+        
+        <!-- Opacity & Transparent -->
+        <div class="color-slider-row" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--input-border); display: flex; align-items: center; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-right: 4px;">
+                <input type="checkbox" id="cpTransparent" style="accent-color: var(--accent-pink);">
+                <span style="font-size: 11px; color: var(--text-secondary);">Transparent</span>
+            </label>
+            <div style="width: 1px; height: 16px; background: var(--input-border); margin: 0 4px;"></div>
+            <span class="color-slider-label" style="width: auto;">Alpha</span>
+            <input type="range" class="color-slider" id="cpSliderA" min="0" max="100" value="100" style="background: linear-gradient(to right, transparent, #fff); flex: 1; min-width: 0;">
+            <span class="color-slider-value" id="cpValueA" style="width: 35px; text-align: right;">100%</span>
+        </div>
+        
+        <!-- Preview and Hex -->
+        <div class="color-preview-row">
+            <div class="color-preview-swatch">
+                <div class="color-preview-color" id="cpPreview" style="background: rgba(237, 244, 255, 1);"></div>
+            </div>
+            <input type="text" class="color-hex-input" id="cpHexInput" value="#EDF4FF" placeholder="#RRGGBB">
+        </div>
+        
+        <button class="color-picker-apply" id="cpApply">Apply Color</button>
+    </div>
+    
+    <!-- Input Prompt Modal (replaces native prompt) -->
+    <div id="inputPromptModal" class="settings-modal" style="display: none;">
+        <div style="background: var(--modal-bg); width: 350px; border-radius: 12px; border: 1px solid var(--input-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div style="padding: 20px; border-bottom: 1px solid var(--input-border);">
+                <h3 id="inputPromptTitle" style="color: var(--text-primary); font-size: 16px; margin: 0;">Enter Value</h3>
+            </div>
+            <div style="padding: 20px;">
+                <input type="text" id="inputPromptValue" class="setting-input" style="width: 100%; padding: 10px 12px; font-size: 14px;" placeholder="Enter name...">
+            </div>
+            <div style="padding: 15px 20px; display: flex; gap: 10px; justify-content: flex-end; background: var(--stats-bg); border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                <button id="inputPromptCancel" class="btn-cancel" style="padding: 8px 16px;">Cancel</button>
+                <button id="inputPromptOK" class="btn-save" style="padding: 8px 16px;">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>
