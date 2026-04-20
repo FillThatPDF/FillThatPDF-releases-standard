@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+  <MASTER_PAD_VERSION_INFO>
+    <MASTER_PAD_VERSION>4.0</MASTER_PAD_VERSION>
+    <MASTER_PAD_EDITOR>Hand-crafted</MASTER_PAD_EDITOR>
+    <MASTER_PAD_INFO>Portable Application Description for Fill That PDF! PRO</MASTER_PAD_INFO>
+  </MASTER_PAD_VERSION_INFO>
+
+  <Company_Info>
+    <Company_Name>FillThatPDF!</Company_Name>
+    <Address_1></Address_1>
+    <City_Town></City_Town>
+    <State_Province></State_Province>
+    <Zip_Postal_Code></Zip_Postal_Code>
+    <Country>United States</Country>
+    <Company_WebSite_URL>https://fillthatpdf.com</Company_WebSite_URL>
+    <Contact_Info>
+      <Author_First_Name>Alex</Author_First_Name>
+      <Author_Last_Name>Gordon</Author_Last_Name>
+      <Author_Email>alexthebritgordon@gmail.com</Author_Email>
+      <Contact_First_Name>Alex</Contact_First_Name>
+      <Contact_Last_Name>Gordon</Contact_Last_Name>
+      <Contact_Email>alexthebritgordon@gmail.com</Contact_Email>
+    </Contact_Info>
+    <Support_Info>
+      <Sales_Email>alexthebritgordon@gmail.com</Sales_Email>
+      <Support_Email>alexthebritgordon@gmail.com</Support_Email>
+      <General_Email>alexthebritgordon@gmail.com</General_Email>
+    </Support_Info>
+  </Company_Info>
+
+  <Program_Info>
+    <Program_Name>Fill That PDF! PRO</Program_Name>
+    <Program_Version>1.0.0</Program_Version>
+    <Program_Release_Month>03</Program_Release_Month>
+    <Program_Release_Day>02</Program_Release_Day>
+    <Program_Release_Year>2026</Program_Release_Year>
+    <Program_Cost_Dollars>99.99</Program_Cost_Dollars>
+    <Program_Cost_Other_Code>USD</Program_Cost_Other_Code>
+    <Program_Type>Commercialware</Program_Type>
+    <Program_Release_Status>Major Release</Program_Release_Status>
+    <Program_OS_Support>Mac OS X</Program_OS_Support>
+    <Program_Language>English</Program_Language>
+    <Program_Change_Info>Version 1.0.0 - Initial Release</Program_Change_Info>
+    <Program_System_Requirements>macOS 10.12 or later, Intel or Apple Silicon Mac, 700 MB disk space</Program_System_Requirements>
+    <Program_Category>Business</Program_Category>
+    <File_Info>
+      <Filename_Versioned>FillThatPDF_PRO_v1.0.0.dmg</Filename_Versioned>
+      <File_Size_Bytes>732075816</File_Size_Bytes>
+      <File_Size_K>714917</File_Size_K>
+      <File_Size_MB>698.0</File_Size_MB>
+    </File_Info>
+    <Expire_Info>
+      <Expire_Count>0</Expire_Count>
+      <Expire_Based_On>Never</Expire_Based_On>
+      <Expire_Other_Info>License does not expire</Expire_Other_Info>
+    </Expire_Info>
+  </Program_Info>
+
+  <Program_Descriptions>
+    <English>
+      <Char_Desc_45>Advanced fillable PDF creator with editor</Char_Desc_45>
+      <Char_Desc_80>Create fillable PDFs with visual field editor, AI assistant, and bulk processing</Char_Desc_80>
+      <Char_Desc_250>Fill That PDF! PRO is the complete PDF form creation suite. It includes everything in the Standard version plus a visual field editor for precise control over every field, an AI assistant powered by Google Gemini, unlimited bulk processing, conditional rules, and calculated fields.</Char_Desc_250>
+      <Char_Desc_450>Fill That PDF! PRO is the complete professional PDF form creation suite for macOS. Beyond automatic field detection, it includes a full visual field editor where you can drag, resize, rename, and style every form field with pixel-perfect precision. Set up calculated fields with formulas, create conditional visibility rules, and use the built-in AI assistant to speed up your workflow. PRO supports unlimited bulk processing and advanced formatting options including custom validation, JavaScript actions, and multi-page form editing.</Char_Desc_450>
+      <Char_Desc_2000>Fill That PDF! PRO is the complete professional PDF form creation suite for macOS, designed for power users who need full control over their fillable PDF forms.
+
+Building on the intelligent automatic detection engine, Fill That PDF! PRO adds a comprehensive visual field editor that gives you precise control over every aspect of your form fields. Drag, resize, align, and style fields directly on the PDF canvas with real-time preview.
+
+PRO-exclusive features include:
+- Visual Field Editor with drag-and-drop field placement, resizing, and alignment tools
+- Calculated Fields supporting sum, average, min, max, product, and count operations across multiple source fields
+- Conditional Rules engine for show/hide logic based on field values
+- AI Assistant powered by Google Gemini for intelligent field suggestions and workflow automation
+- Unlimited Bulk Processing to convert entire folders of PDFs in one operation
+- Advanced field properties including character limits, comb fields, password masking, visibility controls, rotation, default values, and custom validation rules
+- Custom JavaScript actions for mouse, focus, and blur events
+- Lasso/marquee selection for batch field operations
+- Field formatting with date, phone, ZIP code, currency, and number masks
+- Per-field font, color, border, and alignment customization
+
+All Standard features are also included:
+- Automatic field detection for text fields, checkboxes, radio buttons, and dropdowns
+- Smart field naming based on nearby labels
+- Test fill mode with sample data
+- Customizable global settings for field appearance
+- Standards-compliant output compatible with Adobe Acrobat, Preview, and all major PDF viewers
+
+Fill That PDF! PRO runs natively on both Intel and Apple Silicon Macs as a universal application with a bundled Python engine requiring no additional software installation.
+
+The ultimate tool for businesses, form designers, and anyone who needs professional fillable PDF creation with complete control.</Char_Desc_2000>
+      <Keywords>pdf, fillable pdf, form fields, pdf forms, pdf editor, visual editor, form creator, calculated fields, conditional rules, ai assistant, bulk processing, checkbox, radio button, dropdown, mac pdf, pdf tool</Keywords>
+    </English>
+  </Program_Descriptions>
+
+  <Web_Info>
+    <Application_URLs>
+      <Application_Info_URL>https://fillthatpdf.com</Application_Info_URL>
+      <Application_Order_URL>https://fillthatpdf.com</Application_Order_URL>
+      <Application_Screenshot_URL>https://fillthatpdf.com/screenshot.png</Application_Screenshot_URL>
+      <Application_Icon_URL>https://fillthatpdf.com/icon.png</Application_Icon_URL>
+      <Application_XML_File_URL>https://fillthatpdf.com/pad_pro.xml</Application_XML_File_URL>
+    </Application_URLs>
+    <Download_URLs>
+      <Primary_Download_URL>https://github.com/FillThatPDF/FillThatPDF-releases-pro/releases/download/v1.0.0/FillThatPDF_PRO_v1.0.0.dmg</Primary_Download_URL>
+    </Download_URLs>
+  </Web_Info>
+
+  <Permissions>
+    <Distribution_Permissions>This software may not be redistributed without written permission from FillThatPDF!</Distribution_Permissions>
+    <Copyright_Holder>FillThatPDF!</Copyright_Holder>
+    <Copyright_Year>2026</Copyright_Year>
+  </Permissions>
+</XML_DIZ_INFO>

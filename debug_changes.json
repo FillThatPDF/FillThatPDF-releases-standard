@@ -1,0 +1,52 @@
+{
+  "deleted": [],
+  "renamed": {
+    "Con Edison Electric Account Number": "Con Edison Electric Account Number_2",
+    "State": "State_1",
+    "ZIP Code": "ZIP Code_1",
+    "City": "City_1",
+    "Work Phone": "Work Phone_1",
+    "State_1": "State_2",
+    "City_1": "City_2",
+    "ZIP Code_1": "ZIP Code_2",
+    "Work Phone_1": "Work Phone_2",
+    "Account Holder’s Signature X_2": "Account Holder’s Signature X"
+  },
+  "moved": {},
+  "resized": {},
+  "styled": {
+    "Con Edison Electric Account Number_2": {
+      "tooltip": "Con Edison Electric Account Number_2"
+    },
+    "State_1": {
+      "tooltip": "State_1"
+    },
+    "ZIP Code_1": {
+      "tooltip": "ZIP Code_1"
+    },
+    "City_1": {
+      "tooltip": "City_1"
+    },
+    "Work Phone_1": {
+      "tooltip": "Work Phone_1"
+    },
+    "State_2": {
+      "tooltip": "State_2"
+    },
+    "City_2": {
+      "tooltip": "City_2"
+    },
+    "ZIP Code_2": {
+      "tooltip": "ZIP Code_2"
+    },
+    "Work Phone_2": {
+      "tooltip": "Work Phone_2"
+    },
+    "Account Holder’s Signature X": {
+      "tooltip": "Account Holder’s Signature X"
+    }
+  },
+  "new_radio_groups": {},
+  "ungroup_radios": [],
+  "tab_order": {}
+}

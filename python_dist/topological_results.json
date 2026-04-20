@@ -1,0 +1,8522 @@
+[
+  {
+    "rect": [
+      37.0,
+      589.6843,
+      45.0,
+      597.6843
+    ],
+    "page": 7,
+    "label": "CB_193_P8",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      37.0,
+      568.6843,
+      45.0,
+      576.6843
+    ],
+    "page": 7,
+    "label": "CB_194_P8",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      37.0,
+      547.6843,
+      45.0,
+      555.6843
+    ],
+    "page": 7,
+    "label": "CB_195_P8",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      37.0,
+      526.6843,
+      45.0,
+      534.6843
+    ],
+    "page": 7,
+    "label": "CB_196_P8",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      37.0,
+      505.6843,
+      45.0,
+      513.6843
+    ],
+    "page": 7,
+    "label": "CB_197_P8",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      135.997,
+      645.32046,
+      303.9193,
+      657.32046
+    ],
+    "page": 13,
+    "label": "Account_Holder_First_Name_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      404.6382,
+      645.32046,
+      573.7952,
+      657.32046
+    ],
+    "page": 13,
+    "label": "Account_Holder_Last_Name_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      238.8746,
+      620.1203,
+      303.9193,
+      632.1203
+    ],
+    "page": 13,
+    "label": "Applicant_Name_if_different_fr_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      467.3366,
+      620.1203,
+      573.7952,
+      632.1203
+    ],
+    "page": 13,
+    "label": "Applicant_Relationship_to_DTE__P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      74.2394,
+      594.9203,
+      303.9193,
+      606.9203
+    ],
+    "page": 13,
+    "label": "Address_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      358.4822,
+      594.9203,
+      573.7952,
+      606.9203
+    ],
+    "page": 13,
+    "label": "Home_Phone_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      60.7402,
+      569.7204,
+      185.21987,
+      581.7204
+    ],
+    "page": 13,
+    "label": "City_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      351.591,
+      569.7204,
+      573.7952,
+      581.7204
+    ],
+    "page": 13,
+    "label": "Cell_Phone_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      189.21987,
+      561.24417,
+      233.45987,
+      569.7204
+    ],
+    "page": 13,
+    "label": "State_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      237.45987,
+      561.24417,
+      303.9193,
+      569.7204
+    ],
+    "page": 13,
+    "label": "ZIP_Code_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      41.0346,
+      541.9383,
+      49.0346,
+      549.9383
+    ],
+    "page": 13,
+    "label": "CB_198_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      196.8798,
+      539.5373,
+      303.9193,
+      551.5373
+    ],
+    "page": 13,
+    "label": "DTE_Energy_Natural_Gas_Account_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      363.9966,
+      544.5204,
+      573.7952,
+      556.5204
+    ],
+    "page": 13,
+    "label": "Email_Address_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      41.0346,
+      516.7383,
+      49.0346,
+      524.7383
+    ],
+    "page": 13,
+    "label": "CB_199_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      183.2174,
+      514.3373,
+      303.9193,
+      526.3373
+    ],
+    "page": 13,
+    "label": "DTE_Energy_Electric_Account_Nu_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      307.9193,
+      510.84416,
+      573.7952,
+      519.32046
+    ],
+    "page": 13,
+    "label": "Community_Action_Agency_CAANon_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      98.685,
+      463.1203,
+      303.9193,
+      475.1203
+    ],
+    "page": 13,
+    "label": "Company_Name_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      372.2262,
+      463.1203,
+      573.7952,
+      475.1203
+    ],
+    "page": 13,
+    "label": "Technician_Name_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      74.2394,
+      437.9203,
+      303.9193,
+      449.9203
+    ],
+    "page": 13,
+    "label": "Address_P13_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      337.751,
+      437.9203,
+      573.7952,
+      449.9203
+    ],
+    "page": 13,
+    "label": "Phone_P13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      60.7402,
+      412.7204,
+      185.21987,
+      424.7204
+    ],
+    "page": 13,
+    "label": "City_P13_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      363.9966,
+      412.7204,
+      573.7952,
+      424.7204
+    ],
+    "page": 13,
+    "label": "Email_Address_P13_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      189.21987,
+      404.2441,
+      233.45987,
+      412.7204
+    ],
+    "page": 13,
+    "label": "State_P13_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      237.45987,
+      404.2441,
+      303.9193,
+      412.7204
+    ],
+    "page": 13,
+    "label": "ZIP_Code_P13_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.5346,
+      351.7383,
+      48.5346,
+      359.7383
+    ],
+    "page": 13,
+    "label": "CB_200_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      351.7383,
+      318.5,
+      359.7383
+    ],
+    "page": 13,
+    "label": "CB_201_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      426.5897,
+      351.7383,
+      434.5897,
+      359.7383
+    ],
+    "page": 13,
+    "label": "RadioGroup_43./Off",
+    "parent": "RadioGroup_43",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      471.2407,
+      351.7383,
+      479.2407,
+      359.7383
+    ],
+    "page": 13,
+    "label": "RadioGroup_43./Off",
+    "parent": "RadioGroup_43",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5346,
+      330.1383,
+      48.5346,
+      338.1383
+    ],
+    "page": 13,
+    "label": "CB_204_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      330.1383,
+      318.5,
+      338.1383
+    ],
+    "page": 13,
+    "label": "CB_205_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5346,
+      308.5383,
+      48.5346,
+      316.5383
+    ],
+    "page": 13,
+    "label": "CB_206_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      308.5383,
+      318.5,
+      316.5383
+    ],
+    "page": 13,
+    "label": "CB_207_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5346,
+      286.9383,
+      48.5346,
+      294.9383
+    ],
+    "page": 13,
+    "label": "CB_208_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      286.9383,
+      318.5,
+      294.9383
+    ],
+    "page": 13,
+    "label": "CB_209_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5346,
+      265.33833,
+      48.5346,
+      273.33833
+    ],
+    "page": 13,
+    "label": "CB_210_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      265.33833,
+      318.5,
+      273.33833
+    ],
+    "page": 13,
+    "label": "CB_211_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5346,
+      240.11939,
+      48.5346,
+      248.11939
+    ],
+    "page": 13,
+    "label": "CB_212_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.5,
+      247.11939,
+      318.5,
+      255.11939
+    ],
+    "page": 13,
+    "label": "CB_213_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      459.9578,
+      247.11939,
+      467.9578,
+      255.11939
+    ],
+    "page": 13,
+    "label": "RadioGroup_44./Off",
+    "parent": "RadioGroup_44",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      500.8027,
+      247.11939,
+      508.8027,
+      255.11939
+    ],
+    "page": 13,
+    "label": "RadioGroup_44./Off",
+    "parent": "RadioGroup_44",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      459.9578,
+      233.11939,
+      467.9578,
+      241.11939
+    ],
+    "page": 13,
+    "label": "CB_216_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      214.90039,
+      48.5345,
+      222.90039
+    ],
+    "page": 13,
+    "label": "CB_217_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      214.90039,
+      318.4999,
+      222.90039
+    ],
+    "page": 13,
+    "label": "CB_218_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      193.30042,
+      48.5345,
+      201.30042
+    ],
+    "page": 13,
+    "label": "CB_219_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      193.30042,
+      318.4999,
+      201.30042
+    ],
+    "page": 13,
+    "label": "CB_220_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      171.70038,
+      48.5345,
+      179.70038
+    ],
+    "page": 13,
+    "label": "CB_221_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      171.70038,
+      318.4999,
+      179.70038
+    ],
+    "page": 13,
+    "label": "CB_222_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      150.1004,
+      48.5345,
+      158.1004
+    ],
+    "page": 13,
+    "label": "CB_223_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      150.1004,
+      318.4999,
+      158.1004
+    ],
+    "page": 13,
+    "label": "CB_224_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      128.50043,
+      48.5345,
+      136.50043
+    ],
+    "page": 13,
+    "label": "CB_225_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      128.50043,
+      318.4999,
+      136.50043
+    ],
+    "page": 13,
+    "label": "CB_226_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      106.90039,
+      48.5345,
+      114.90039
+    ],
+    "page": 13,
+    "label": "CB_227_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      106.90039,
+      318.4999,
+      114.90039
+    ],
+    "page": 13,
+    "label": "CB_228_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      85.300418,
+      48.5345,
+      93.300418
+    ],
+    "page": 13,
+    "label": "CB_229_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      85.300418,
+      318.4999,
+      93.300418
+    ],
+    "page": 13,
+    "label": "CB_230_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      63.70038,
+      48.5345,
+      71.70038
+    ],
+    "page": 13,
+    "label": "CB_231_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      63.70038,
+      318.4999,
+      71.70038
+    ],
+    "page": 13,
+    "label": "CB_232_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.5345,
+      42.100404,
+      48.5345,
+      50.100404
+    ],
+    "page": 13,
+    "label": "CB_233_P13",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      310.4999,
+      42.100404,
+      318.4999,
+      50.100404
+    ],
+    "page": 13,
+    "label": "RadioGroup_45./Off",
+    "parent": "RadioGroup_45",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      361.7973,
+      42.100404,
+      369.7973,
+      50.100404
+    ],
+    "page": 13,
+    "label": "RadioGroup_45./Off",
+    "parent": "RadioGroup_45",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      409.8859,
+      42.100404,
+      417.8859,
+      50.100404
+    ],
+    "page": 13,
+    "label": "RadioGroup_45./Off",
+    "parent": "RadioGroup_45",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      465.1265,
+      42.100404,
+      473.1265,
+      50.100404
+    ],
+    "page": 13,
+    "label": "RadioGroup_45./Off",
+    "parent": "RadioGroup_45",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.57,
+      689.1251,
+      48.57,
+      697.1251
+    ],
+    "page": 14,
+    "label": "CB_238_P14",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      75.5772,
+      654.196,
+      573.702,
+      682.224
+    ],
+    "page": 14,
+    "label": "Other_including_Health_and_Saf_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8392704,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      233.3572,
+      631.144,
+      573.70217,
+      643.144
+    ],
+    "page": 14,
+    "label": "Preexisting_conditions_of_the__P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      144.502,
+      457.8961,
+      573.70217,
+      469.8961
+    ],
+    "page": 14,
+    "label": "Customer_Name_please_print_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      112.3076,
+      432.5161,
+      381.58,
+      444.5161
+    ],
+    "page": 14,
+    "label": "Customer_Signature_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      410.1904,
+      432.5161,
+      540.9998,
+      444.5161
+    ],
+    "page": 14,
+    "label": "Date_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      148.282,
+      394.1361,
+      573.70217,
+      406.1361
+    ],
+    "page": 14,
+    "label": "Contractor_Name_please_print_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      116.0812,
+      368.7561,
+      381.58,
+      380.7561
+    ],
+    "page": 14,
+    "label": "Contractor_Signature_P14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      410.1904,
+      368.7561,
+      540.9998,
+      380.7561
+    ],
+    "page": 14,
+    "label": "Date_P14_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.75,
+      609.91946,
+      48.75,
+      617.91946
+    ],
+    "page": 15,
+    "label": "CB_239_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      411.912,
+      607.82046,
+      446.2,
+      619.82046
+    ],
+    "page": 15,
+    "label": "Kilowatt_Hours_kWh_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      497.236,
+      607.82046,
+      573.7383,
+      619.82046
+    ],
+    "page": 15,
+    "label": "Peak_Watts_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      216.92,
+      598.84408,
+      327.335,
+      607.82046
+    ],
+    "page": 15,
+    "label": "Elapsed_Time_minutes_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.75,
+      584.7193,
+      48.75,
+      592.7193
+    ],
+    "page": 15,
+    "label": "CB_240_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      247.0488,
+      582.6203,
+      327.335,
+      594.6203
+    ],
+    "page": 15,
+    "label": "Month_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.7632,
+      582.6203,
+      573.7383,
+      594.6203
+    ],
+    "page": 15,
+    "label": "Year_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.75,
+      559.5193,
+      48.75,
+      567.5193
+    ],
+    "page": 15,
+    "label": "CB_241_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      236.776,
+      536.677,
+      573.738,
+      569.42
+    ],
+    "page": 15,
+    "label": "SIR_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8392704,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      174.4576,
+      470.9804,
+      295.0,
+      482.9804
+    ],
+    "page": 15,
+    "label": "Make_or_Brand_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      430.7776,
+      470.9804,
+      573.7383,
+      482.9804
+    ],
+    "page": 15,
+    "label": "Make_or_Brand_P15_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      174.4304,
+      445.1804,
+      295.0,
+      457.1804
+    ],
+    "page": 15,
+    "label": "Model_Number_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.75,
+      433.7493,
+      48.75,
+      441.7493
+    ],
+    "page": 15,
+    "label": "CB_242_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      301.5,
+      433.7493,
+      309.5,
+      441.7493
+    ],
+    "page": 15,
+    "label": "CB_245_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      430.7504,
+      437.3804,
+      573.7383,
+      449.3804
+    ],
+    "page": 15,
+    "label": "Model_Number_P15_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      172.8496,
+      420.5804,
+      295.0,
+      432.5804
+    ],
+    "page": 15,
+    "label": "Serial_Number_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      40.75,
+      415.2493,
+      48.75,
+      423.2493
+    ],
+    "page": 15,
+    "label": "CB_243_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      301.5,
+      415.2493,
+      309.5,
+      423.2493
+    ],
+    "page": 15,
+    "label": "CB_246_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.75,
+      396.7493,
+      48.75,
+      404.7493
+    ],
+    "page": 15,
+    "label": "CB_244_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      188.7024,
+      395.5004,
+      273.74049,
+      407.5004
+    ],
+    "page": 15,
+    "label": "Date_of_Installation_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      429.1696,
+      403.7804,
+      573.7383,
+      415.7804
+    ],
+    "page": 15,
+    "label": "Serial_Number_P15_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      301.5,
+      396.7493,
+      309.5,
+      404.7493
+    ],
+    "page": 15,
+    "label": "CB_247_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.75,
+      304.5983,
+      48.75,
+      312.5983
+    ],
+    "page": 15,
+    "label": "CB_248_P15",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      177.75,
+      298.70408,
+      235.67,
+      319.90406
+    ],
+    "page": 15,
+    "label": "Installed_Date_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      483.20423,
+      298.70408,
+      573.7383,
+      319.90406
+    ],
+    "page": 15,
+    "label": "Total_Expected_Rebate_P15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      483.20423,
+      273.50416,
+      573.7383,
+      294.70408
+    ],
+    "page": 15,
+    "label": "Total_Expected_Rebate_P15_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      43.0,
+      637.1362,
+      51.0,
+      645.1362
+    ],
+    "page": 16,
+    "label": "CB_249_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      328.75,
+      637.1362,
+      336.75,
+      645.1362
+    ],
+    "page": 16,
+    "label": "CB_254_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      605.6362,
+      51.0,
+      613.6362
+    ],
+    "page": 16,
+    "label": "CB_250_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      328.75,
+      587.6362,
+      336.75,
+      595.6362
+    ],
+    "page": 16,
+    "label": "CB_255_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      556.1362,
+      51.0,
+      564.1362
+    ],
+    "page": 16,
+    "label": "CB_251_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      328.75,
+      538.1362,
+      336.75,
+      546.1362
+    ],
+    "page": 16,
+    "label": "CB_256_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      506.6362,
+      51.0,
+      514.6362
+    ],
+    "page": 16,
+    "label": "CB_252_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      328.75,
+      488.6362,
+      336.75,
+      496.6362
+    ],
+    "page": 16,
+    "label": "CB_257_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      457.1362,
+      51.0,
+      465.1362
+    ],
+    "page": 16,
+    "label": "CB_253_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      328.75,
+      457.1362,
+      336.75,
+      465.1362
+    ],
+    "page": 16,
+    "label": "CB_258_P16",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      39.508,
+      442.908,
+      196.789,
+      600.18899
+    ],
+    "page": 17,
+    "label": "Manometer_P17_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      442.908,
+      384.64,
+      600.18899
+    ],
+    "page": 17,
+    "label": "Blower_P17_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      442.908,
+      572.491,
+      600.18899
+    ],
+    "page": 17,
+    "label": "required_P17_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      245.70801,
+      196.789,
+      402.989
+    ],
+    "page": 17,
+    "label": "Notes_P17_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      245.70801,
+      384.64,
+      402.989
+    ],
+    "page": 17,
+    "label": "Notes_P17_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      245.70801,
+      572.491,
+      402.989
+    ],
+    "page": 17,
+    "label": "Notes_P17_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 17,
+    "label": "Notes_P17_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 17,
+    "label": "Manometer_P17_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 17,
+    "label": "Blower_P17_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      443.908,
+      196.789,
+      601.18899
+    ],
+    "page": 18,
+    "label": "Before_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      443.908,
+      384.64,
+      601.18899
+    ],
+    "page": 18,
+    "label": "Before_P18_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      443.908,
+      572.491,
+      601.18899
+    ],
+    "page": 18,
+    "label": "Air_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      243.70801,
+      196.789,
+      400.989
+    ],
+    "page": 18,
+    "label": "BafflesInsulation_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      243.70801,
+      384.64,
+      400.989
+    ],
+    "page": 18,
+    "label": "Depth_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      243.70801,
+      572.491,
+      400.989
+    ],
+    "page": 18,
+    "label": "After_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 18,
+    "label": "Misc_P18_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 18,
+    "label": "Misc_P18_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 18,
+    "label": "Misc_P18_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      443.908,
+      196.789,
+      601.18899
+    ],
+    "page": 19,
+    "label": "Before_P19_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      443.908,
+      384.64,
+      601.18899
+    ],
+    "page": 19,
+    "label": "Before_P19_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      443.908,
+      572.491,
+      601.18899
+    ],
+    "page": 19,
+    "label": "Before_P19_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      243.70801,
+      196.789,
+      400.989
+    ],
+    "page": 19,
+    "label": "Air_P19_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      243.70801,
+      384.64,
+      400.989
+    ],
+    "page": 19,
+    "label": "Air_P19_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      243.70801,
+      572.491,
+      400.989
+    ],
+    "page": 19,
+    "label": "Air_P19_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 19,
+    "label": "After_P19_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 19,
+    "label": "After_P19_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 19,
+    "label": "After_P19_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      443.908,
+      196.789,
+      601.18899
+    ],
+    "page": 20,
+    "label": "Before_P20_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      443.908,
+      384.64,
+      601.18899
+    ],
+    "page": 20,
+    "label": "Before_P20_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      443.908,
+      572.491,
+      601.18899
+    ],
+    "page": 20,
+    "label": "After_P20_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      243.70801,
+      196.789,
+      400.989
+    ],
+    "page": 20,
+    "label": "After_P20_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      243.70801,
+      384.64,
+      400.989
+    ],
+    "page": 20,
+    "label": "if_P20_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      243.70801,
+      572.491,
+      400.989
+    ],
+    "page": 20,
+    "label": "if_P20_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 20,
+    "label": "Air_P20_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 20,
+    "label": "Air_P20_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 20,
+    "label": "Air_P20_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 21,
+    "label": "Notes_P21_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 21,
+    "label": "Notes_P21_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 21,
+    "label": "Notes_P21_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 21,
+    "label": "Notes_P21_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 21,
+    "label": "Notes_P21_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 21,
+    "label": "Notes_P21_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 21,
+    "label": "Notes_P21_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 21,
+    "label": "Notes_P21_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 21,
+    "label": "Notes_P21_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      443.908,
+      196.789,
+      601.18899
+    ],
+    "page": 22,
+    "label": "Before_P22_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      443.908,
+      384.64,
+      601.18899
+    ],
+    "page": 22,
+    "label": "Before_P22_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      443.908,
+      572.491,
+      601.18899
+    ],
+    "page": 22,
+    "label": "Air_P22_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      243.70801,
+      196.789,
+      400.989
+    ],
+    "page": 22,
+    "label": "Air_P22_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      243.70801,
+      384.64,
+      400.989
+    ],
+    "page": 22,
+    "label": "After_P22_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      243.70801,
+      572.491,
+      400.989
+    ],
+    "page": 22,
+    "label": "After_P22_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 22,
+    "label": "Misc_P22_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 22,
+    "label": "Misc_P22_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 22,
+    "label": "Misc_P22_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      481.61,
+      196.789,
+      638.891
+    ],
+    "page": 23,
+    "label": "Basement_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      481.61,
+      384.64,
+      638.891
+    ],
+    "page": 23,
+    "label": "Insulation_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      481.61,
+      572.491,
+      638.891
+    ],
+    "page": 23,
+    "label": "Notes_P23_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      296.41,
+      196.789,
+      453.691
+    ],
+    "page": 23,
+    "label": "Notes_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      296.41,
+      384.64,
+      453.691
+    ],
+    "page": 23,
+    "label": "Notes_P23_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      296.41,
+      572.491,
+      453.691
+    ],
+    "page": 23,
+    "label": "Notes_P23_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 23,
+    "label": "Ductwork_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 23,
+    "label": "Field_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 23,
+    "label": "and_P23_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      501.61,
+      196.789,
+      658.891
+    ],
+    "page": 24,
+    "label": "Floor_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      501.61,
+      384.64,
+      658.891
+    ],
+    "page": 24,
+    "label": "Field_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      501.61,
+      572.491,
+      658.891
+    ],
+    "page": 24,
+    "label": "and_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      316.41,
+      196.789,
+      473.691
+    ],
+    "page": 24,
+    "label": "Notes_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      316.41,
+      384.64,
+      473.691
+    ],
+    "page": 24,
+    "label": "Notes_P24_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      316.41,
+      572.491,
+      473.691
+    ],
+    "page": 24,
+    "label": "Notes_P24_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 24,
+    "label": "Hatch_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 24,
+    "label": "Attic_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 24,
+    "label": "Stripping_P24_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      43.0,
+      637.1362,
+      51.0,
+      645.1362
+    ],
+    "page": 25,
+    "label": "CB_259_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      605.6362,
+      51.0,
+      613.6362
+    ],
+    "page": 25,
+    "label": "CB_260_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      574.1362,
+      51.0,
+      582.1362
+    ],
+    "page": 25,
+    "label": "CB_261_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      542.6362,
+      51.0,
+      550.6362
+    ],
+    "page": 25,
+    "label": "CB_262_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      511.1362,
+      51.0,
+      519.1362
+    ],
+    "page": 25,
+    "label": "CB_263_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      479.6362,
+      51.0,
+      487.6362
+    ],
+    "page": 25,
+    "label": "CB_264_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      43.0,
+      448.1362,
+      51.0,
+      456.1362
+    ],
+    "page": 25,
+    "label": "CB_265_P25",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 26,
+    "label": "Notes_P26_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 26,
+    "label": "Notes_P26_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 26,
+    "label": "Notes_P26_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 26,
+    "label": "Notes_P26_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 26,
+    "label": "Notes_P26_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 26,
+    "label": "Notes_P26_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 26,
+    "label": "Notes_P26_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 26,
+    "label": "Notes_P26_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 26,
+    "label": "Notes_P26_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 27,
+    "label": "Notes_P27_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 27,
+    "label": "Notes_P27_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 27,
+    "label": "Notes_P27_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 27,
+    "label": "Notes_P27_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 27,
+    "label": "Notes_P27_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 27,
+    "label": "Notes_P27_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 27,
+    "label": "Notes_P27_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 27,
+    "label": "Notes_P27_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 27,
+    "label": "Notes_P27_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      331.265,
+      284.433,
+      576.19
+    ],
+    "page": 28,
+    "label": "Notes_P28_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      327.567,
+      331.265,
+      572.492,
+      576.19
+    ],
+    "page": 28,
+    "label": "Notes_P28_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      47.271974,
+      284.433,
+      292.197
+    ],
+    "page": 28,
+    "label": "Notes_P28_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      327.567,
+      47.271974,
+      572.492,
+      292.197
+    ],
+    "page": 28,
+    "label": "Notes_P28_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      458.909,
+      196.789,
+      616.19
+    ],
+    "page": 29,
+    "label": "Basement_P29_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      458.909,
+      384.64,
+      616.19
+    ],
+    "page": 29,
+    "label": "Basement_P29_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      458.909,
+      572.491,
+      616.19
+    ],
+    "page": 29,
+    "label": "Basement_P29_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      253.70801,
+      196.789,
+      410.989
+    ],
+    "page": 29,
+    "label": "Outside_P29_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      253.70801,
+      384.64,
+      410.989
+    ],
+    "page": 29,
+    "label": "Outside_P29_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      253.70801,
+      572.491,
+      410.989
+    ],
+    "page": 29,
+    "label": "Outside_P29_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 29,
+    "label": "Capped_P29_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 29,
+    "label": "Chimney_P29_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 29,
+    "label": "Chimney_P29_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 30,
+    "label": "Notes_P30_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 30,
+    "label": "Notes_P30_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 30,
+    "label": "Notes_P30_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 30,
+    "label": "Notes_P30_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 30,
+    "label": "Notes_P30_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 30,
+    "label": "Notes_P30_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 30,
+    "label": "Notes_P30_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 30,
+    "label": "Notes_P30_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 30,
+    "label": "Notes_P30_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 31,
+    "label": "Notes_P31_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 31,
+    "label": "Notes_P31_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 31,
+    "label": "Notes_P31_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 31,
+    "label": "Notes_P31_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 31,
+    "label": "Notes_P31_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 31,
+    "label": "Notes_P31_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 31,
+    "label": "Notes_P31_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 31,
+    "label": "Notes_P31_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 31,
+    "label": "Notes_P31_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      418.908,
+      196.789,
+      576.18899
+    ],
+    "page": 32,
+    "label": "Notes_P32_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      418.908,
+      384.64,
+      576.18899
+    ],
+    "page": 32,
+    "label": "Notes_P32_4_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      418.908,
+      572.491,
+      576.18899
+    ],
+    "page": 32,
+    "label": "Notes_P32_7_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      233.70801,
+      196.789,
+      390.989
+    ],
+    "page": 32,
+    "label": "Notes_P32_2_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      233.70801,
+      384.64,
+      390.989
+    ],
+    "page": 32,
+    "label": "Notes_P32_5_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      233.70801,
+      572.491,
+      390.989
+    ],
+    "page": 32,
+    "label": "Notes_P32_8_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      39.508,
+      48.507997,
+      196.789,
+      205.789
+    ],
+    "page": 32,
+    "label": "Notes_P32_3_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      227.359,
+      48.507997,
+      384.64,
+      205.789
+    ],
+    "page": 32,
+    "label": "Notes_P32_6_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      415.21,
+      48.507997,
+      572.491,
+      205.789
+    ],
+    "page": 32,
+    "label": "Notes_P32_9_af_image",
+    "parent": "",
+    "type": "pushbutton",
+    "flags": 65536,
+    "action_js": "event.target.buttonImportIcon();",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      62.7354,
+      676.887,
+      471.63566,
+      688.887
+    ],
+    "page": 32,
+    "label": "Date_P33",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      79.0282,
+      649.88699,
+      573.8607,
+      661.88699
+    ],
+    "page": 32,
+    "label": "Customer_P33",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      481.6785,
+      598.815,
+      487.6785,
+      604.815
+    ],
+    "page": 32,
+    "label": "RadioGroup_1./Off",
+    "parent": "RadioGroup_1",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8345,
+      598.815,
+      518.8345,
+      604.815
+    ],
+    "page": 32,
+    "label": "RadioGroup_1./Off",
+    "parent": "RadioGroup_1",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      598.815,
+      547.54458,
+      604.815
+    ],
+    "page": 32,
+    "label": "RadioGroup_1./Off",
+    "parent": "RadioGroup_1",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      582.572,
+      487.6785,
+      588.572
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8345,
+      582.572,
+      518.8345,
+      588.572
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      582.572,
+      547.54458,
+      588.572
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      566.329,
+      487.6785,
+      572.329
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8345,
+      566.329,
+      518.8345,
+      572.329
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      566.329,
+      547.54458,
+      572.329
+    ],
+    "page": 32,
+    "label": "RadioGroup_2./Off",
+    "parent": "RadioGroup_2",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      550.085,
+      487.6785,
+      556.085
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8345,
+      550.085,
+      518.8345,
+      556.085
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      550.085,
+      547.54458,
+      556.085
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      533.842,
+      487.6785,
+      539.842
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8345,
+      533.842,
+      518.8345,
+      539.842
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      533.842,
+      547.54458,
+      539.842
+    ],
+    "page": 32,
+    "label": "RadioGroup_3./Off",
+    "parent": "RadioGroup_3",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      517.599,
+      487.6785,
+      523.599
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      517.599,
+      518.8335,
+      523.599
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      517.599,
+      547.54458,
+      523.599
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      501.356,
+      487.6785,
+      507.356
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      501.356,
+      518.8335,
+      507.356
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      501.356,
+      547.54458,
+      507.356
+    ],
+    "page": 32,
+    "label": "RadioGroup_4./Off",
+    "parent": "RadioGroup_4",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      485.113,
+      487.6785,
+      491.113
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      485.113,
+      518.8335,
+      491.113
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      485.113,
+      547.54458,
+      491.113
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6785,
+      468.869,
+      487.6785,
+      474.869
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      468.869,
+      518.8335,
+      474.869
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      468.869,
+      547.54458,
+      474.869
+    ],
+    "page": 32,
+    "label": "RadioGroup_5./Off",
+    "parent": "RadioGroup_5",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      452.626,
+      487.6775,
+      458.626
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      452.626,
+      518.8335,
+      458.626
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      452.626,
+      547.54458,
+      458.626
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      436.383,
+      487.6775,
+      442.383
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      436.383,
+      518.8335,
+      442.383
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54458,
+      436.383,
+      547.54458,
+      442.383
+    ],
+    "page": 32,
+    "label": "RadioGroup_6./Off",
+    "parent": "RadioGroup_6",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      403.88999,
+      487.6775,
+      409.88999
+    ],
+    "page": 32,
+    "label": "RadioGroup_7./Off",
+    "parent": "RadioGroup_7",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      403.88999,
+      518.8335,
+      409.88999
+    ],
+    "page": 32,
+    "label": "RadioGroup_7./Off",
+    "parent": "RadioGroup_7",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      403.88999,
+      547.54348,
+      409.88999
+    ],
+    "page": 32,
+    "label": "RadioGroup_7./Off",
+    "parent": "RadioGroup_7",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      387.647,
+      487.6775,
+      393.647
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      387.647,
+      518.8335,
+      393.647
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      387.647,
+      547.54348,
+      393.647
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      371.40299,
+      487.6775,
+      377.40299
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      371.40299,
+      518.8335,
+      377.40299
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      371.40299,
+      547.54348,
+      377.40299
+    ],
+    "page": 32,
+    "label": "RadioGroup_8./Off",
+    "parent": "RadioGroup_8",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      355.16,
+      487.6775,
+      361.16
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      355.16,
+      518.8335,
+      361.16
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      355.16,
+      547.54348,
+      361.16
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      338.917,
+      487.6775,
+      344.917
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      338.917,
+      518.8335,
+      344.917
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      338.917,
+      547.54348,
+      344.917
+    ],
+    "page": 32,
+    "label": "RadioGroup_9./Off",
+    "parent": "RadioGroup_9",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      178.7705,
+      305.218,
+      184.7705,
+      311.218
+    ],
+    "page": 32,
+    "label": "RadioGroup_10./Off",
+    "parent": "RadioGroup_10",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      242.4085,
+      305.218,
+      248.4085,
+      311.218
+    ],
+    "page": 32,
+    "label": "RadioGroup_10./Off",
+    "parent": "RadioGroup_10",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      309.9445,
+      305.218,
+      315.9445,
+      311.218
+    ],
+    "page": 32,
+    "label": "RadioGroup_10./Off",
+    "parent": "RadioGroup_10",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      306.424,
+      487.6775,
+      312.424
+    ],
+    "page": 32,
+    "label": "RadioGroup_11./Off",
+    "parent": "RadioGroup_11",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      306.424,
+      518.8335,
+      312.424
+    ],
+    "page": 32,
+    "label": "RadioGroup_11./Off",
+    "parent": "RadioGroup_11",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      306.424,
+      547.54348,
+      312.424
+    ],
+    "page": 32,
+    "label": "RadioGroup_11./Off",
+    "parent": "RadioGroup_11",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      290.098,
+      487.6775,
+      296.098
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      290.098,
+      518.8335,
+      296.098
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      290.098,
+      547.54348,
+      296.098
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      273.85505,
+      487.6775,
+      279.85505
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      273.85505,
+      518.8335,
+      279.85505
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      273.85505,
+      547.54348,
+      279.85505
+    ],
+    "page": 32,
+    "label": "RadioGroup_12./Off",
+    "parent": "RadioGroup_12",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      241.36902,
+      487.6775,
+      247.36902
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      241.36902,
+      518.8335,
+      247.36902
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      241.36902,
+      547.54348,
+      247.36902
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      225.125,
+      487.6775,
+      231.125
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8335,
+      225.125,
+      518.8335,
+      231.125
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      225.125,
+      547.54348,
+      231.125
+    ],
+    "page": 32,
+    "label": "RadioGroup_13./Off",
+    "parent": "RadioGroup_13",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      192.63898,
+      487.6775,
+      198.63898
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      192.63898,
+      518.8325,
+      198.63898
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      192.63898,
+      547.54348,
+      198.63898
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      176.396,
+      487.6775,
+      182.396
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      176.396,
+      518.8325,
+      182.396
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      176.396,
+      547.54348,
+      182.396
+    ],
+    "page": 32,
+    "label": "RadioGroup_14./Off",
+    "parent": "RadioGroup_14",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      160.15302,
+      487.6775,
+      166.15302
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      160.15302,
+      518.8325,
+      166.15302
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      160.15302,
+      547.54348,
+      166.15302
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      143.909,
+      487.6775,
+      149.909
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      143.909,
+      518.8325,
+      149.909
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      143.909,
+      547.54348,
+      149.909
+    ],
+    "page": 32,
+    "label": "RadioGroup_15./Off",
+    "parent": "RadioGroup_15",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.6775,
+      111.416019,
+      487.6775,
+      117.416019
+    ],
+    "page": 32,
+    "label": "RadioGroup_16./Off",
+    "parent": "RadioGroup_16",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      111.416019,
+      518.8325,
+      117.416019
+    ],
+    "page": 32,
+    "label": "RadioGroup_16./Off",
+    "parent": "RadioGroup_16",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      111.416019,
+      547.54348,
+      117.416019
+    ],
+    "page": 32,
+    "label": "RadioGroup_16./Off",
+    "parent": "RadioGroup_16",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.67649,
+      78.92297,
+      487.67649,
+      84.92297
+    ],
+    "page": 32,
+    "label": "RadioGroup_17./Off",
+    "parent": "RadioGroup_17",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      78.92297,
+      518.8325,
+      84.92297
+    ],
+    "page": 32,
+    "label": "RadioGroup_17./Off",
+    "parent": "RadioGroup_17",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      78.92297,
+      547.54348,
+      84.92297
+    ],
+    "page": 32,
+    "label": "RadioGroup_17./Off",
+    "parent": "RadioGroup_17",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.67649,
+      62.679994,
+      487.67649,
+      68.67999
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      62.679994,
+      518.8325,
+      68.67999
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.54348,
+      62.679994,
+      547.54348,
+      68.67999
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.67649,
+      46.43701,
+      487.67649,
+      52.43701
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.8325,
+      46.43701,
+      518.8325,
+      52.43701
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.5425,
+      46.43701,
+      547.5425,
+      52.43701
+    ],
+    "page": 32,
+    "label": "RadioGroup_18./Off",
+    "parent": "RadioGroup_18",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      62.4854,
+      660.88699,
+      471.58164,
+      672.887
+    ],
+    "page": 33,
+    "label": "Date_P34",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      78.7782,
+      633.88699,
+      573.8557,
+      645.88699
+    ],
+    "page": 33,
+    "label": "Customer_P34",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      481.4285,
+      577.315,
+      487.4285,
+      583.315
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      577.315,
+      518.5845,
+      583.315
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      577.315,
+      547.29458,
+      583.315
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      561.072,
+      487.4285,
+      567.072
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      561.072,
+      518.5845,
+      567.072
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      561.072,
+      547.29458,
+      567.072
+    ],
+    "page": 33,
+    "label": "RadioGroup_19./Off",
+    "parent": "RadioGroup_19",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      544.829,
+      487.4285,
+      550.829
+    ],
+    "page": 33,
+    "label": "RadioGroup_20./Off",
+    "parent": "RadioGroup_20",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      544.829,
+      518.5845,
+      550.829
+    ],
+    "page": 33,
+    "label": "RadioGroup_20./Off",
+    "parent": "RadioGroup_20",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      544.829,
+      547.29458,
+      550.829
+    ],
+    "page": 33,
+    "label": "RadioGroup_20./Off",
+    "parent": "RadioGroup_20",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      528.585,
+      487.4285,
+      534.585
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      528.585,
+      518.5845,
+      534.585
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      528.585,
+      547.29458,
+      534.585
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      512.342,
+      487.4285,
+      518.342
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      512.342,
+      518.5845,
+      518.342
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      512.342,
+      547.29458,
+      518.342
+    ],
+    "page": 33,
+    "label": "RadioGroup_21./Off",
+    "parent": "RadioGroup_21",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      496.099,
+      487.4285,
+      502.099
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      496.099,
+      518.5835,
+      502.099
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      496.099,
+      547.29458,
+      502.099
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      479.856,
+      487.4285,
+      485.856
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      479.856,
+      518.5835,
+      485.856
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      479.856,
+      547.29458,
+      485.856
+    ],
+    "page": 33,
+    "label": "RadioGroup_22./Off",
+    "parent": "RadioGroup_22",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      463.613,
+      487.4285,
+      469.613
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      463.613,
+      518.5835,
+      469.613
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      463.613,
+      547.29458,
+      469.613
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      447.369,
+      487.4285,
+      453.369
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      447.369,
+      518.5835,
+      453.369
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      447.369,
+      547.29458,
+      453.369
+    ],
+    "page": 33,
+    "label": "RadioGroup_23./Off",
+    "parent": "RadioGroup_23",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.427499,
+      417.44599,
+      46.427499,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_24./Off",
+    "parent": "RadioGroup_24",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      108.587497,
+      417.44599,
+      114.587497,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_24./Off",
+    "parent": "RadioGroup_24",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      210.2905,
+      417.44599,
+      216.2905,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_25./Off",
+    "parent": "RadioGroup_25",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      280.5015,
+      417.44599,
+      286.5015,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_25./Off",
+    "parent": "RadioGroup_25",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      421.6365,
+      417.44599,
+      427.6365,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_26./Off",
+    "parent": "RadioGroup_26",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      494.14649,
+      417.44599,
+      500.14649,
+      423.44599
+    ],
+    "page": 33,
+    "label": "RadioGroup_26./Off",
+    "parent": "RadioGroup_26",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      115.4963,
+      383.2985,
+      123.4963,
+      391.2985
+    ],
+    "page": 33,
+    "label": "RadioGroup_46./Off",
+    "parent": "RadioGroup_46",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      174.9144,
+      383.2985,
+      182.9144,
+      391.2985
+    ],
+    "page": 33,
+    "label": "RadioGroup_46./Off",
+    "parent": "RadioGroup_46",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      369.026,
+      487.4275,
+      375.026
+    ],
+    "page": 33,
+    "label": "RadioGroup_27./Off",
+    "parent": "RadioGroup_27",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      369.026,
+      518.5835,
+      375.026
+    ],
+    "page": 33,
+    "label": "RadioGroup_27./Off",
+    "parent": "RadioGroup_27",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      369.026,
+      547.29458,
+      375.026
+    ],
+    "page": 33,
+    "label": "RadioGroup_27./Off",
+    "parent": "RadioGroup_27",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      353.501,
+      487.4275,
+      359.501
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      353.501,
+      518.5835,
+      359.501
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      353.501,
+      547.29458,
+      359.501
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      337.97599,
+      487.4275,
+      343.97599
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      337.97599,
+      518.5835,
+      343.97599
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      337.97599,
+      547.29348,
+      343.97599
+    ],
+    "page": 33,
+    "label": "RadioGroup_28./Off",
+    "parent": "RadioGroup_28",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      322.451,
+      487.4275,
+      328.451
+    ],
+    "page": 33,
+    "label": "RadioGroup_29./Off",
+    "parent": "RadioGroup_29",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      322.451,
+      518.5835,
+      328.451
+    ],
+    "page": 33,
+    "label": "RadioGroup_29./Off",
+    "parent": "RadioGroup_29",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      322.451,
+      547.29348,
+      328.451
+    ],
+    "page": 33,
+    "label": "RadioGroup_29./Off",
+    "parent": "RadioGroup_29",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.427499,
+      293.246,
+      46.427499,
+      299.246
+    ],
+    "page": 33,
+    "label": "RadioGroup_30./Off",
+    "parent": "RadioGroup_30",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      132.4465,
+      293.246,
+      138.4465,
+      299.246
+    ],
+    "page": 33,
+    "label": "RadioGroup_30./Off",
+    "parent": "RadioGroup_30",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      208.8035,
+      293.246,
+      214.8035,
+      299.246
+    ],
+    "page": 33,
+    "label": "RadioGroup_30./Off",
+    "parent": "RadioGroup_30",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      261.87605,
+      487.4275,
+      267.87605
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      261.87605,
+      518.5835,
+      267.87605
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      261.87605,
+      547.29348,
+      267.87605
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      245.63202,
+      487.4275,
+      251.63202
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      245.63202,
+      518.5835,
+      251.63202
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      245.63202,
+      547.29348,
+      251.63202
+    ],
+    "page": 33,
+    "label": "RadioGroup_31./Off",
+    "parent": "RadioGroup_31",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      229.38898,
+      487.4275,
+      235.38898
+    ],
+    "page": 33,
+    "label": "RadioGroup_32./Off",
+    "parent": "RadioGroup_32",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      229.38898,
+      518.5835,
+      235.38898
+    ],
+    "page": 33,
+    "label": "RadioGroup_32./Off",
+    "parent": "RadioGroup_32",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      229.38898,
+      547.29348,
+      235.38898
+    ],
+    "page": 33,
+    "label": "RadioGroup_32./Off",
+    "parent": "RadioGroup_32",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      213.146,
+      487.4275,
+      219.146
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      213.146,
+      518.5835,
+      219.146
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      213.146,
+      547.29348,
+      219.146
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      196.90302,
+      487.4275,
+      202.90302
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      196.90302,
+      518.5835,
+      202.90302
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      196.90302,
+      547.29348,
+      202.90302
+    ],
+    "page": 33,
+    "label": "RadioGroup_33./Off",
+    "parent": "RadioGroup_33",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4275,
+      180.659,
+      487.4275,
+      186.659
+    ],
+    "page": 33,
+    "label": "RadioGroup_34./Off",
+    "parent": "RadioGroup_34",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      180.659,
+      518.5835,
+      186.659
+    ],
+    "page": 33,
+    "label": "RadioGroup_34./Off",
+    "parent": "RadioGroup_34",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29348,
+      180.659,
+      547.29348,
+      186.659
+    ],
+    "page": 33,
+    "label": "RadioGroup_34./Off",
+    "parent": "RadioGroup_34",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.427499,
+      153.23603,
+      46.427499,
+      159.23603
+    ],
+    "page": 33,
+    "label": "RadioGroup_35./Off",
+    "parent": "RadioGroup_35",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      137.6785,
+      153.23603,
+      143.6785,
+      159.23603
+    ],
+    "page": 33,
+    "label": "RadioGroup_35./Off",
+    "parent": "RadioGroup_35",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      246.2065,
+      153.23603,
+      252.2065,
+      159.23603
+    ],
+    "page": 33,
+    "label": "RadioGroup_36./Off",
+    "parent": "RadioGroup_36",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      342.2765,
+      153.23603,
+      348.2765,
+      159.23603
+    ],
+    "page": 33,
+    "label": "RadioGroup_36./Off",
+    "parent": "RadioGroup_36",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      647.565,
+      487.4285,
+      653.565
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      647.565,
+      518.5845,
+      653.565
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      647.565,
+      547.29458,
+      653.565
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      631.322,
+      487.4285,
+      637.322
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      631.322,
+      518.5845,
+      637.322
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      631.322,
+      547.29458,
+      637.322
+    ],
+    "page": 34,
+    "label": "RadioGroup_37./Off",
+    "parent": "RadioGroup_37",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      615.079,
+      487.4285,
+      621.079
+    ],
+    "page": 34,
+    "label": "RadioGroup_38./Off",
+    "parent": "RadioGroup_38",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      615.079,
+      518.5845,
+      621.079
+    ],
+    "page": 34,
+    "label": "RadioGroup_38./Off",
+    "parent": "RadioGroup_38",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      615.079,
+      547.29458,
+      621.079
+    ],
+    "page": 34,
+    "label": "RadioGroup_38./Off",
+    "parent": "RadioGroup_38",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      582.585,
+      487.4285,
+      588.585
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      582.585,
+      518.5845,
+      588.585
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      582.585,
+      547.29458,
+      588.585
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      566.342,
+      487.4285,
+      572.342
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5845,
+      566.342,
+      518.5845,
+      572.342
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      566.342,
+      547.29458,
+      572.342
+    ],
+    "page": 34,
+    "label": "RadioGroup_39./Off",
+    "parent": "RadioGroup_39",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.428499,
+      536.419,
+      46.428499,
+      542.419
+    ],
+    "page": 34,
+    "label": "CB_175_P35",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      191.4175,
+      536.419,
+      197.4175,
+      542.419
+    ],
+    "page": 34,
+    "label": "CB_176_P35",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      505.049,
+      487.4285,
+      511.049
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      505.049,
+      518.5835,
+      511.049
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      505.049,
+      547.29458,
+      511.049
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      488.806,
+      487.4285,
+      494.806
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      488.806,
+      518.5835,
+      494.806
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      488.806,
+      547.29458,
+      494.806
+    ],
+    "page": 34,
+    "label": "RadioGroup_40./Off",
+    "parent": "RadioGroup_40",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      472.563,
+      487.4285,
+      478.563
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      472.563,
+      518.5835,
+      478.563
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      472.563,
+      547.29458,
+      478.563
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      481.4285,
+      456.319,
+      487.4285,
+      462.319
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      512.5835,
+      456.319,
+      518.5835,
+      462.319
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      541.29458,
+      456.319,
+      547.29458,
+      462.319
+    ],
+    "page": 34,
+    "label": "RadioGroup_41./Off",
+    "parent": "RadioGroup_41",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.427499,
+      426.396,
+      46.427499,
+      432.396
+    ],
+    "page": 34,
+    "label": "RadioGroup_42./Off",
+    "parent": "RadioGroup_42",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      130.9525,
+      426.396,
+      136.9525,
+      432.396
+    ],
+    "page": 34,
+    "label": "RadioGroup_42./Off",
+    "parent": "RadioGroup_42",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      40.427499,
+      381.346,
+      46.427499,
+      387.346
+    ],
+    "page": 34,
+    "label": "CB_191_P35",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      252.98349,
+      381.346,
+      258.9835,
+      387.346
+    ],
+    "page": 34,
+    "label": "CB_192_P35",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      65.4132,
+      604.7883,
+      205.0,
+      616.7883
+    ],
+    "page": 35,
+    "label": "Make_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      266.3704,
+      604.7883,
+      383.92,
+      616.7883
+    ],
+    "page": 35,
+    "label": "Model_Number_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      443.7096,
+      604.7883,
+      573.73959,
+      616.7883
+    ],
+    "page": 35,
+    "label": "Serial_Number_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      82.6548,
+      583.1883,
+      205.0,
+      595.1883
+    ],
+    "page": 35,
+    "label": "Input_Btuh_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      258.9752,
+      583.1883,
+      383.92,
+      595.1883
+    ],
+    "page": 35,
+    "label": "Output_Btuh_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      430.1744,
+      583.1883,
+      573.73959,
+      595.1883
+    ],
+    "page": 35,
+    "label": "Efficiency_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      104.8778,
+      563.8383,
+      112.8778,
+      571.8383
+    ],
+    "page": 35,
+    "label": "RadioGroup_47./Off",
+    "parent": "RadioGroup_47",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      177.0976,
+      563.8383,
+      185.0976,
+      571.8383
+    ],
+    "page": 35,
+    "label": "RadioGroup_47./Off",
+    "parent": "RadioGroup_47",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      251.0924,
+      563.8383,
+      259.0924,
+      571.8383
+    ],
+    "page": 35,
+    "label": "RadioGroup_47./Off",
+    "parent": "RadioGroup_47",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      478.9814,
+      49.25,
+      486.9814
+    ],
+    "page": 35,
+    "label": "CB_271_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      478.9814,
+      319.0,
+      486.9814
+    ],
+    "page": 35,
+    "label": "CB_282_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      465.5414,
+      49.25,
+      473.5414
+    ],
+    "page": 35,
+    "label": "CB_272_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      465.5414,
+      319.0,
+      473.5414
+    ],
+    "page": 35,
+    "label": "CB_283_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      440.1014,
+      49.25,
+      448.1014
+    ],
+    "page": 35,
+    "label": "CB_273_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      440.1014,
+      319.0,
+      448.1014
+    ],
+    "page": 35,
+    "label": "CB_284_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      414.6614,
+      49.25,
+      422.6614
+    ],
+    "page": 35,
+    "label": "CB_274_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      414.6614,
+      319.0,
+      422.6614
+    ],
+    "page": 35,
+    "label": "CB_285_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      401.2214,
+      49.25,
+      409.2214
+    ],
+    "page": 35,
+    "label": "CB_275_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      401.2214,
+      319.0,
+      409.2214
+    ],
+    "page": 35,
+    "label": "CB_286_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      387.7814,
+      49.25,
+      395.7814
+    ],
+    "page": 35,
+    "label": "CB_276_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      387.7814,
+      319.0,
+      395.7814
+    ],
+    "page": 35,
+    "label": "CB_287_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      374.3414,
+      49.25,
+      382.3414
+    ],
+    "page": 35,
+    "label": "CB_277_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      374.3414,
+      319.0,
+      382.3414
+    ],
+    "page": 35,
+    "label": "CB_288_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      360.9014,
+      49.25,
+      368.9014
+    ],
+    "page": 35,
+    "label": "CB_278_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      360.9014,
+      319.0,
+      368.9014
+    ],
+    "page": 35,
+    "label": "CB_289_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      347.4614,
+      49.25,
+      355.4614
+    ],
+    "page": 35,
+    "label": "CB_279_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      347.4614,
+      319.0,
+      355.4614
+    ],
+    "page": 35,
+    "label": "CB_290_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      334.0214,
+      319.0,
+      342.0214
+    ],
+    "page": 35,
+    "label": "CB_291_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      322.0214,
+      49.25,
+      330.0214
+    ],
+    "page": 35,
+    "label": "CB_280_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      311.0,
+      320.5814,
+      319.0,
+      328.5814
+    ],
+    "page": 35,
+    "label": "CB_292_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      41.25,
+      296.5814,
+      49.25,
+      304.5814
+    ],
+    "page": 35,
+    "label": "CB_281_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      121.4084,
+      261.98829,
+      304.0,
+      273.98829
+    ],
+    "page": 35,
+    "label": "Combustion_Efficiency_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.6008,
+      261.98829,
+      438.875,
+      273.98829
+    ],
+    "page": 35,
+    "label": "PreService_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      493.5934,
+      261.98829,
+      573.73959,
+      273.98829
+    ],
+    "page": 35,
+    "label": "PostService_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      109.0604,
+      240.3883,
+      304.0,
+      252.3883
+    ],
+    "page": 35,
+    "label": "Stack_Temperature_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.6008,
+      240.3883,
+      438.875,
+      252.3883
+    ],
+    "page": 35,
+    "label": "PreService_P36_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      493.5934,
+      240.3883,
+      573.73959,
+      252.3883
+    ],
+    "page": 35,
+    "label": "PostService_P36_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      91.8812,
+      218.78833,
+      304.0,
+      230.78833
+    ],
+    "page": 35,
+    "label": "Oxygen_Level_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.6008,
+      218.78833,
+      438.875,
+      230.78833
+    ],
+    "page": 35,
+    "label": "PreService_P36_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      493.5934,
+      218.78833,
+      573.73959,
+      230.78833
+    ],
+    "page": 35,
+    "label": "PostService_P36_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      97.4972,
+      197.1883,
+      304.0,
+      209.1883
+    ],
+    "page": 35,
+    "label": "Carbon_Dioxide_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.6008,
+      197.1883,
+      438.875,
+      209.1883
+    ],
+    "page": 35,
+    "label": "PreService_P36_4",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      493.5934,
+      197.1883,
+      573.73959,
+      209.1883
+    ],
+    "page": 35,
+    "label": "PostService_P36_4",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      105.026,
+      175.58832,
+      304.0,
+      187.58832
+    ],
+    "page": 35,
+    "label": "Carbon_Monoxide_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      355.6008,
+      175.58832,
+      438.875,
+      187.58832
+    ],
+    "page": 35,
+    "label": "PreService_P36_5",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      493.5934,
+      175.58832,
+      573.73959,
+      187.58832
+    ],
+    "page": 35,
+    "label": "PostService_P36_5",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      41.25,
+      154.22229,
+      49.25,
+      162.22229
+    ],
+    "page": 35,
+    "label": "CB_293_P36",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      82.254,
+      131.38843,
+      573.73959,
+      143.38843
+    ],
+    "page": 35,
+    "label": "Comments_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      95.759,
+      74.838199,
+      314.879,
+      88.838199
+    ],
+    "page": 35,
+    "label": "Technician_Name_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      344.7517,
+      74.838199,
+      456.3037,
+      88.838199
+    ],
+    "page": 35,
+    "label": "Date_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      105.7188,
+      54.338197,
+      314.8788,
+      68.338199
+    ],
+    "page": 35,
+    "label": "Signature_P36",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      41.2499,
+      604.91946,
+      49.2499,
+      612.91946
+    ],
+    "page": 36,
+    "label": "CB_294_P37",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      149.2499,
+      604.91946,
+      157.2499,
+      612.91946
+    ],
+    "page": 36,
+    "label": "CB_295_P37",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      321.207,
+      602.82046,
+      410.847,
+      614.82046
+    ],
+    "page": 36,
+    "label": "Manufacturer_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      473.9273,
+      602.82046,
+      563.5673,
+      614.82046
+    ],
+    "page": 36,
+    "label": "TESP_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      41.2499,
+      586.41946,
+      49.2499,
+      594.41946
+    ],
+    "page": 36,
+    "label": "CB_296_P37",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      149.2499,
+      586.41946,
+      157.2499,
+      594.41946
+    ],
+    "page": 36,
+    "label": "CB_297_P37",
+    "parent": "",
+    "type": "checkbox",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      248.166,
+      586.32046,
+      410.846,
+      598.32046
+    ],
+    "page": 36,
+    "label": "Model_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      447.3638,
+      586.32046,
+      563.5638,
+      598.32046
+    ],
+    "page": 36,
+    "label": "SN_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      97.1855,
+      567.51846,
+      200.1055,
+      579.51846
+    ],
+    "page": 36,
+    "label": "known_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      321.2051,
+      569.82046,
+      410.8451,
+      581.82046
+    ],
+    "page": 36,
+    "label": "Manufacturer_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      450.683,
+      569.82046,
+      563.563,
+      581.82046
+    ],
+    "page": 36,
+    "label": "Tons_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      80.5925,
+      551.01846,
+      200.1125,
+      563.01846
+    ],
+    "page": 36,
+    "label": "Coil_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      248.166,
+      553.32046,
+      410.846,
+      565.32046
+    ],
+    "page": 36,
+    "label": "Model_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      447.3638,
+      553.32046,
+      563.5638,
+      565.32046
+    ],
+    "page": 36,
+    "label": "SN_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      301.2888,
+      536.82046,
+      410.8488,
+      548.82046
+    ],
+    "page": 36,
+    "label": "Manufacturer_P37_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      450.683,
+      536.82046,
+      563.563,
+      548.82046
+    ],
+    "page": 36,
+    "label": "Tons_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      244.846,
+      520.32046,
+      410.846,
+      532.32046
+    ],
+    "page": 36,
+    "label": "Model_P37_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      431.4697,
+      522.72146,
+      439.4697,
+      530.72146
+    ],
+    "page": 36,
+    "label": "RadioGroup_48./Off",
+    "parent": "RadioGroup_48",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      468.3987,
+      522.72146,
+      476.3987,
+      530.72146
+    ],
+    "page": 36,
+    "label": "RadioGroup_48./Off",
+    "parent": "RadioGroup_48",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      161.8457,
+      438.259,
+      264.7859,
+      448.259
+    ],
+    "page": 36,
+    "label": "Before_After_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      280.4776,
+      438.259,
+      373.84,
+      448.259
+    ],
+    "page": 36,
+    "label": "After_After_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      508.368,
+      437.259,
+      573.742,
+      449.259
+    ],
+    "page": 36,
+    "label": "Comments_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      413.13108,
+      264.7859,
+      427.187
+    ],
+    "page": 36,
+    "label": "Before_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      413.13108,
+      373.84,
+      427.187
+    ],
+    "page": 36,
+    "label": "After_P37",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      522.413,
+      413.203,
+      573.742,
+      425.203
+    ],
+    "page": 36,
+    "label": "Comments_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      395.0751,
+      205.96994,
+      409.13108
+    ],
+    "page": 36,
+    "label": "Before_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      209.96994,
+      395.0751,
+      264.7859,
+      409.13108
+    ],
+    "page": 36,
+    "label": "Before_P37_14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      395.0751,
+      319.12,
+      409.13108
+    ],
+    "page": 36,
+    "label": "After_P37_2",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      323.12,
+      395.0751,
+      373.84,
+      409.13108
+    ],
+    "page": 36,
+    "label": "After_P37_14",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      462.407,
+      395.147,
+      573.742,
+      407.147
+    ],
+    "page": 36,
+    "label": "Comments_P37_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      377.01918,
+      205.96994,
+      391.0751
+    ],
+    "page": 36,
+    "label": "Before_P37_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      209.96994,
+      377.01918,
+      264.7859,
+      391.0751
+    ],
+    "page": 36,
+    "label": "Before_P37_15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      377.01918,
+      319.12,
+      391.0751
+    ],
+    "page": 36,
+    "label": "After_P37_3",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      323.12,
+      377.01918,
+      373.84,
+      391.0751
+    ],
+    "page": 36,
+    "label": "After_P37_15",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      458.606,
+      377.091,
+      573.742,
+      389.091
+    ],
+    "page": 36,
+    "label": "Comments_P37_4",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      173.4514,
+      359.0355,
+      264.7859,
+      371.0355
+    ],
+    "page": 36,
+    "label": "Before_P37_4",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      292.0832,
+      359.0355,
+      373.84,
+      371.0355
+    ],
+    "page": 36,
+    "label": "After_P37_4",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      481.163,
+      359.035,
+      573.742,
+      371.035
+    ],
+    "page": 36,
+    "label": "Comments_P37_5",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      173.4513,
+      340.9796,
+      264.7859,
+      352.9796
+    ],
+    "page": 36,
+    "label": "Before_P37_5",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      292.0832,
+      340.9796,
+      373.84,
+      352.9796
+    ],
+    "page": 36,
+    "label": "After_P37_5",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      525.41,
+      340.98,
+      573.742,
+      352.98
+    ],
+    "page": 36,
+    "label": "Comments_P37_6",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      162.3177,
+      316.9237,
+      264.7859,
+      328.9237
+    ],
+    "page": 36,
+    "label": "Before_P37_6",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      280.9496,
+      316.9237,
+      373.84,
+      328.9237
+    ],
+    "page": 36,
+    "label": "After_P37_6",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      164.1257,
+      292.8678,
+      264.7859,
+      304.8678
+    ],
+    "page": 36,
+    "label": "Before_P37_7",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      282.7576,
+      292.8678,
+      373.84,
+      304.8678
+    ],
+    "page": 36,
+    "label": "After_P37_7",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      510.606,
+      292.868,
+      573.742,
+      304.868
+    ],
+    "page": 36,
+    "label": "Comments_P37_7",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      164.1257,
+      271.23994,
+      264.7859,
+      283.2399
+    ],
+    "page": 36,
+    "label": "Before_P37_8",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      282.7576,
+      271.23994,
+      373.84,
+      283.2399
+    ],
+    "page": 36,
+    "label": "After_P37_8",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      506.81,
+      271.24,
+      573.742,
+      283.24
+    ],
+    "page": 36,
+    "label": "Comments_P37_8",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      164.1257,
+      229.92212,
+      264.7859,
+      241.92212
+    ],
+    "page": 36,
+    "label": "Before_P37_10",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      282.7576,
+      229.92212,
+      373.84,
+      241.92212
+    ],
+    "page": 36,
+    "label": "After_P37_10",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      465.017,
+      229.922,
+      573.742,
+      241.922
+    ],
+    "page": 36,
+    "label": "Comments_P37_10",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      204.45008,
+      205.96994,
+      225.85004
+    ],
+    "page": 36,
+    "label": "Before_P37_11",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      209.96994,
+      204.45008,
+      264.7859,
+      225.85004
+    ],
+    "page": 36,
+    "label": "Before_P37_16",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      204.45008,
+      319.12,
+      225.85004
+    ],
+    "page": 36,
+    "label": "After_P37_11",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      323.12,
+      204.45008,
+      373.84,
+      225.85004
+    ],
+    "page": 36,
+    "label": "After_P37_17",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      501.25,
+      208.194,
+      573.742,
+      220.194
+    ],
+    "page": 36,
+    "label": "Comments_P37_11",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      186.3941,
+      205.96994,
+      200.45008
+    ],
+    "page": 36,
+    "label": "Before_P37_12",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      209.96994,
+      186.3941,
+      264.7859,
+      200.45008
+    ],
+    "page": 36,
+    "label": "Before_P37_17",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      186.3941,
+      319.12,
+      200.45008
+    ],
+    "page": 36,
+    "label": "After_P37_12",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      323.12,
+      186.3941,
+      373.84,
+      200.45008
+    ],
+    "page": 36,
+    "label": "After_P37_18",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      501.25,
+      186.466,
+      573.742,
+      198.466
+    ],
+    "page": 36,
+    "label": "Comments_P37_12",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      150.15393,
+      168.0362,
+      205.96994,
+      182.3941
+    ],
+    "page": 36,
+    "label": "Before_P37_13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      209.96994,
+      168.0362,
+      264.7859,
+      182.3941
+    ],
+    "page": 36,
+    "label": "Before_P37_18",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      268.7859,
+      168.0362,
+      319.12,
+      182.3941
+    ],
+    "page": 36,
+    "label": "After_P37_13",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      323.12,
+      168.0362,
+      373.84,
+      182.3941
+    ],
+    "page": 36,
+    "label": "After_P37_19",
+    "parent": "",
+    "type": "text",
+    "flags": 8388608,
+    "action_js": "",
+    "as_state": ""
+  },
+  {
+    "rect": [
+      380.8399,
+      170.5094,
+      388.8399,
+      178.5094
+    ],
+    "page": 36,
+    "label": "RadioGroup_49./Off",
+    "parent": "RadioGroup_49",
+    "type": "text",
+    "flags": 0,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      452.8399,
+      170.5094,
+      460.8399,
+      178.5094
+    ],
+    "page": 36,
+    "label": "RadioGroup_49./Off",
+    "parent": "RadioGroup_49",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  },
+  {
+    "rect": [
+      524.8399,
+      170.5094,
+      532.8399,
+      178.5094
+    ],
+    "page": 36,
+    "label": "RadioGroup_49./Off",
+    "parent": "RadioGroup_49",
+    "type": "radio",
+    "flags": 49152,
+    "action_js": "",
+    "as_state": "/Off"
+  }
+]
