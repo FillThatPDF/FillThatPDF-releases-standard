@@ -1,0 +1,78 @@
+('/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+ '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/smart_fillable_server.pkg',
+ {'BINARY': True,
+  'DATA': True,
+  'EXECUTABLE': True,
+  'EXTENSION': True,
+  'PYMODULE': True,
+  'PYSOURCE': True,
+  'PYZ': False,
+  'SPLASH': True,
+  'SYMLINK': False},
+ [('pyi-contents-directory _internal', '', 'OPTION'),
+  ('PYZ-00.pyz',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/PYZ-00.pyz',
+   'PYZ'),
+  ('python3.9/lib-dynload/_struct.cpython-39-darwin.so',
+   '/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/lib-dynload/_struct.cpython-39-darwin.so',
+   'EXTENSION'),
+  ('python3.9/lib-dynload/zlib.cpython-39-darwin.so',
+   '/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/lib-dynload/zlib.cpython-39-darwin.so',
+   'EXTENSION'),
+  ('struct',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/localpycs/struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/localpycs/pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/localpycs/pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/build/pyinstaller_x64_server/smart_fillable_server/localpycs/pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/loader/pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_multiprocessing.py',
+   'PYSOURCE'),
+  ('pyi_rth_setuptools',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_setuptools.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgres',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pkgres.py',
+   'PYSOURCE'),
+  ('pyi_rth_cryptography_openssl',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/venv_x64/lib/python3.9/site-packages/_pyinstaller_hooks_contrib/rthooks/pyi_rth_cryptography_openssl.py',
+   'PYSOURCE'),
+  ('smart_fillable_server',
+   '/Users/36981/Desktop/PDFTest/FILLABLE TESTING '
+   '2/FillThatPDF_Optimized_v17/python_dist/smart_fillable_server.py',
+   'PYSOURCE')],
+ 'Python3',
+ True,
+ False,
+ False,
+ [],
+ 'x86_64',
+ None,
+ None)
