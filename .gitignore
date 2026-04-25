@@ -1,0 +1,94 @@
+# Dependencies
+node_modules/
+
+# Python virtual environments
+venv*/
+pyenv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller build artifacts
+python_dist/dist/
+python_dist/dist_arm64/
+python_dist/dist_x64/
+python_dist/dist_win/
+python_dist/build/
+python_dist/build_*/
+
+# Electron build output
+dist/
+
+# macOS build artifacts
+*.dmg
+*.blockmap
+
+# PDFs (test files, not source)
+*.pdf
+
+# Debug/log files
+*.log
+*_debug_*.txt
+*_final_*.txt
+*_p*_full.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Credentials / secrets (never commit these)
+*.env
+.env.*
+credentials.json
+*.p12
+*.pem
+*.key
+
+# Temporary files
+*.tmp
+*.bak
+
+# Markdown docs generated during development
+BUG_FIXES_SUMMARY.md
+DIAGNOSIS_REPORT.md
+CHANGELOG*.md
+
+# Ads folder (marketing assets, not source)
+ads/
+
+# Misc test artifacts
+poppler_bin/
+
+# Temp git push dir
+.git_push/
+
+# Training datasets (large, not source code)
+python_dist/dataset_v3/
+python_dist/dataset*/
+python_dist/classifier_*/
+
+# Nested version directories (old builds accidentally copied in)
+FillThatPDF_v*/
+EZ-Filler_v*/
+
+# Test/debug output files
+*.txt
+*_overlay_*.png
+*_debug_*.png
+*_visual_debug*
+visual_debug*/
+0/
+12/
+
+# Debug JSON artifacts (but NOT package-lock.json, pairs.json etc needed by build)
+*_candidates*.json
+*_fields.json
+*_added.json
+*_removed.json
