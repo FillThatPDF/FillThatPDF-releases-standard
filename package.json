@@ -2,7 +2,7 @@
   "name": "fill-that-pdf",
   "productName": "Fill That PDF! PRO",
   "isPro": true,
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Create fillable PDFs and test fill them with dummy data",
   "repository": {
     "type": "git",

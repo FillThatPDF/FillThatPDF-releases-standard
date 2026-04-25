@@ -13,7 +13,7 @@ const config = {
 
     
     // Version info
-    version: '1.1.9',
+    version: '1.2.2',
     
     // Demo/Trial limits
     demo: {
