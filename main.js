@@ -777,8 +777,6 @@ app.whenReady().then(async () => {
         console.warn('Failed to clear cache:', e);
     }
 
-    setupAutoUpdater();
-
     createWindow();
 
     // Start persistent Python server for fast PDF processing
@@ -792,6 +790,12 @@ app.whenReady().then(async () => {
     // appears (silent install-on-quit still worked, but the user never saw
     // a prompt). See renderer.js for the matching synchronous listener
     // registration. Fixed in v1.1.9.
+    //
+    // BUG FIX (v1.2.1): previously called setupAutoUpdater() twice — once
+    // unconditionally above and once below — which threw "Attempted to
+    // register a second handler for 'install-update'" and aborted the
+    // entire update check. Now setupAutoUpdater() is only called inside
+    // this guarded block, and only when the user has updates enabled.
     const checkForUpdates = settingsStore.get('settings.check_for_updates', true);
     if (checkForUpdates && app.isPackaged) {
         const autoUpdater = setupAutoUpdater();
