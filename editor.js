@@ -1834,11 +1834,30 @@ function setupEventListeners() {
         const oldGroup = field.radio_group;
         if (!newGroup || newGroup === oldGroup) return;
         fields.forEach(f => {
-            if (f.type === 'radio' && f.radio_group === oldGroup) f.radio_group = newGroup;
+            if (f.type === 'radio' && f.radio_group === oldGroup) {
+                f.radio_group = newGroup;
+                // Kids inherit /T from the parent — keep their displayed
+                // name in sync with the renamed group so subsequent edits
+                // reference the new name.
+                if (f.name === oldGroup) f.name = newGroup;
+            }
         });
         if (oldGroup && changes.new_radio_groups[oldGroup]) {
+            // Group was newly created in this session — just migrate the
+            // pending-create entry to the new name. No rename event needed.
             changes.new_radio_groups[newGroup] = changes.new_radio_groups[oldGroup];
             delete changes.new_radio_groups[oldGroup];
+            if (changes.new_radio_groups_by_objgen && changes.new_radio_groups_by_objgen[oldGroup]) {
+                changes.new_radio_groups_by_objgen[newGroup] = changes.new_radio_groups_by_objgen[oldGroup];
+                delete changes.new_radio_groups_by_objgen[oldGroup];
+            }
+        } else {
+            // BUG FIX (v1.2.3): existing radio groups previously did not
+            // register the rename in changes.renamed, so clicking Apply
+            // Radio Group on a saved-PDF group was a silent no-op on save.
+            // Now we record the rename so modify_fields.py renames the
+            // parent field node (the spec-correct PDF target).
+            changes.renamed[oldGroup] = newGroup;
         }
         if (collapsedGroups.has(oldGroup)) {
             collapsedGroups.delete(oldGroup);
@@ -3506,14 +3525,37 @@ function setupStyleListeners() {
             // Store on field object
             if (!field.style) field.style = {};
             field.style.exportValue = value;
-            
-            // Track in changes for save
+
+            // BUG FIX (v1.2.3): also track per-objgen so radio-group kids
+            // that share an inherited /T (e.g. all 5 kids of "electric")
+            // don't collide on the same changes.styled[name] entry. Before
+            // this fix, applying export values to multiple kids in turn
+            // overwrote the same key — only the last value survived, and
+            // on save the Python engine wrote it to ALL kids, collapsing
+            // them to identical AP/N states. Acrobat then dedup'd the
+            // identical kids and deleted 3 of 5.
+            if (field.objgen) {
+                const objKey = field.objgen.join(',');
+                if (!changes.styled_by_objgen) changes.styled_by_objgen = {};
+                if (!changes.styled_by_objgen[objKey]) changes.styled_by_objgen[objKey] = {};
+                changes.styled_by_objgen[objKey].exportValue = value;
+                changes.styled_by_objgen[objKey]._name = field.name;
+            }
+
+            // Track in changes for save (kept for backward compat — Python
+            // skips name-keyed exportValue when the name covers multiple
+            // widgets, deferring to objgen entries to avoid clobbering).
             if (!changes.styled[field.name]) {
                 changes.styled[field.name] = {};
             }
             changes.styled[field.name].exportValue = value;
-            
+
             markUnsaved();
+            // BUG FIX (v1.2.3): refresh the side field list so the new
+            // export value (often shown alongside the field name for
+            // radio kids) is visible immediately after Apply.
+            try { updateFieldList(); } catch (_) {}
+            try { renderCanvas(); } catch (_) {}
         });
     }
 }
@@ -3798,9 +3840,19 @@ async function handleGroupRadio() {
     if (!groupName) return;
     
     saveState();  // Save state for undo
-    
+
     changes.new_radio_groups[groupName] = selectedFields.map(f => f.name);
-    
+    // BUG FIX (v1.2.3): also send objgens so Python can disambiguate
+    // when multiple widgets share an inherited /T name. Without this,
+    // creating 2 radio groups whose kids share a name would shuffle
+    // widgets into the wrong groups (e.g. Gas:1 / electric:4 instead
+    // of Gas:3 / electric:2) because annot_map[name] returned ALL
+    // matching widgets for each group.
+    if (!changes.new_radio_groups_by_objgen) changes.new_radio_groups_by_objgen = {};
+    changes.new_radio_groups_by_objgen[groupName] = selectedFields
+        .filter(f => f.objgen)
+        .map(f => f.objgen.join(','));
+
     for (let i = 0; i < selectedFields.length; i++) {
         const field = selectedFields[i];
         const oldName = field.name;
@@ -10568,6 +10620,14 @@ ipcRenderer.on('from-panel', (event, { action, payload, ...rest }) => {
                     if (oldGroup && changes.new_radio_groups[oldGroup]) {
                         changes.new_radio_groups[newGroup] = changes.new_radio_groups[oldGroup];
                         delete changes.new_radio_groups[oldGroup];
+                        if (changes.new_radio_groups_by_objgen && changes.new_radio_groups_by_objgen[oldGroup]) {
+                            changes.new_radio_groups_by_objgen[newGroup] = changes.new_radio_groups_by_objgen[oldGroup];
+                            delete changes.new_radio_groups_by_objgen[oldGroup];
+                        }
+                    } else if (oldGroup) {
+                        // BUG FIX (v1.2.3): existing radio groups now register
+                        // a rename so the parent field /T is updated on save.
+                        changes.renamed[oldGroup] = newGroup;
                     }
                     if (collapsedGroups.has(oldGroup)) {
                         collapsedGroups.delete(oldGroup);

@@ -746,32 +746,68 @@ def _create_radio_appearance_stream(pdf, rect, ev, bg_rgb=(1,1,1), style='check'
     
     return {'on': on_stream, 'off': off_stream}
 
-def _apply_radio_groups(pdf, groups: Dict[str, List[str]], annot_map: Dict, settings: Dict = {}) -> int:
-    """Convert checkboxes into radio button groups."""
+def _apply_radio_groups(pdf, groups: Dict[str, List[str]], annot_map: Dict,
+                        settings: Dict = {}, groups_by_objgen: Dict = None,
+                        ev_overrides: Dict = None) -> int:
+    """Convert checkboxes into radio button groups.
+
+    BUG FIX (v1.2.3):
+      - groups_by_objgen={group_name: ["8,0", "120,0", ...]}: when present,
+        members are looked up by exact PDF object identifier instead of by
+        name. Required when multiple widgets share an inherited /T (radio
+        kids) — name-based lookup returns ALL matching widgets and would
+        shuffle them across groups.
+      - ev_overrides={"8,0": "centerpoint", ...}: user-supplied export
+        values per widget (from styled_by_objgen). Honored over the
+        orig_name-derived default, so user-edited export names persist
+        through the regrouping that happens at save time.
+    """
     count = 0
     if '/AcroForm' not in pdf.Root: return 0
     acroform = pdf.Root['/AcroForm']
     all_fields = acroform['/Fields']
-    
-    # Build a map of annot -> page for later use
+    if ev_overrides is None: ev_overrides = {}
+    if groups_by_objgen is None: groups_by_objgen = {}
+
+    # Build maps of annot by objgen and annot -> page
     annot_to_page = {}
+    objgen_lookup = {}
     for page in pdf.pages:
         if '/Annots' in page:
             for annot in page.Annots:
                 if hasattr(annot, 'objgen'):
                     annot_to_page[annot.objgen] = page
+                    objgen_lookup[annot.objgen] = (page, annot)
 
     for group_name, checkbox_names in groups.items():
         checkbox_items = []
         seen_widget_ids = set() # Deduplicate physical widgets
-        
-        for name in checkbox_names:
-            if name in annot_map:
-                for page, annot in annot_map[name]:
-                    obj_id = f"{annot.objgen[0]}_{annot.objgen[1]}" if hasattr(annot, 'objgen') else str(id(annot))
+
+        og_list = groups_by_objgen.get(group_name)
+        if og_list:
+            # Preferred path: identify members by exact objgen
+            for og_str in og_list:
+                try:
+                    parts = og_str.split(',')
+                    og = (int(parts[0]), int(parts[1]))
+                except Exception:
+                    continue
+                if og in objgen_lookup:
+                    page, annot = objgen_lookup[og]
+                    obj_id = f"{og[0]}_{og[1]}"
                     if obj_id not in seen_widget_ids:
-                        checkbox_items.append((annot, name))
+                        cur_name = str(_resolve_attribute(annot, '/T', ''))
+                        checkbox_items.append((annot, cur_name))
                         seen_widget_ids.add(obj_id)
+        else:
+            # Legacy name-based path (backward compat for older editor sessions)
+            for name in checkbox_names:
+                if name in annot_map:
+                    for page, annot in annot_map[name]:
+                        obj_id = f"{annot.objgen[0]}_{annot.objgen[1]}" if hasattr(annot, 'objgen') else str(id(annot))
+                        if obj_id not in seen_widget_ids:
+                            checkbox_items.append((annot, name))
+                            seen_widget_ids.add(obj_id)
         
         if len(checkbox_items) < 1: continue
         
@@ -784,7 +820,7 @@ def _apply_radio_groups(pdf, groups: Dict[str, List[str]], annot_map: Dict, sett
             '/V': pikepdf.Name('/Off'),
             '/DA': pikepdf.String('0 g /ZaDb 0 Tf') # Default font for buttons
         }))
-        
+
         used_evs = {'Off', '/Off'}
         for i, (annot, orig_name) in enumerate(checkbox_items):
             # 1. Surgical Hierarchy Removal
@@ -799,7 +835,19 @@ def _apply_radio_groups(pdf, groups: Dict[str, List[str]], annot_map: Dict, sett
             if '/V' in annot: del annot['/V']
             
             # 3. Assign unique export value
-            ev = orig_name.strip().replace(' ', '_')
+            # BUG FIX (v1.2.3): prefer user-supplied exportValue (from
+            # styled_by_objgen) over the orig_name-derived default. Without
+            # this, custom export values applied in the editor were silently
+            # overwritten by this regrouping step (which runs at the END of
+            # the save pipeline).
+            ev = None
+            if hasattr(annot, 'objgen'):
+                og_key = f"{annot.objgen[0]},{annot.objgen[1]}"
+                override = ev_overrides.get(og_key)
+                if override:
+                    ev = str(override).strip().replace(' ', '_')
+            if not ev:
+                ev = orig_name.strip().replace(' ', '_')
             if not ev or ev in used_evs:
                 ev = f"Choice{i+1}"
             used_evs.add(ev)
@@ -1206,13 +1254,61 @@ def apply_field_changes(pdf_path: str, output_path: str, changes: Dict[str, Any]
         annot_map = build_annot_map()
 
         # 4. Rename (Moved BEFORE Grouping so groups can find new names)
+        # BUG FIX (v1.2.3): previously this rewrote /T on every annotation in
+        # annot_map[old]. annot_map is built using _resolve_attribute, which
+        # walks the parent chain — so for a radio group whose kids inherit /T
+        # from the parent (the spec-correct layout), annot_map["electric"]
+        # returns the 5 KID widgets, not the parent field. Setting /T on each
+        # kid violates the spec ("child widgets in a radio group MUST NOT
+        # have their own /T") and leaves the parent's /T untouched. Acrobat's
+        # repair logic on open then deletes 3 of the 5 malformed kids.
+        # Now we walk the AcroForm field tree and rename the field NODE that
+        # actually owns /T (the parent), preserving inheritance for kids.
+        def _find_field_node_by_name(fields, target_name):
+            """Depth-first search for a field node whose own /T == target_name."""
+            for f in fields:
+                try:
+                    fobj = pdf.get_object(f.objgen) if f.is_indirect else f
+                except Exception:
+                    fobj = f
+                if '/T' in fobj and str(fobj['/T']) == target_name:
+                    return fobj
+                if '/Kids' in fobj:
+                    found = _find_field_node_by_name(fobj['/Kids'], target_name)
+                    if found is not None:
+                        return found
+            return None
+
         name_updates = {}
         for old, new in changes.get("renamed", {}).items():
-            if old in annot_map:
-                for _, a in annot_map[old]: a['/T'] = pikepdf.String(new)
+            field_node = None
+            try:
+                acroform_fields = acroform.get('/Fields', [])
+                field_node = _find_field_node_by_name(acroform_fields, old)
+            except Exception:
+                field_node = None
+
+            if field_node is not None:
+                # Rename the field node that owns /T. For radio groups this
+                # is the parent field; kid widgets keep their inherited /T.
+                field_node['/T'] = pikepdf.String(new)
                 result["renamed"] += 1
-                annot_map[new] = annot_map.pop(old)
+                if old in annot_map:
+                    annot_map[new] = annot_map.pop(old)
                 name_updates[old] = new
+            elif old in annot_map:
+                # Fallback: no field node owns this /T (unusual). Only
+                # rewrite /T on widgets that actually own /T themselves —
+                # never on widgets inheriting from a parent.
+                renamed_any = False
+                for _, a in annot_map[old]:
+                    if '/T' in a:
+                        a['/T'] = pikepdf.String(new)
+                        renamed_any = True
+                if renamed_any:
+                    result["renamed"] += 1
+                    annot_map[new] = annot_map.pop(old)
+                    name_updates[old] = new
 
 
         # 6. Move / Resize
@@ -1800,7 +1896,18 @@ def apply_field_changes(pdf_path: str, output_path: str, changes: Dict[str, Any]
         for name, styles in styled_by_name.items():
             t_name = name_updates.get(name, name)
             if t_name in annot_map:
-                for _, annot in annot_map[t_name]: apply_styles(annot, styles)
+                widgets = annot_map[t_name]
+                # BUG FIX (v1.2.3): when multiple widgets share a name
+                # (radio-group kids inheriting /T from the parent), do NOT
+                # apply exportValue from the name-keyed entry — that would
+                # clobber every kid to the same AP/N on-state, which
+                # Acrobat dedups by deleting all but a couple of them.
+                # Per-widget objgen entries (handled below) carry the
+                # correct per-kid exportValue.
+                styles_to_apply = styles
+                if len(widgets) > 1 and 'exportValue' in styles:
+                    styles_to_apply = {k: v for k, v in styles.items() if k != 'exportValue'}
+                for _, annot in widgets: apply_styles(annot, styles_to_apply)
                 result["styled"] += 1
 
         # Apply by objgen (stable across saves) — with name cross-validation
@@ -2219,7 +2326,21 @@ def apply_field_changes(pdf_path: str, output_path: str, changes: Dict[str, Any]
         new_groups = changes.get("new_radio_groups", {})
         if new_groups:
             annot_map = build_annot_map() # Final rebuild
-            result["grouped"] = _apply_radio_groups(pdf, new_groups, annot_map, settings)
+            # BUG FIX (v1.2.3): pass through the parallel objgen-keyed payload
+            # and any user-supplied exportValue overrides so this step does
+            # not (a) shuffle radio kids across groups when widgets share an
+            # inherited /T, and (b) does not silently overwrite the export
+            # values the user just applied in the editor.
+            new_groups_by_og = changes.get("new_radio_groups_by_objgen", {}) or {}
+            ev_overrides = {}
+            for og_key, st in changes.get("styled_by_objgen", {}).items():
+                if isinstance(st, dict) and st.get("exportValue"):
+                    ev_overrides[og_key] = st["exportValue"]
+            result["grouped"] = _apply_radio_groups(
+                pdf, new_groups, annot_map, settings,
+                groups_by_objgen=new_groups_by_og,
+                ev_overrides=ev_overrides,
+            )
             _diag_snapshot("AFTER-RADIO-GROUP", pdf)
             _diag_page_fields("AFTER-RADIO-GROUP", pdf, 2)
 
