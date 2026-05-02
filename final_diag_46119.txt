@@ -1,0 +1,7 @@
+usage: smart_fillable_v23.py [-h] [--inspect] [--fix IDS] [--skip-inspection]
+                             [--auto-calibrate] [--settings JSON]
+                             [--enhanced {off,conservative,aggressive}]
+                             [--qa-overlay FILE] [--candidate-json FILE]
+                             [--pages PAGES]
+                             input_pdf [output_pdf]
+smart_fillable_v23.py: error: unrecognized arguments: --debug

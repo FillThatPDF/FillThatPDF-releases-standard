@@ -1,0 +1,15 @@
+
+🔧 Building FillThatPDF! PRO version...
+
+✅ Set isPro = true
+✅ Set isDemo = false
+✅ Updated package.json for PRO
+
+📦 Running electron-builder...
+
+  • electron-builder  version=24.13.3 os=24.6.0
+  • loaded configuration  file=package.json ("build" field)
+  • packaging       platform=darwin arch=x64 electron=28.3.3 appOutDir=dist/mac-universal-x64-temp
+  • packaging       platform=darwin arch=arm64 electron=28.3.3 appOutDir=dist/mac-universal-arm64-temp
+  • packaging       platform=darwin arch=universal electron=28.3.3 appOutDir=dist/mac-universal
+  • 

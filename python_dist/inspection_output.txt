@@ -1,0 +1,36 @@
+Page 3 Size: 612.0x792.0
+Found 23 lines
+Line: 36.0,175.6 -> 157.7,175.6
+Line: 36.1,175.7 -> 36.1,191.3
+Line: 157.7,175.6 -> 576.0,175.6
+Line: 157.7,175.7 -> 157.7,191.3
+Line: 575.9,175.7 -> 575.9,191.3
+Line: 36.0,191.4 -> 157.7,191.4
+Line: 36.1,191.5 -> 36.1,239.6
+Line: 157.7,191.4 -> 576.0,191.4
+Line: 157.7,191.5 -> 157.7,239.6
+Line: 575.9,191.5 -> 575.9,239.6
+Line: 36.0,239.7 -> 157.7,239.7
+Line: 36.1,239.9 -> 36.1,287.9
+Line: 157.7,239.7 -> 576.0,239.7
+Line: 157.7,239.9 -> 157.7,287.9
+Line: 575.9,239.9 -> 575.9,287.9
+Line: 36.0,288.1 -> 157.7,288.1
+Line: 157.7,288.1 -> 576.0,288.1
+Line: 83.3,382.3 -> 473.0,382.3
+Line: 504.8,382.3 -> 573.1,382.3
+Line: 90.0,407.5 -> 473.0,407.5
+Line: 128.4,432.7 -> 473.0,432.7
+Line: 504.8,432.7 -> 573.1,432.7
+Line: 135.0,457.9 -> 473.0,457.9
+Found 5 rects
+Rect: -9.0,-9.0 -> 621.0,126.0
+Rect: 124.4,32.1 -> 126.0,41.9
+Rect: 149.5,32.0 -> 151.1,33.5
+Rect: 36.1,175.6 -> 157.7,191.4
+Rect: 157.7,175.6 -> 575.9,191.4
+Found 1 tables
+Table 0: 3 rows
+  Row: ['NJ Utility', 'Submission Information']
+  Row: ['Elizabethtown Gas', 'This rebate form is only to be used when submitting a rebate for qualifying natural gas equipment to\nElizabethtown Gas. Please include this form, along with required documentation to Elizabethtown Gas\nResidential Products Rebate Program c/o Honeywell Smart Energy · PO Box 308 · Morris Plains,\nNJ 07950, or email elizabethtowngas@honeywell.com']
+  Row: ['PSE&G', 'This rebate form is only to be used when submitting a rebate for qualifying electric and natural gas\nequipment to Public Service Electric and Gas (PSE&G). Please include this form, along with required\ndocumentation to ICF, Attn: One Gateway Center, Suite 2600, Newark, New Jersey 07102,\nor email to pseghomeenergy@icf.com']

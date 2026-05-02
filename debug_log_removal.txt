@@ -1,0 +1,347 @@
+Testing rect detection on /Users/36981/Desktop/PDFTest/PDFs to test/Blank/55570_DTE_SEEL_Contractor_Onboarding _Packet_v18.pdf
+Settings: {'min_empty_box_width': 40, 'min_empty_box_height': 15, 'detection_sensitivity': 'standard'}
+
+============================================================
+  Universal PDF Fillable Detector v1.0
+  Input:  55570_DTE_SEEL_Contractor_Onboarding _Packet_v18.pdf
+  Output: test_rect_output.pdf
+============================================================
+
+   📊 Pre-loading structural data for 37 page(s)...
+   ✅ Structural data cached in 3.97s
+📄 PASS 0: Detecting text-only pages...
+   Page 4: Detected as text-only/informational - skipping field detection
+   Page 5: Detected as text-only/informational - skipping field detection
+
+🔲 PASS 1: Detecting checkboxes (vector + character)...
+   Page 33: 90 vector checkboxes
+   Page 34: 70 vector checkboxes
+   Page 35: 33 vector checkboxes
+   Page 8: 5 character checkboxes
+   Page 13: 40 character checkboxes
+   Page 14: 1 character checkboxes
+   Page 15: 10 character checkboxes
+   Page 16: 10 character checkboxes
+   Page 25: 7 character checkboxes
+   Page 34: 2 character checkboxes
+   Page 36: 26 character checkboxes
+   Page 37: 9 character checkboxes
+   Total: 303 checkboxes
+
+📋 PASS 2: Detecting table cells...
+   Page 13: 20 table fields
+   Page 14: 8 table fields
+   Page 15: 19 table fields
+   Page 33: 4 table fields
+   Page 34: 2 table fields
+   Page 36: 11 table fields
+   Page 37: 65 table fields
+   Total from tables: 129 fields
+   Found 11 colon-label cell fields
+
+✍️  PASS 3: Detecting signature/date fields...
+      Technician Name_2: width=219.1pt
+      Date_5: width=139.4pt
+      Signature: width=209.2pt
+   Found 3 signature/date fields
+
+🏷️  PASS 3A: Detecting special label fields...
+
+🏷️  PASS 3B: Detecting inline label fields (City/State/ZIP)...
+
+📝 PASS 3C: Detecting general underscore text patterns...
+
+🏷️  PASS 3D: Detecting colon-separated label fields...
+   v18: Replaced full-row field 'Account Holder First Name' with split fields
+   v18: Replaced full-row field 'Address' with split fields
+   v18: Replaced full-row field 'Company Name' with split fields
+   v18: Replaced full-row field 'Address_2' with split fields
+   Found 38 colon-separated fields
+
+📦 PASS 4: Detecting empty boxes for text areas...
+   Total: 255 empty box fields
+
+📏 PASS 4B: Detecting form lines (underlines)...
+   DEBUG INLINE: Found 2 labels on line y=208
+      Label 'State' x0=192 x1=211
+      Label 'ZIP Code' x0=240 x1=271
+   DEBUG INLINE: Found 2 labels on line y=351
+      Label 'State' x0=192 x1=211
+      Label 'ZIP Code' x0=240 x1=271
+   Found 8 form line fields
+
+📦 PASS 4C: Detecting box entry fields (account numbers)...
+   Detecting filled rectangle fields...
+DEBUG: Filled Rect Settings - min_width=40, min_height=15
+DEBUG P37 RECT: x=36.2 y=609.6 w=111.9 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+  -> REJECTED: Text inside
+DEBUG P37 RECT: x=148.2 y=609.6 w=59.3 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=207.5 y=609.6 w=59.3 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=266.8 y=609.6 w=54.3 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=321.1 y=609.6 w=54.7 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=375.8 y=609.6 w=199.9 h=18.4 Color=(0.0, 0.0, 0.0, 0.0)
+  -> REJECTED: Text inside
+DEBUG P37 RECT: x=36.2 y=591.5 w=111.9 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+  -> REJECTED: Text inside
+DEBUG P37 RECT: x=148.2 y=591.5 w=59.3 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=207.5 y=591.5 w=59.3 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=266.8 y=591.5 w=54.3 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=321.1 y=591.5 w=54.7 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+DEBUG P37 RECT: x=375.8 y=591.5 w=199.9 h=18.1 Color=(0.0, 0.0, 0.0, 0.0)
+  -> REJECTED: Text inside
+   found 178 filled rectangle fields
+   No box entry fields found
+
+🧹 PASS 4C: Cleaning up field boundaries...
+   Normalized 226 field heights for row alignment
+
+🏷️  PASS 4D: Enriching checkbox labels from column headers...
+   Enriched 18 checkbox labels from column headers
+
+🏷️  PASS 4E: Enriching checkbox labels from beside text...
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 0 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 1 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+   Enriched 2 checkbox labels from beside text
+
+🔘 PASS 5: Identifying radio button groups...
+DEBUG RADIO GROUP: Found horizontal group 'N_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'F_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'C_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'S_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'G_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'E_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'V_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'O_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'C_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'N_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'W_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'P_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'C_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'V_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'O_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'P_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'V_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'V_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'S_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'P_YesNoNA' on Page 33 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'I_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'B_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'P_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'E_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'I_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'W_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'B_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'W_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'I_YesNoNA' on Page 34 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'C_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'A_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'D_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'V_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'H_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+DEBUG RADIO GROUP: Found horizontal group 'W_YesNoNA' on Page 35 with 3 options: ['yes', 'no', 'n/a']
+   Found 57 radio button groups
+
+🏷️  PASS 5A: Refining horizontal checkbox labels...
+
+🏷️  PASS 5B: Assigning header-based checkbox names...
+
+✂️  PASS 5C: Splitting fields on separators...
+
+🧩 PASS 6: Merging fragmented fields...
+
+🔄 PASS 6B: Removing overlapping duplicate fields...
+   🔄 Removed 178 overlapping duplicate fields (kept wider ones)
+
+📏 PASS 6C: Extending fields to form line endpoints...
+   Extended 5 fields to form line endpoints
+✂️  PASS 6D: Splitting fields crossing vertical lines...
+
+📝 PASS 7: Creating fillable PDF...
+   Removed 0 duplicate fields
+   ✅ Created 726 form fields using pikepdf
+   ✅ Applied center alignment to 68 small table fields
+   Page rotations: {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 0, 32: 0, 33: 0, 34: 0, 35: 0, 36: 0}
+   ✅ Created 726 form fields
+
+🔤 PASS 8: Fixing font encoding...
+   ✅ Applied checkbox style 'check' to 303 fields
+   ✅ AcroForm settings applied (DA, DR, NeedAppearances)
+
+🔘 PASS 9: Creating radio button groups...
+   ✅ Removed 171 widget references from Fields array
+   ✅ Created 57 radio button groups
+
+🎨 PASS 9: Generating QA overlays...
+   ✅ Overlays saved to: /var/folders/y6/0bsrphmd2zl6m4svph6_xs200000gp/T/FillThatPDF_overlays/test_rect_output
+
+============================================================
+  SUMMARY
+============================================================
+  Checkboxes: 303
+  Text fields: 436
+  Radio groups: 57
+
+  Fields by detection source:
+    empty_box: 225
+    table: 61
+    filled_box: 52
+    colon_separated: 38
+    table_data_row: 25
+    embedded_underscore: 13
+    colon_label_cell: 11
+    split_field: 8
+    signature: 3
+
+  Output: /Users/36981/Desktop/PDFTest/test_rect_output.pdf
+============================================================
+
+
+📜 PASS 10: Adding JavaScript formatting...
+   📅 Field 'Date' (Source: table_data_row): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Date_2' (Source: table_data_row): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Date of Installation' (Source: table_data_row): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Installed Date Quantity Installed' (Source: filled_box): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Date_3' (Source: table_data_row): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Date_4' (Source: table_data_row): Applying date format 'mm/dd/yyyy'
+   📅 Field 'Date_5' (Source: signature): Applying date format 'mm/dd/yyyy'
+   ✅ Added JavaScript to 55 fields: currency=8, date=7, number=32, phone=3, state=2, year=1, zip=2
+   ✅ Added click-to-browse to 126 image boxes
+
+🔤 PASS 12: Applying final AcroForm settings...
+   ✅ Applied checkbox style 'check' to 303 fields
+   ✅ AcroForm settings applied (DA, DR, NeedAppearances)
+
+Analysis complete.

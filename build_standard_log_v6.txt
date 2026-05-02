@@ -1,0 +1,23 @@
+
+🔧 Building FillThatPDF! Standard version...
+
+✅ Set isPro = false
+✅ Set isDemo = false
+✅ Updated package.json for Standard
+✅ Publish repo: FillThatPDF-releases-standard
+
+📦 Running electron-builder...
+
+  • electron-builder  version=24.13.3 os=25.3.0
+  • loaded configuration  file=package.json ("build" field)
+  • packaging       platform=darwin arch=x64 electron=28.3.3 appOutDir=dist/mac-universal-x64-temp
+  • packaging       platform=darwin arch=arm64 electron=28.3.3 appOutDir=dist/mac-universal-arm64-temp
+  • packaging       platform=darwin arch=universal electron=28.3.3 appOutDir=dist/mac-universal
+  • signing         file=dist/mac-universal/Fill That PDF!.app platform=darwin type=distribution identity=E8934069A73A7841583014D9461E31188D2358CB provisioningProfile=none
+  • notarization successful
+  • building        target=DMG arch=universal file=dist/Fill That PDF!-1.0.0-universal.dmg
+  • Detected arm64 process, HFS+ is unavailable. Creating dmg with APFS - supports Mac OSX 10.12+
+  • building block map  blockMapFile=dist/Fill That PDF!-1.0.0-universal.dmg.blockmap
+
+🎉 Build complete! Check the dist/ folder for your Standard DMG.
+

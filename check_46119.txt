@@ -1,0 +1,197 @@
+Results for 46119 (Utility Alignment Check):
+
+--- Checking output_verify_46119.pdf (Page 1) ---
+Field: Contractor                     Rect: [549.4191, 570.7862, 573.5, 598.6582] Tooltip: Contractor
+Field: Single Family                  Rect: [133.917425, 529.570825, 140.733575, 536.386975] Tooltip: Single Family
+Field: MultiFamily 24 units           Rect: [206.943425, 529.570825, 213.759575, 536.386975] Tooltip: MultiFamily 24 units
+Field: Townhome                       Rect: [318.327425, 529.570825, 325.143575, 536.386975] Tooltip: Townhome
+Field: Mobile Home                    Rect: [381.687425, 529.570825, 388.503575, 536.386975] Tooltip: Mobile Home
+Field: Type of Residence Single Famil Rect: [449.954, 509.4074, 573.625, 539.9223] Tooltip: Type of Residence Single Famil
+Field: Residence                      Rect: [216.861, 509.4074, 232.966, 522.4074] Tooltip: Residence
+Field: Homeowner Name                 Rect: [127.666, 494.0794, 303.625, 507.0794] Tooltip: Homeowner Name
+Field: Contractor Company Name        Rect: [433.351, 494.0794, 570.625, 507.0794] Tooltip: Contractor Company Name
+Field: Homeowner Email                Rect: [125.83, 480.2994, 303.625, 493.2994] Tooltip: Homeowner Email
+Field: Contractor Email               Rect: [389.998, 480.2994, 570.625, 493.2994] Tooltip: Contractor Email
+Field: Homeowner Phone                Rect: [137.17, 466.5194, 303.625, 479.5194] Tooltip: Homeowner Phone
+Field: Contractor Phone               Rect: [401.338, 466.5194, 570.625, 479.5194] Tooltip: Contractor Phone
+Field: Installation Address           Rect: [131.3371, 452.7394, 303.625, 465.7394] Tooltip: Installation Address
+Field: Name_7                         Rect: [423.34, 452.7394, 573.625, 465.7394] Tooltip: Name
+Field: City                           Rect: [67.158, 438.9594, 184.327, 451.9594] Tooltip: City
+Field: State                          Rect: [218.997, 438.9594, 232.324, 451.9594] Tooltip: State
+Field: ZIP                            Rect: [259.488, 438.9594, 303.625, 451.9594] Tooltip: ZIP
+Field: NJ HVAC License                Rect: [400.924, 438.9594, 570.625, 451.9594] Tooltip: NJ HVAC License
+Field: County                         Rect: [81.334, 425.1794, 303.625, 438.1794] Tooltip: County
+Field: Participating Distributor Name Rect: [443.674, 425.1794, 570.625, 438.1794] Tooltip: Participating Distributor Name
+Field: of Individuals in Household    Rect: [168.517, 411.3994, 303.625, 424.3994] Tooltip: of Individuals in Household
+Field: WhiteCaucasian                 Rect: [43.926425, 374.031825, 50.742575, 380.847975] Tooltip: WhiteCaucasian
+Field: BlackAfrican American          Rect: [131.784425, 374.031825, 138.600575, 380.847975] Tooltip: BlackAfrican American
+Field: WhiteCaucasian HispanicLatino  Rect: [43.926425, 364.032825, 50.742575, 370.848975] Tooltip: WhiteCaucasian HispanicLatino
+Field: Asian BlackAfrican American    Rect: [126.789425, 364.032825, 133.605575, 370.848975] Tooltip: Asian BlackAfrican American
+Field: American HispanicLatino IndianAlaskan Asian Native Rect: [43.926425, 354.033825, 50.742575, 360.849975] Tooltip: American HispanicLatino IndianAlaskan Asian Native
+Field: Pacific Islander               Rect: [191.130425, 354.033825, 197.946575, 360.849975] Tooltip: Pacific Islander
+Field: American More than IndianAlaskan one race Rect: [43.926425, 344.034825, 50.742575, 350.850975] Tooltip: American More than IndianAlaskan one race
+Field: Native Pacific Islander        Rect: [141.801425, 344.034825, 148.617575, 350.850975] Tooltip: Native Pacific Islander
+Field: Decline                        Rect: [250.431425, 344.034825, 257.247575, 350.850975] Tooltip: Decline
+Field: PSEG                           Rect: [43.926425, 278.467125, 50.742575, 285.283275] Tooltip: PSEG
+Field: Rockland Co                    Rect: [313.926425, 278.467125, 320.742575, 285.283275] Tooltip: Rockland Co
+Field: PSEG_3                         Rect: [92.512, 278.2837, 303.625, 291.2837] Tooltip: PSEG
+Field: Elizabethtown                  Rect: [43.926425, 264.688125, 50.742575, 271.504275] Tooltip: Elizabethtown
+Field: PSEG_2                         Rect: [313.926425, 264.688125, 320.742575, 271.504275] Tooltip: PSEG
+Field: Elizabethtown                  Rect: [119.332, 264.5037, 303.625, 277.5037] Tooltip: Elizabethtown
+Field: PSEG_4                         Rect: [362.512, 264.5037, 570.625, 277.5037] Tooltip: PSEG
+Field: NJNG                           Rect: [43.926425, 250.909125, 50.742575, 257.725275] Tooltip: NJNG
+Field: Atlantic City Electric         Rect: [313.926425, 250.909125, 320.742575, 257.725275] Tooltip: Atlantic City Electric
+Field: NJNG_2                         Rect: [87.346, 250.7237, 303.625, 263.7237] Tooltip: NJNG
+Field: Electric_3                     Rect: [412.677, 250.7237, 570.625, 263.7237] Tooltip: Electric
+Field: SJG                            Rect: [43.926425, 237.130125, 50.742575, 243.946275] Tooltip: SJG
+Field: Municipal Co                   Rect: [313.926425, 237.130125, 320.742575, 243.946275] Tooltip: Municipal Co
+Field: Co_2                           Rect: [417.688, 236.9437, 573.5, 249.9437] Tooltip: Co
+Field: SJG                            Rect: [77.182, 230.7437, 303.625, 243.7437] Tooltip: SJG
+Field: replaced                       Rect: [337.938, 161.9955, 569.8646, 174.9955] Tooltip: replaced
+Field: AirSource Heat Pump ASHP       Rect: [285.387425, 120.844925, 292.203575, 127.661075] Tooltip: AirSource Heat Pump ASHP
+Field: Ground type Source of HVAC Heat system Pump will GSHP the thermostat Rect: [52.926425, 110.845925, 59.742575, 117.662075] Tooltip: Ground type Source of HVAC Heat system Pump will GSHP the thermostat
+Field: MiniSplit control Heat Pump AirSource MSHP Heat Rect: [213.639425, 110.845925, 220.455575, 117.662075] Tooltip: MiniSplit control Heat Pump AirSource MSHP Heat
+Field: Pump Furnace ASHP              Rect: [352.518425, 110.845925, 359.334575, 117.662075] Tooltip: Pump Furnace ASHP
+Field: Resistance                     Rect: [404.871425, 110.845925, 411.687575, 117.662075] Tooltip: Resistance
+Field: Central Ground Air Source Conditioner Heat Pump Rect: [52.926425, 100.846925, 59.742575, 107.663075] Tooltip: Central Ground Air Source Conditioner Heat Pump
+Field: Boiler GSHP                    Rect: [164.112425, 100.846925, 170.928575, 107.663075] Tooltip: Boiler GSHP
+Field: MiniSplit Heat Pump MSHP Furnace Rect: [206.790425, 100.846925, 213.606575, 107.663075] Tooltip: MiniSplit Heat Pump MSHP Furnace
+Field: Cooling Only                   Rect: [243.813725, 87.067925, 250.629875, 93.884075] Tooltip: Cooling Only
+
+Results for 53252 (Phantom Field Check):
+
+--- Checking output_verify_53252.pdf (Page 3) ---
+Field: Pass                           Rect: [225.1785, 599.2495, 231.1785, 605.2495] Tooltip: Pass
+Field: Fail                           Rect: [256.6785, 599.2495, 262.6785, 605.2495] Tooltip: Fail
+Field: Cell_36_182                    Rect: [38.625, 592.3032, 186.625, 607.8032] Tooltip: Cell_36
+Field: Cell_189_182                   Rect: [191.625, 592.3032, 218.125, 607.8032] Tooltip: Cell_189
+Field: Cell_283_182                   Rect: [286.125, 592.3032, 506.125, 607.8032] Tooltip: Cell_283
+Field: Cell_508_182                   Rect: [511.125, 592.3032, 573.625, 607.8032] Tooltip: Cell_508
+Field: Check Box 3                    Rect: [225.1785, 581.2495, 231.1785, 587.2495] Tooltip: Check Box 3
+Field: Check Box 4                    Rect: [256.6785, 581.2495, 262.6785, 587.2495] Tooltip: Check Box 4
+Field: Cell_36_200                    Rect: [38.625, 574.3032, 186.625, 589.8032] Tooltip: Cell_36
+Field: Cell_189_200                   Rect: [191.625, 574.3032, 218.125, 589.8032] Tooltip: Cell_189
+Field: Cell_283_200                   Rect: [286.125, 574.3032, 506.125, 589.8032] Tooltip: Cell_283
+Field: Cell_508_200                   Rect: [511.125, 574.3032, 573.625, 589.8032] Tooltip: Cell_508
+Field: Check Box 5                    Rect: [225.1785, 563.2495, 231.1785, 569.2495] Tooltip: Check Box 5
+Field: Check Box 6                    Rect: [256.6785, 563.2495, 262.6785, 569.2495] Tooltip: Check Box 6
+Field: Cell_36_218                    Rect: [38.625, 556.3032, 186.625, 571.8032] Tooltip: Cell_36
+Field: Cell_189_218                   Rect: [191.625, 556.3032, 218.125, 571.8032] Tooltip: Cell_189
+Field: Cell_283_218                   Rect: [286.125, 556.3032, 506.125, 571.8032] Tooltip: Cell_283
+Field: Cell_508_218                   Rect: [511.125, 556.3032, 573.625, 571.8032] Tooltip: Cell_508
+Field: Check Box 7                    Rect: [225.1785, 545.2495, 231.1785, 551.2495] Tooltip: Check Box 7
+Field: Check Box 8                    Rect: [256.6785, 545.2495, 262.6785, 551.2495] Tooltip: Check Box 8
+Field: Cell_36_236                    Rect: [38.625, 538.3032, 186.625, 553.8032] Tooltip: Cell_36
+Field: Cell_189_236                   Rect: [191.625, 538.3032, 218.125, 553.8032] Tooltip: Cell_189
+Field: Cell_283_236                   Rect: [286.125, 538.3032, 506.125, 553.8032] Tooltip: Cell_283
+Field: Cell_508_236                   Rect: [511.125, 538.3032, 573.625, 553.8032] Tooltip: Cell_508
+Field: Check Box 9                    Rect: [225.1785, 527.2495, 231.1785, 533.2495] Tooltip: Check Box 9
+Field: Check Box 10                   Rect: [256.6785, 527.2495, 262.6785, 533.2495] Tooltip: Check Box 10
+Field: Cell_36_254                    Rect: [38.625, 520.3032, 186.625, 535.8032] Tooltip: Cell_36
+Field: Cell_189_254                   Rect: [191.625, 520.3032, 218.125, 535.8032] Tooltip: Cell_189
+Field: Cell_283_254                   Rect: [286.125, 520.3032, 506.125, 535.8032] Tooltip: Cell_283
+Field: Cell_508_254                   Rect: [511.125, 520.3032, 573.625, 535.8032] Tooltip: Cell_508
+Field: Check Box 11                   Rect: [225.1785, 509.2495, 231.1785, 515.2495] Tooltip: Check Box 11
+Field: Check Box 12                   Rect: [256.6785, 509.2495, 262.6785, 515.2495] Tooltip: Check Box 12
+Field: Cell_36_272                    Rect: [38.625, 502.3032, 186.625, 517.8032] Tooltip: Cell_36
+Field: Cell_189_272                   Rect: [191.625, 502.3032, 218.125, 517.8032] Tooltip: Cell_189
+Field: Cell_283_272                   Rect: [286.125, 502.3032, 506.125, 517.8032] Tooltip: Cell_283
+Field: Cell_508_272                   Rect: [511.125, 502.3032, 573.625, 517.8032] Tooltip: Cell_508
+Field: Check Box 13                   Rect: [225.1785, 491.2495, 231.1785, 497.2495] Tooltip: Check Box 13
+Field: Check Box 14                   Rect: [256.6785, 491.2495, 262.6785, 497.2495] Tooltip: Check Box 14
+Field: Cell_36_290                    Rect: [38.625, 484.3032, 186.625, 499.8032] Tooltip: Cell_36
+Field: Cell_189_290                   Rect: [191.625, 484.3032, 218.125, 499.8032] Tooltip: Cell_189
+Field: Cell_283_290                   Rect: [286.125, 484.3032, 506.125, 499.8032] Tooltip: Cell_283
+Field: Cell_508_290                   Rect: [511.125, 484.3032, 573.625, 499.8032] Tooltip: Cell_508
+Field: Check Box 15                   Rect: [225.1785, 473.2495, 231.1785, 479.2495] Tooltip: Check Box 15
+Field: Check Box 16                   Rect: [256.6785, 473.2495, 262.6785, 479.2495] Tooltip: Check Box 16
+Field: Cell_36_308                    Rect: [38.625, 466.3032, 186.625, 481.8032] Tooltip: Cell_36
+Field: Cell_189_308                   Rect: [191.625, 466.3032, 218.125, 481.8032] Tooltip: Cell_189
+Field: Cell_283_308                   Rect: [286.125, 466.3032, 506.125, 481.8032] Tooltip: Cell_283
+Field: Cell_508_308                   Rect: [511.125, 466.3032, 573.625, 481.8032] Tooltip: Cell_508
+Field: Check Box 17                   Rect: [225.1785, 455.2495, 231.1785, 461.2495] Tooltip: Check Box 17
+Field: Check Box 18                   Rect: [256.6785, 455.2495, 262.6785, 461.2495] Tooltip: Check Box 18
+Field: Cell_36_326                    Rect: [38.625, 448.3032, 186.625, 463.8032] Tooltip: Cell_36
+Field: Cell_189_326                   Rect: [191.625, 448.3032, 218.125, 463.8032] Tooltip: Cell_189
+Field: Cell_283_326                   Rect: [286.125, 448.3032, 506.125, 463.8032] Tooltip: Cell_283
+Field: Cell_508_326                   Rect: [511.125, 448.3032, 573.625, 463.8032] Tooltip: Cell_508
+Field: Check Box 19                   Rect: [225.1785, 437.2495, 231.1785, 443.2495] Tooltip: Check Box 19
+Field: Check Box 20                   Rect: [256.6785, 437.2495, 262.6785, 443.2495] Tooltip: Check Box 20
+Field: Cell_36_344                    Rect: [38.625, 430.3032, 186.625, 445.8032] Tooltip: Cell_36
+Field: Cell_189_344                   Rect: [191.625, 430.3032, 218.125, 445.8032] Tooltip: Cell_189
+Field: Cell_283_344                   Rect: [286.125, 430.3032, 506.125, 445.8032] Tooltip: Cell_283
+Field: Cell_508_344                   Rect: [511.125, 430.3032, 573.625, 445.8032] Tooltip: Cell_508
+Field: Check Box 21                   Rect: [225.1785, 419.2495, 231.1785, 425.2495] Tooltip: Check Box 21
+Field: Check Box 22                   Rect: [256.6785, 419.2495, 262.6785, 425.2495] Tooltip: Check Box 22
+Field: Cell_36_362                    Rect: [38.625, 412.3032, 186.625, 427.8032] Tooltip: Cell_36
+Field: Cell_189_362                   Rect: [191.625, 412.3032, 218.125, 427.8032] Tooltip: Cell_189
+Field: Cell_283_362                   Rect: [286.125, 412.3032, 506.125, 427.8032] Tooltip: Cell_283
+Field: Cell_508_362                   Rect: [511.125, 412.3032, 573.625, 427.8032] Tooltip: Cell_508
+Field: Check Box 23                   Rect: [225.1785, 401.2495, 231.1785, 407.2495] Tooltip: Check Box 23
+Field: Check Box 24                   Rect: [256.6785, 401.2495, 262.6785, 407.2495] Tooltip: Check Box 24
+Field: Cell_36_380                    Rect: [38.625, 394.3032, 186.625, 409.8032] Tooltip: Cell_36
+Field: Cell_189_380                   Rect: [191.625, 394.3032, 218.125, 409.8032] Tooltip: Cell_189
+Field: Cell_283_380                   Rect: [286.125, 394.3032, 506.125, 409.8032] Tooltip: Cell_283
+Field: Cell_508_380                   Rect: [511.125, 394.3032, 573.625, 409.8032] Tooltip: Cell_508
+Field: Check Box 25                   Rect: [225.1785, 383.2495, 231.1785, 389.2495] Tooltip: Check Box 25
+Field: Check Box 26                   Rect: [256.6785, 383.2495, 262.6785, 389.2495] Tooltip: Check Box 26
+Field: Cell_36_398                    Rect: [38.625, 376.3032, 186.625, 391.8032] Tooltip: Cell_36
+Field: Cell_189_398                   Rect: [191.625, 376.3032, 218.125, 391.8032] Tooltip: Cell_189
+Field: Cell_283_398                   Rect: [286.125, 376.3032, 506.125, 391.8032] Tooltip: Cell_283
+Field: Cell_508_398                   Rect: [511.125, 376.3032, 573.625, 391.8032] Tooltip: Cell_508
+Field: Check Box 27                   Rect: [225.1785, 365.2495, 231.1785, 371.2495] Tooltip: Check Box 27
+Field: Check Box 28                   Rect: [256.6785, 365.2495, 262.6785, 371.2495] Tooltip: Check Box 28
+Field: Cell_36_416                    Rect: [38.625, 358.3032, 186.625, 373.8032] Tooltip: Cell_36
+Field: Cell_189_416                   Rect: [191.625, 358.3032, 218.125, 373.8032] Tooltip: Cell_189
+Field: Cell_283_416                   Rect: [286.125, 358.3032, 506.125, 373.8032] Tooltip: Cell_283
+Field: Cell_508_416                   Rect: [511.125, 358.3032, 573.625, 373.8032] Tooltip: Cell_508
+Field: Check Box 29                   Rect: [225.1785, 347.2495, 231.1785, 353.2495] Tooltip: Check Box 29
+Field: Check Box 30                   Rect: [256.6785, 347.2495, 262.6785, 353.2495] Tooltip: Check Box 30
+Field: Cell_36_434                    Rect: [38.625, 340.3032, 186.625, 355.8032] Tooltip: Cell_36
+Field: Cell_189_434                   Rect: [191.625, 340.3032, 218.125, 355.8032] Tooltip: Cell_189
+Field: Cell_283_434                   Rect: [286.125, 340.3032, 506.125, 355.8032] Tooltip: Cell_283
+Field: Cell_508_434                   Rect: [511.125, 340.3032, 573.625, 355.8032] Tooltip: Cell_508
+Field: Check Box 31                   Rect: [225.1785, 329.2495, 231.1785, 335.2495] Tooltip: Check Box 31
+Field: Check Box 32                   Rect: [256.6785, 329.2495, 262.6785, 335.2495] Tooltip: Check Box 32
+Field: Cell_36_452                    Rect: [38.625, 322.3032, 186.625, 337.8032] Tooltip: Cell_36
+Field: Cell_189_452                   Rect: [191.625, 322.3032, 218.125, 337.8032] Tooltip: Cell_189
+Field: Cell_283_452                   Rect: [286.125, 322.3032, 506.125, 337.8032] Tooltip: Cell_283
+Field: Cell_508_452                   Rect: [511.125, 322.3032, 573.625, 337.8032] Tooltip: Cell_508
+Field: Check Box 33                   Rect: [225.1785, 311.2495, 231.1785, 317.2495] Tooltip: Check Box 33
+Field: Check Box 34                   Rect: [256.6785, 311.2495, 262.6785, 317.2495] Tooltip: Check Box 34
+Field: GapFill_R470C220               Rect: [223.125, 306.3032, 249.625, 319.3032] Tooltip: GapFill_R470C220
+Field: GapFill_R470C220_2             Rect: [223.125, 306.3032, 249.625, 319.3032] Tooltip: GapFill_R470C220
+Field: GapFill_R470C252               Rect: [254.625, 306.3032, 281.125, 319.3032] Tooltip: GapFill_R470C252
+Field: GapFill_R470C252_2             Rect: [254.625, 306.3032, 281.125, 319.3032] Tooltip: GapFill_R470C252
+Field: Cell_36_470                    Rect: [38.625, 304.3032, 186.625, 319.8032] Tooltip: Cell_36
+Field: Cell_189_470                   Rect: [191.625, 304.3032, 218.125, 319.8032] Tooltip: Cell_189
+Field: Cell_283_470                   Rect: [286.125, 304.3032, 506.125, 319.8032] Tooltip: Cell_283
+Field: Cell_508_470                   Rect: [511.125, 304.3032, 573.625, 319.8032] Tooltip: Cell_508
+Field: Check Box 35                   Rect: [225.1785, 293.2495, 231.1785, 299.2495] Tooltip: Check Box 35
+Field: Check Box 36                   Rect: [256.6785, 293.2495, 262.6785, 299.2495] Tooltip: Check Box 36
+Field: GapFill_R488C220               Rect: [223.125, 288.3032, 249.625, 301.3032] Tooltip: GapFill_R488C220
+Field: GapFill_R488C220_2             Rect: [223.125, 288.3032, 249.625, 301.3032] Tooltip: GapFill_R488C220
+Field: GapFill_R488C252               Rect: [254.625, 288.3032, 281.125, 301.3032] Tooltip: GapFill_R488C252
+Field: GapFill_R488C252_2             Rect: [254.625, 288.3032, 281.125, 301.3032] Tooltip: GapFill_R488C252
+Field: Cell_36_488                    Rect: [38.625, 286.3032, 186.625, 301.8032] Tooltip: Cell_36
+Field: Cell_189_488                   Rect: [191.625, 286.3032, 218.125, 301.8032] Tooltip: Cell_189
+Field: Cell_283_488                   Rect: [286.125, 286.3032, 506.125, 301.8032] Tooltip: Cell_283
+Field: Cell_508_488                   Rect: [511.125, 286.3032, 573.625, 301.8032] Tooltip: Cell_508
+Field: Check Box 37                   Rect: [225.1785, 275.2495, 231.1785, 281.2495] Tooltip: Check Box 37
+Field: Check Box 38                   Rect: [256.6785, 275.2495, 262.6785, 281.2495] Tooltip: Check Box 38
+Field: GapFill_R506C220               Rect: [223.125, 270.3032, 249.625, 283.3032] Tooltip: GapFill_R506C220
+Field: GapFill_R506C220_2             Rect: [223.125, 270.3032, 249.625, 283.3032] Tooltip: GapFill_R506C220
+Field: GapFill_R506C252               Rect: [254.625, 270.3032, 281.125, 283.3032] Tooltip: GapFill_R506C252
+Field: GapFill_R506C252_2             Rect: [254.625, 270.3032, 281.125, 283.3032] Tooltip: GapFill_R506C252
+Field: Cell_36_506                    Rect: [38.625, 268.3032, 186.625, 283.8032] Tooltip: Cell_36
+Field: Cell_189_506                   Rect: [191.625, 268.3032, 218.125, 283.8032] Tooltip: Cell_189
+Field: Cell_283_506                   Rect: [286.125, 268.3032, 506.125, 283.8032] Tooltip: Cell_283
+Field: Cell_508_506                   Rect: [511.125, 268.3032, 573.625, 283.8032] Tooltip: Cell_508
+Field: Inspection                     Rect: [225.1785, 257.2495, 231.1785, 263.2495] Tooltip: Inspection
+Field: at                             Rect: [256.6785, 257.2495, 262.6785, 263.2495] Tooltip: at
+Field: Cell_36_524                    Rect: [38.625, 250.3032, 186.625, 265.8032] Tooltip: Cell_36
+Field: Cell_189_524                   Rect: [191.625, 250.3032, 218.125, 265.8032] Tooltip: Cell_189
+Field: Cell_283_524                   Rect: [286.125, 250.3032, 506.125, 265.8032] Tooltip: Cell_283
+Field: Cell_508_524                   Rect: [511.125, 250.3032, 573.625, 265.8032] Tooltip: Cell_508
+Field: Inspector Signature            Rect: [122.8923, 188.3462, 186.625, 201.3462] Tooltip: Inspector Signature
+Field: Date                           Rect: [443.7818, 188.3462, 506.125, 201.3462] Tooltip: Date

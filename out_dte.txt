@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/36981/Desktop/PDFTest/FILLABLE TESTING 2/FillThatPDF_Optimized_v10/python_dist/smart_fillable_v23.py", line 17747, in <module>
+    main()
+    ~~~~^^
+  File "/Users/36981/Desktop/PDFTest/FILLABLE TESTING 2/FillThatPDF_Optimized_v10/python_dist/smart_fillable_v23.py", line 17566, in main
+    detector._preload_structural_data()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/36981/Desktop/PDFTest/FILLABLE TESTING 2/FillThatPDF_Optimized_v10/python_dist/smart_fillable_v23.py", line 701, in _preload_structural_data
+    print(f"   📊 Pre-loading structural data for {self.page_count} page(s)...")
+                                                   ^^^^^^^^^^^^^^^
+AttributeError: 'UniversalPDFFillable' object has no attribute 'page_count'
