@@ -42,9 +42,19 @@ configContent = configContent.replace(
     /isDemo:\s*(true|false)/,
     `isDemo: ${isDemo}`
 );
+// Sync version from package.json so the in-app About dialog never drifts
+// from the actual shipped version. Added in v1.2.2 — previously the
+// `version` string in config.js was hand-edited and got stale (was '1.1.9'
+// on a v1.2.1 build). package.json is the single source of truth.
+const pkgVersion = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version;
+configContent = configContent.replace(
+    /version:\s*'[^']*'/,
+    `version: '${pkgVersion}'`
+);
 fs.writeFileSync(configPath, configContent);
 console.log(`✅ Set isPro = ${isPro}`);
 console.log(`✅ Set isDemo = ${isDemo}`);
+console.log(`✅ Set version = ${pkgVersion}`);
 
 // Update package.json productName and appId
 const packagePath = path.join(__dirname, 'package.json');

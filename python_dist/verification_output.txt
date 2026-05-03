@@ -1,3 +1,0 @@
-/opt/homebrew/Cellar/python@3.14/3.14.3/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/36981/Desktop/PDFTest/FILLABLE TESTING 2/FillThatPDF_Optimized_v11/python_dist/python_dist/smart_fillable_v23.py': [Errno 2] No such file or directory
-Running smart_fillable_v23.py on 46119_RECO_HVAC_Incentive_Claim_Form_v02.pdf...
-Error running smart_fillable: Command '['python3', 'python_dist/smart_fillable_v23.py', '46119_RECO_HVAC_Incentive_Claim_Form_v02.pdf', 'output_46119_verify.pdf']' returned non-zero exit status 2.

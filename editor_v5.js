@@ -51,20 +51,9 @@ function recordFieldResize(field, rect) {
     }
 }
 
-// Generic pick-from-canvas mode. null = off, or { onPick: fn, onDisable: fn, btnId: string, pickedNames: Set<string> }
-// pickedNames tracks fields picked in the current pick session so the canvas
-// can render them green even when the real source list lives in a separate
-// panel window (e.g. the Properties Calculate tab).
+// Generic pick-from-canvas mode. null = off, or { onPick: fn, onDisable: fn, btnId: string }
 let pickMode = null;
 function isPickModeActive() { return pickMode !== null; }
-// Record a pick on the current pickMode and repaint the canvas so the user
-// sees immediate green-highlight feedback.  Safe to call from marquee-end,
-// single-click, and any other pick trigger.
-function recordPickOnCanvas(field) {
-    if (!pickMode) return;
-    if (!pickMode.pickedNames) pickMode.pickedNames = new Set();
-    pickMode.pickedNames.add(field.name);
-}
 function disablePickMode() {
     if (!pickMode) return;
     const { btnId, onDisable } = pickMode;
@@ -872,7 +861,6 @@ function svBuildOverlay(field, wrap, iw, ih) {
         if (isPickModeActive()) {
             const targetName = modalField ? modalField.name : '';
             if (f.name !== targetName) {
-                recordPickOnCanvas(f);
                 pickMode.onPick(f);
             }
             renderCanvas();
@@ -1133,30 +1121,6 @@ function syncScrollViewDOM() {
             svBuildOverlay(field, wrap, iw, ih);
         } else {
             svPositionOverlay(ov, field, iw, ih);
-
-            // Re-sync calc visual state (class + Σ badge). svBuildOverlay
-            // only runs once at creation time, so newly-applied calcs on
-            // existing overlays would otherwise stay un-green until the
-            // user switched views (which forces a full rebuild).
-            const hasCalc = !!(changes.calculations[field.name]
-                               || field.calculation)?.type;
-            // Keep type-colour classes exclusive: .sv-calc overrides
-            // the base type class only when the field is not a checkbox/
-            // radio/link.
-            const isTyped = field.type === 'checkbox'
-                         || field.type === 'radio'
-                         || field.type === 'link';
-            ov.classList.toggle('sv-calc', hasCalc && !isTyped);
-
-            let badge = ov.querySelector(':scope > .sv-calc-badge');
-            if (hasCalc && !badge) {
-                badge = document.createElement('div');
-                badge.className   = 'sv-calc-badge';
-                badge.textContent = 'Σ';
-                ov.appendChild(badge);
-            } else if (!hasCalc && badge) {
-                badge.remove();
-            }
         }
     });
 
@@ -1658,14 +1622,8 @@ function drawField(field) {
     const h = (field.rect[3] - field.rect[1]) * DPI_SCALE * zoom;
     
     const fieldHasCalc = !!(changes.calculations[field.name] || field.calculation)?.type;
-    // Check if this field is a calc source in pick mode.
-    // Source list may live in editor (legacy inline calc UI) OR in the
-    // separate Properties panel window — in the latter case pickMode
-    // tracks picked names on itself so we can still highlight them.
-    const isCalcSource = isPickModeActive() && (
-        calcSources.find(s => s.name === field.name)
-        || (pickMode.pickedNames && pickMode.pickedNames.has(field.name))
-    );
+    // Check if this field is a calc source in pick mode
+    const isCalcSource = isPickModeActive() && calcSources.find(s => s.name === field.name);
     const isCalcTarget = isPickModeActive() && modalField && field.name === modalField.name;
     let fillColor, strokeColor;
     if (isCalcTarget) {
@@ -1836,27 +1794,20 @@ function setupEventListeners() {
         fields.forEach(f => {
             if (f.type === 'radio' && f.radio_group === oldGroup) {
                 f.radio_group = newGroup;
-                // Kids inherit /T from the parent — keep their displayed
-                // name in sync with the renamed group so subsequent edits
-                // reference the new name.
                 if (f.name === oldGroup) f.name = newGroup;
             }
         });
         if (oldGroup && changes.new_radio_groups[oldGroup]) {
-            // Group was newly created in this session — just migrate the
-            // pending-create entry to the new name. No rename event needed.
             changes.new_radio_groups[newGroup] = changes.new_radio_groups[oldGroup];
             delete changes.new_radio_groups[oldGroup];
             if (changes.new_radio_groups_by_objgen && changes.new_radio_groups_by_objgen[oldGroup]) {
                 changes.new_radio_groups_by_objgen[newGroup] = changes.new_radio_groups_by_objgen[oldGroup];
                 delete changes.new_radio_groups_by_objgen[oldGroup];
             }
-        } else {
+        } else if (oldGroup) {
             // BUG FIX (v1.2.3): existing radio groups previously did not
-            // register the rename in changes.renamed, so clicking Apply
-            // Radio Group on a saved-PDF group was a silent no-op on save.
-            // Now we record the rename so modify_fields.py renames the
-            // parent field node (the spec-correct PDF target).
+            // register the rename, so saving was a silent no-op. Record
+            // it so the parent field /T is updated by modify_fields.py.
             changes.renamed[oldGroup] = newGroup;
         }
         if (collapsedGroups.has(oldGroup)) {
@@ -1900,11 +1851,11 @@ function setupEventListeners() {
     // Properties button — mirror the ↗ pop-out button EXACTLY.
     //
     // Previously this called openPropertiesModal() which had type-specific
-    // branching (link fields went to the Hyperlinks Manager). That branching
-    // was brittle and threw "closePropertiesModal is not defined" for link
-    // fields. The ↗ pop-out button in editor.html uses a plain
-    // onclick="floatPropertiesPanel()" and works for every field type, so
-    // we do the same here — floatPropertiesPanel() itself inspects
+    // branching (link fields went to the Hyperlinks Manager) and threw
+    // "closePropertiesModal is not defined" because that symbol wasn't
+    // defined in this file. The ↗ pop-out button in editor_v5.html uses
+    // a plain onclick="floatPropertiesPanel()" and works for every field
+    // type, so we do the same here — floatPropertiesPanel() itself inspects
     // selectedFields.length and serialises multi-selection automatically.
     const btnProperties = document.getElementById('btnProperties');
     if (btnProperties) {
@@ -2224,7 +2175,6 @@ function handleMouseDown(e) {
             // Don't pick the target field itself
             const targetName = modalField ? modalField.name : '';
             if (clickedField.name !== targetName) {
-                recordPickOnCanvas(clickedField);
                 pickMode.onPick(clickedField);
             }
             renderCanvas();
@@ -2271,12 +2221,6 @@ function handleMouseDown(e) {
     
     updatePropertiesPanel();
     updateFieldList();  // Sync field list sidebar with selection
-    // Keep scroll-view overlays' .selected class + dependency visuals
-    // in sync with canvas-view click/shift-click selection, so switching
-    // to scroll view immediately reflects the current selection.
-    if (typeof updateScrollFieldHighlights === 'function') {
-        updateScrollFieldHighlights();
-    }
     renderCanvas();
 }
 
@@ -2492,7 +2436,6 @@ function handleMouseUp() {
                 const targetName = modalField ? modalField.name : '';
                 for (const f of newlySelected) {
                     if (f.name !== targetName) {
-                        recordPickOnCanvas(f);
                         pickMode.onPick(f);
                     }
                 }
@@ -2503,14 +2446,8 @@ function handleMouseUp() {
 
             updatePropertiesPanel();
             updateFieldList();  // Sync field list with marquee selection
-            // Also sync scroll-view overlay .selected classes so the
-            // marquee result is visible if the user switches view mode
-            // (and so dependency-arrow redraws pick up the new selection).
-            if (typeof updateScrollFieldHighlights === 'function') {
-                updateScrollFieldHighlights();
-            }
         }
-
+        
         isMarqueeSelecting = false;
         renderCanvas();
     }
@@ -3514,26 +3451,22 @@ function setupStyleListeners() {
         btnApplyExportValue.addEventListener('click', () => {
             if (selectedFields.length !== 1) return;
             const field = selectedFields[0];
-            
+
             const exportValueInput = document.getElementById('propExportValue');
             if (!exportValueInput) return;
-            
+
             const value = exportValueInput.value.trim() || 'Yes';
-            
+
             saveState();
-            
+
             // Store on field object
             if (!field.style) field.style = {};
             field.style.exportValue = value;
 
-            // BUG FIX (v1.2.3): also track per-objgen so radio-group kids
-            // that share an inherited /T (e.g. all 5 kids of "electric")
-            // don't collide on the same changes.styled[name] entry. Before
-            // this fix, applying export values to multiple kids in turn
-            // overwrote the same key — only the last value survived, and
-            // on save the Python engine wrote it to ALL kids, collapsing
-            // them to identical AP/N states. Acrobat then dedup'd the
-            // identical kids and deleted 3 of 5.
+            // BUG FIX (v1.2.3): track per-objgen so radio kids that share
+            // an inherited /T don't collide on changes.styled[name]. Last
+            // edit used to overwrite previous edits — and on save modify_fields
+            // wrote that single value to ALL kids, causing Acrobat dedup.
             if (field.objgen) {
                 const objKey = field.objgen.join(',');
                 if (!changes.styled_by_objgen) changes.styled_by_objgen = {};
@@ -3542,18 +3475,15 @@ function setupStyleListeners() {
                 changes.styled_by_objgen[objKey]._name = field.name;
             }
 
-            // Track in changes for save (kept for backward compat — Python
-            // skips name-keyed exportValue when the name covers multiple
-            // widgets, deferring to objgen entries to avoid clobbering).
+            // Track in changes for save (legacy / single-widget path)
             if (!changes.styled[field.name]) {
                 changes.styled[field.name] = {};
             }
             changes.styled[field.name].exportValue = value;
 
             markUnsaved();
-            // BUG FIX (v1.2.3): refresh the side field list so the new
-            // export value (often shown alongside the field name for
-            // radio kids) is visible immediately after Apply.
+            // BUG FIX (v1.2.3): refresh side field list + canvas so the new
+            // export value is visible immediately after Apply.
             try { updateFieldList(); } catch (_) {}
             try { renderCanvas(); } catch (_) {}
         });
@@ -3842,12 +3772,12 @@ async function handleGroupRadio() {
     saveState();  // Save state for undo
 
     changes.new_radio_groups[groupName] = selectedFields.map(f => f.name);
-    // BUG FIX (v1.2.3): also send objgens so Python can disambiguate
-    // when multiple widgets share an inherited /T name. Without this,
-    // creating 2 radio groups whose kids share a name would shuffle
-    // widgets into the wrong groups (e.g. Gas:1 / electric:4 instead
-    // of Gas:3 / electric:2) because annot_map[name] returned ALL
-    // matching widgets for each group.
+    // BUG FIX (v1.2.3): also send objgens so the Python engine can
+    // disambiguate when multiple widgets share an inherited /T name.
+    // Without this, creating 2 radio groups whose kids share a name
+    // would shuffle widgets between groups (e.g. gas:1 / electric:4
+    // instead of gas:3 / electric:2) because annot_map[name] returned
+    // ALL matching widgets for each group.
     if (!changes.new_radio_groups_by_objgen) changes.new_radio_groups_by_objgen = {};
     changes.new_radio_groups_by_objgen[groupName] = selectedFields
         .filter(f => f.objgen)
@@ -4154,17 +4084,20 @@ function pasteFields(inPlace = false) {
         fields.push(newField);
         newFields.push(newField);
 
+        // Track as a new field for saving. Link (hyperlink) fields must go
+        // through the /Link-annotation pipeline (hyperlinks_created +
+        // hyperlinks[]) — NOT through `changes.created`, which is the widget
+        // creation path and bakes in a default text-field background colour
+        // (`#EDF4FF`). Routing a pasted hyperlink through `changes.created`
+        // is what caused the "pasted go-to-page hyperlink has blue fill you
+        // can't clear" bug.
         if (newField.type === 'link') {
-            // Hyperlinks are tracked separately — NOT in changes.created.
-            // Routing them through changes.created would create a text-field
-            // widget with the default #EDF4FF blue fill on save, which is
-            // exactly the "blue-tinted paste" bug we're fixing here.
             if (!changes.hyperlinks_created) changes.hyperlinks_created = [];
             if (!changes.hyperlinks) changes.hyperlinks = {};
             changes.hyperlinks_created.push(newField.name);
             changes.hyperlinks[newField.name] = {
-                destType:        newField.destType || 'url',
-                url:             newField.url      || '',
+                destType:        newField.destType        || 'url',
+                url:             newField.url             || '',
                 objgen:          null,
                 rect:            [...newField.rect],
                 page:            newField.page,
@@ -4175,10 +4108,8 @@ function pasteFields(inPlace = false) {
                 linkBorderColor: newField.linkBorderColor || '#0066cc',
             };
         } else {
-            // Track as a new field for saving
             if (!changes.created) changes.created = [];
             changes.created.push(newField);
-
             changes.styled[newField.name] = {
                 ...changes.styled[clipField.name] || {},
                 isNew: true,
@@ -4461,9 +4392,8 @@ function handleContextMenuAction(action) {
     switch (action) {
         case 'properties':
             // Right-click → Properties: use the same code path as the ↗ pop-out
-            // button in editor.html (onclick="floatPropertiesPanel()") so that
-            // link fields — which used to be routed into the Hyperlinks Manager
-            // — open the normal floating Properties panel like everything else.
+            // button (onclick="floatPropertiesPanel()") so link fields open the
+            // floating Properties panel like everything else.
             if (selectedFields.length > 0) {
                 floatPropertiesPanel();
             }
@@ -5514,7 +5444,7 @@ let isMultiFieldEdit = false;
 let multiFieldSelection = [];
 
 /** Safe no-op / legacy bridge.
- *  The embedded #propertiesModal element no longer exists in editor.html
+ *  The embedded #propertiesModal element no longer exists in editor_v5.html
  *  (properties now live in a floating panel window — see floatPropertiesPanel).
  *  A few call sites still reference this by name; define it so they don't throw. */
 function closePropertiesModal() {
@@ -5528,9 +5458,8 @@ function openPropertiesModal(field) {
     // Properties panel path used by the ↗ pop-out button.  Previously link
     // fields were redirected into the Hyperlinks Manager, which was brittle
     // (the Manager needs a specific DOM state and broke the sidebar
-    // Properties button / right-click → Properties).  Users can still open
-    // the Hyperlinks Manager explicitly from the right-click menu or the
-    // toolbar — this just makes "Properties…" consistent across all types.
+    // Properties button / right-click → Properties, throwing
+    // "closePropertiesModal is not defined").
     floatPropertiesPanel();
 }
 
@@ -8580,13 +8509,11 @@ function refreshCalcManagerTable() {
 
     // Merge: calculations from changes + calculations from extracted fields
     const allCalcs = {};
-    // From extracted fields
     for (const f of fields) {
         if (f.calculation && f.calculation.type) {
             allCalcs[f.name] = f.calculation;
         }
     }
-    // Override with pending changes
     for (const [name, calc] of Object.entries(changes.calculations)) {
         if (calc && calc.type) {
             allCalcs[name] = calc;
@@ -8596,12 +8523,21 @@ function refreshCalcManagerTable() {
     }
 
     const filter = (document.getElementById('calcManagerFilter')?.value || '').toLowerCase();
-    const entries = Object.entries(allCalcs).filter(([name]) =>
-        !filter || name.toLowerCase().includes(filter)
-    );
+    const entries = Object.entries(allCalcs).filter(([name, calc]) => {
+        if (!filter) return true;
+        const srcText = (calc.sources || []).join(' ').toLowerCase();
+        return name.toLowerCase().includes(filter) ||
+               calc.type.toLowerCase().includes(filter) ||
+               srcText.includes(filter);
+    });
+
+    const STICKY_ACTIONS = 'position:sticky;right:0;background:var(--bg-secondary);border-left:1px solid #233554;z-index:5;';
 
     if (entries.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="calc-empty-msg">No calculations configured yet</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="4" class="calc-empty-msg" style="padding: 20px; text-align: center; color: var(--text-secondary); border: none;">${
+            filter ? 'No calculations match filter' : 'No calculations configured yet'
+        }</td></tr>`;
+        updateCalcOrderList(allCalcs);
         return;
     }
 
@@ -8610,18 +8546,19 @@ function refreshCalcManagerTable() {
             ? (calc.sources || []).join(', ')
             : `${calc.sources.length} fields`;
         const typeLabel = calc.type === 'CONSTANT_MULTIPLY' ? `×${calc.constant || 1}` : calc.type;
-        return `<tr data-calc-field="${name}" style="border-bottom: 1px solid #1a2a44; transition: background 0.15s; background: var(--bg-primary);">
-            <td style="padding: 6px 10px; text-align: center; white-space: nowrap; position: sticky; left: 0; background: #112240; border-right: 1px solid #233554; z-index: 5;">
-                <span style="cursor: pointer; color: var(--accent); font-size: 14px; margin-right: 10px; display: inline-block; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="editCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Edit calculation">🔧</span>
-                <span style="cursor: pointer; color: var(--danger); font-size: 14px; display: inline-block; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="removeCalcFromManager('${name.replace(/'/g, "\\'")}')" title="Remove calculation">🗑</span>
-            </td>
-            <td style="padding: 6px 10px; color: var(--text-primary); white-space: nowrap;">${name}</td>
+        const esc = name.replace(/'/g, "\\'");
+        
+        return `<tr data-calc-field="${name}" style="border-bottom: 1px solid #1a2a44; transition: background 0.1s; background: var(--bg-primary);">
+            <td style="padding: 6px 10px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;" title="${name}">${name}</td>
             <td style="padding: 6px 10px; color: var(--accent); font-weight: 500; white-space: nowrap;">${typeLabel}</td>
             <td style="padding: 6px 10px; color: var(--text-secondary); font-size: 11px; white-space: nowrap;">${srcText}</td>
+            <td style="padding: 6px 10px; text-align: center; white-space: nowrap; ${STICKY_ACTIONS}">
+                <span style="cursor: pointer; color: var(--accent); font-size: 13px; margin-right: 8px; display: inline-block; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="editCalcFromManager('${esc}')" title="Edit designation">🔧</span>
+                <span style="cursor: pointer; color: var(--danger); font-size: 13px; display: inline-block; transition: transform 0.1s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" onclick="removeCalcFromManager('${esc}')" title="Remove calculation">&#x1F5D1;</span>
+            </td>
         </tr>`;
     }).join('');
 
-    // Update order list
     updateCalcOrderList(allCalcs);
 
     // Sync highlight with current selection
@@ -8682,16 +8619,15 @@ async function editCalcFromManager(fieldName) {
     const field = fields.find(f => f.name === fieldName);
     if (!field) return;
 
-    // Select and highlight the field.
     // Suppress automatic syncFloatingPropertiesPanel() calls fired by updateFieldList /
     // renderCanvas so only our single explicit requestTab:'calc' message reaches the panel.
-    selectedFields = [field];
     _suppressSyncForCalcEdit = true;
-    updateFieldList();
 
     if (viewMode === 'scroll') {
-        // Scroll view: all pages are already in the DOM — scroll to the page first,
-        // then let the browser settle before smooth-scrolling to the exact overlay.
+        // Scroll view: all pages are already in the DOM — select, then scroll-to-page,
+        // then smooth-scroll to the exact overlay once the browser has settled.
+        selectedFields = [field];
+        updateFieldList();
         updateScrollFieldHighlights();
         scrollToPageInScrollView(field.page);
         setTimeout(() => {
@@ -8707,11 +8643,14 @@ async function editCalcFromManager(fieldName) {
             }
         }, 80);
     } else {
-        // Single-page view: load the page if needed, then scroll to the field.
-        // Use Type Coercion to ensure comparison works regardless of index type (string vs number)
-        if (Number(field.page) !== Number(currentPage)) {
+        // Single-page view: MUST load the page BEFORE mutating selectedFields
+        // (matches the 'hyp-edit' handler pattern). Using Number() coercion in case
+        // field.page was rehydrated as a string from IPC payloads.
+        if (Number(field.page) !== Number(currentPage) && typeof loadPage === 'function') {
             await loadPage(field.page);
         }
+        selectedFields = [field];
+        updateFieldList();
         renderCanvas();
         scrollToField(field);
     }
@@ -10615,6 +10554,7 @@ ipcRenderer.on('from-panel', (event, { action, payload, ...rest }) => {
                     fields.forEach(rx => {
                         if (rx.type === 'radio' && rx.radio_group === oldGroup) {
                             rx.radio_group = newGroup;
+                            if (rx.name === oldGroup) rx.name = newGroup;
                         }
                     });
                     if (oldGroup && changes.new_radio_groups[oldGroup]) {
@@ -11117,9 +11057,6 @@ ipcRenderer.on('from-panel', (event, { action, payload }) => {
             if (isPickModeActive()) disablePickMode();
             pickMode = {
                 btnId: null,   // button is in the float window, not the editor
-                // Pre-seed with any already-added sources so they stay green
-                // on the canvas from the moment pick mode turns on.
-                pickedNames: new Set(payload?.names || []),
                 onDisable: () => {
                     // Notify the Properties panel that pick mode ended
                     ipcRenderer.send('editor-to-panel', 'properties', { pickStopped: true });
@@ -11141,16 +11078,6 @@ ipcRenderer.on('from-panel', (event, { action, payload }) => {
             // The panel will filter out the target field and any duplicates itself.
             for (const f of (selectedFields || [])) {
                 ipcRenderer.send('editor-to-panel', 'properties', { pickResult: f.name });
-            }
-            break;
-        }
-        case 'calc-sources-sync': {
-            // Panel sent the full current source list — rebuild pickedNames
-            // so the canvas green-highlight mirrors the panel (including
-            // removals via the X button).
-            if (pickMode) {
-                pickMode.pickedNames = new Set(payload?.names || []);
-                renderCanvas();
             }
             break;
         }

@@ -6,14 +6,33 @@ const Store = require('electron-store');
 // Defer electron-updater require until app is ready (avoids getVersion crash in dev)
 const appConfig = require('./config');
 
-// Suppress EPIPE errors (harmless pipe errors from child process communication)
+// Suppress EPIPE/EIO errors (harmless pipe errors from child process communication)
 process.on('uncaughtException', (err) => {
-    if (err.code === 'EPIPE') return; // Silently ignore EPIPE
+    if (err.code === 'EPIPE' || err.code === 'EIO') return; // Silently ignore pipe I/O errors
     console.error('Uncaught exception:', err);
+});
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled rejection:', reason);
 });
 
 function setupAutoUpdater() {
     const { autoUpdater } = require('electron-updater');
+    // Verbose logging to ~/Library/Logs/<app>/main.log so we can diagnose
+    // silent failures in the field without asking users to run from a
+    // terminal. electron-updater uses electron-log transparently when it's
+    // set here.
+    try {
+        autoUpdater.logger = require('electron-log');
+        autoUpdater.logger.transports.file.level = 'info';
+    } catch (_) {
+        // electron-log is optional; fall back to console if not installed.
+    }
+    autoUpdater.on('checking-for-update', () => {
+        console.log('[auto-updater] checking for update...');
+    });
+    autoUpdater.on('update-not-available', (info) => {
+        console.log('[auto-updater] up to date:', info && info.version);
+    });
     autoUpdater.on('update-available', (info) => {
         // Show in-app banner instead of dialog
         if (mainWindow) {
@@ -110,6 +129,18 @@ function getArchFolder() {
 // Append .exe on Windows for binary names
 function exeName(name) {
     return process.platform === 'win32' ? name + '.exe' : name;
+}
+
+// Resolve the test-fill assets directory (logo1.png, logo2.png) used by
+// fill_pdf_v3.py for PDF image-upload pushbutton fields. Dev:
+// <repo>/assets/test_fill. Packaged: <resourcesPath>/assets/test_fill.
+// Returns null if the directory doesn't exist so the Python side falls
+// back to its env var / script-relative defaults without erroring.
+function getTestFillAssetsDir() {
+    const dir = app.isPackaged
+        ? path.join(process.resourcesPath, 'assets', 'test_fill')
+        : path.join(__dirname, 'assets', 'test_fill');
+    return fs.existsSync(dir) ? dir : null;
 }
 
 // Get path to bundled executable (used in packaged app)
@@ -266,7 +297,7 @@ function startPythonServer() {
     });
 
     _serverProcess.on('close', (code) => {
-        console.log(`Python server exited with code ${code}`);
+        try { console.log(`Python server exited with code ${code}`); } catch (e) { /* ignore */ }
         _serverProcess = null;
         _serverReady = false;
         // Reject all pending requests
@@ -413,7 +444,7 @@ function waitForServer(timeoutMs = 15000) {
 // Default settings for the application
 const DEFAULT_SETTINGS = {
     // === DETECTION CONTROLS ===
-    detection_sensitivity: 'standard',     // 'conservative', 'standard', or 'aggressive'
+    detection_sensitivity: 'aggressive',    // 'conservative', 'standard', or 'aggressive'
     enable_empty_box_detection: true,      // Detect image placeholder boxes
     enable_underscore_detection: true,     // Detect signature/text lines
     enable_radio_grouping: true,           // Auto-group Yes/No/NA into radio buttons
@@ -726,19 +757,59 @@ function createWindow() {
     
     // Uncomment for debugging
     // mainWindow.webContents.openDevTools();
+
+    // Handle renderer crash (GPU process failure) — reload instead of going blank
+    mainWindow.webContents.on('render-process-gone', (event, details) => {
+        console.log('Renderer crashed:', details.reason);
+        if (details.reason !== 'clean-exit') {
+            mainWindow.loadFile('index.html');
+        }
+    });
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+    const { session } = require('electron');
+
+    try {
+        await session.defaultSession.clearCache();
+        console.log('[DEBUG] Session cache cleared');
+    } catch (e) {
+        console.warn('Failed to clear cache:', e);
+    }
+
     createWindow();
 
     // Start persistent Python server for fast PDF processing
     startPythonServer();
 
-    // Auto-update check (if enabled in settings) - only in packaged app
+    // Auto-update check (if enabled in settings) - only in packaged app.
+    // Defer the network check until the renderer has finished loading so
+    // its IPC listeners for update-available / update-downloaded are
+    // guaranteed to be registered. Without this, the event can fire before
+    // the renderer subscribes and the "Restart to Update" banner never
+    // appears (silent install-on-quit still worked, but the user never saw
+    // a prompt). See renderer.js for the matching synchronous listener
+    // registration. Fixed in v1.1.9.
+    //
+    // BUG FIX (v1.2.1): previously called setupAutoUpdater() twice — once
+    // unconditionally above and once below — which threw "Attempted to
+    // register a second handler for 'install-update'" and aborted the
+    // entire update check. Now setupAutoUpdater() is only called inside
+    // this guarded block, and only when the user has updates enabled.
     const checkForUpdates = settingsStore.get('settings.check_for_updates', true);
     if (checkForUpdates && app.isPackaged) {
         const autoUpdater = setupAutoUpdater();
-        autoUpdater.checkForUpdatesAndNotify();
+        const runUpdateCheck = () => {
+            autoUpdater.checkForUpdatesAndNotify().catch(err => {
+                console.error('Auto-updater check failed:', err);
+            });
+        };
+        if (mainWindow && mainWindow.webContents.isLoading()) {
+            mainWindow.webContents.once('did-finish-load', runUpdateCheck);
+        } else {
+            // Small safety delay so renderer script-load IPC handlers attach.
+            setTimeout(runUpdateCheck, 1500);
+        }
     }
     
     // Create application menu
@@ -773,7 +844,7 @@ app.whenReady().then(() => {
                             title: 'About Fill That PDF!',
                             message: message,
                             detail: `Version: ${appConfig.version}
-Build: January 2026
+Build: April 2026
 
 Features:
 ${featuresList}
@@ -859,6 +930,46 @@ ipcMain.handle('select-input-file', async () => {
         return result.filePaths[0];
     }
     return null;
+});
+
+ipcMain.handle('select-input-file-or-folder', async () => {
+    // macOS supports both openFile + openDirectory in one dialog
+    // On Windows, we fall back to two-step approach
+    if (process.platform === 'darwin') {
+        const result = await dialog.showOpenDialog(mainWindow, {
+            title: 'Select PDF File or Folder',
+            filters: [{ name: 'PDF Files', extensions: ['pdf'] }],
+            properties: ['openFile', 'openDirectory']
+        });
+        if (!result.canceled && result.filePaths.length > 0) {
+            return result.filePaths[0];
+        }
+        return null;
+    } else {
+        // Windows: show a message box asking what to select
+        const { response } = await dialog.showMessageBox(mainWindow, {
+            type: 'question',
+            buttons: ['Select PDF File', 'Select Folder', 'Cancel'],
+            defaultId: 0,
+            title: 'Select Input',
+            message: 'What would you like to select?'
+        });
+        if (response === 0) {
+            const result = await dialog.showOpenDialog(mainWindow, {
+                title: 'Select PDF File',
+                filters: [{ name: 'PDF Files', extensions: ['pdf'] }],
+                properties: ['openFile']
+            });
+            if (!result.canceled && result.filePaths.length > 0) return result.filePaths[0];
+        } else if (response === 1) {
+            const result = await dialog.showOpenDialog(mainWindow, {
+                title: 'Select Folder with PDFs',
+                properties: ['openDirectory']
+            });
+            if (!result.canceled && result.filePaths.length > 0) return result.filePaths[0];
+        }
+        return null;
+    }
 });
 
 ipcMain.handle('select-input-folder', async () => {
@@ -1571,13 +1682,21 @@ ipcMain.handle('run-test-fill', async (event, inputPath, outputPath) => {
             // Use helper to get architecture-specific path
             const bundledExe = getBundledExecutable('fill_pdf_v3');
 
+            // v1.2.0: pass test-fill assets dir so image-upload pushbutton
+            // fields can be filled with bundled logos. Falls back silently
+            // (image-upload fields skipped) if the dir is missing.
+            const assetsDir = getTestFillAssetsDir();
+            const assetArgs = assetsDir ? ['--assets-dir', assetsDir] : [];
+            if (assetsDir) console.log('Test-fill assets dir:', assetsDir);
+            else console.warn('Test-fill assets dir not found — image-upload fields will be skipped');
+
             let pythonProcess;
             // DEV: Only force Python in development
             const forceUsePython = !app.isPackaged;
 
             if (!forceUsePython && bundledExe && fs.existsSync(bundledExe)) {
                 console.log('Running bundled fill_pdf:', bundledExe);
-                pythonProcess = spawn(bundledExe, [inputPath, outputFilePath]);
+                pythonProcess = spawn(bundledExe, [inputPath, outputFilePath, ...assetArgs]);
             } else {
                 // Build Python script path
                 const pythonScriptName = 'fill_pdf_v3.py';
@@ -1596,7 +1715,7 @@ ipcMain.handle('run-test-fill', async (event, inputPath, outputPath) => {
                     // Fall through to JavaScript mode
                 } else {
                     console.log('Running Python fill_pdf:', pythonScript);
-                    pythonProcess = spawn(python(), [pythonScript, inputPath, outputFilePath]);
+                    pythonProcess = spawn(python(), [pythonScript, inputPath, outputFilePath, ...assetArgs]);
                 }
             }
 
@@ -2131,10 +2250,16 @@ ipcMain.handle('open-editor', async (event, pdfPath, outputPath) => {
         }
     });
     
-    editorWindow.loadFile('editor.html');
+    editorWindow.loadFile('editor_v5.html');
     editorWindow.maximize();
     
     editorWindow.on('closed', () => {
+        // Close any floating panel windows that belong to this editor session
+        for (const [, win] of panelWindows) {
+            if (!win.isDestroyed()) win.close();
+        }
+        panelWindows.clear();
+
         // Notify main window that editor was closed
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('editor-closed');
@@ -2142,8 +2267,103 @@ ipcMain.handle('open-editor', async (event, pdfPath, outputPath) => {
         editorWindow = null;
         editorData = null;
     });
-    
+
     return { success: true };
+});
+
+// ── Floating panel windows ──────────────────────────────────────────────────
+// Map of  panelType ('global-styles' | 'properties')  →  BrowserWindow
+const panelWindows = new Map();
+
+const PANEL_CONFIGS = {
+    'global-styles': { title: '🎨 Global Styles',       width: 360, height: 640, minWidth: 320, minHeight: 500 },
+    'properties':    { title: '📋 Field Properties',    width: 680, height: 720, minWidth: 560, minHeight: 640 },
+    'history':       { title: '🕐 Version History',     width: 520, height: 560, minWidth: 400, minHeight: 440 },
+    'calc':          { title: '🧮 Calculations Manager', width: 760, height: 640, minWidth: 600, minHeight: 500 },
+    'hyperlinks':    { title: '🔗 Hyperlinks Manager',  width: 780, height: 680, minWidth: 620, minHeight: 520 },
+};
+
+function createPanelWindow(type, data) {
+    // Re-focus existing window and push fresh data instead of opening a second one
+    if (panelWindows.has(type)) {
+        const existing = panelWindows.get(type);
+        if (!existing.isDestroyed()) {
+            existing.focus();
+            existing.webContents.send('panel-update', { type, data });
+            return existing;
+        }
+        panelWindows.delete(type);
+    }
+
+    const cfg = PANEL_CONFIGS[type] || { title: 'Panel', width: 340, height: 600, minWidth: 300, minHeight: 440 };
+
+    const win = new BrowserWindow({
+        width:           cfg.width,
+        height:          cfg.height,
+        minWidth:        cfg.minWidth,
+        minHeight:       cfg.minHeight,
+        title:           cfg.title,
+        titleBarStyle:   'hiddenInset',
+        backgroundColor: '#0a192f',
+        webPreferences: {
+            nodeIntegration:  true,
+            contextIsolation: false,
+        },
+        show: false,
+        // Keep panels/modals above the editor window.  Using alwaysOnTop
+        // with the 'floating' level floats above normal windows but still
+        // lets OS dialogs (notarizer prompts, screensavers) take priority.
+        // No parent set intentionally — lets the panel move to a second monitor.
+        alwaysOnTop: true,
+    });
+    // 'floating' keeps us above the editor but below system UI.
+    try { win.setAlwaysOnTop(true, 'floating'); } catch (_) {}
+
+    win.loadFile('panel.html');
+
+    win.once('ready-to-show', () => {
+        win.show();
+        // Send init data once renderer is ready
+        win.webContents.send('panel-init', type, data);
+    });
+
+    win.on('closed', () => {
+        panelWindows.delete(type);
+        // Tell the editor the panel was closed so it can update its UI state
+        if (editorWindow && !editorWindow.isDestroyed()) {
+            editorWindow.webContents.send('panel-closed', type);
+        }
+    });
+
+    panelWindows.set(type, win);
+    return win;
+}
+
+// Editor → main: open (or focus) a panel window
+ipcMain.handle('open-panel', async (event, type, data) => {
+    createPanelWindow(type, data);
+    return { success: true };
+});
+
+// Panel → main → editor  (panel sends actions / edits)
+ipcMain.on('panel-to-editor', (event, payload) => {
+    if (editorWindow && !editorWindow.isDestroyed()) {
+        editorWindow.webContents.send('from-panel', payload);
+    }
+});
+
+// Editor → main → panel  (editor pushes live data updates to the panel)
+// A few sub-types are routed to an "owning" panel window when there is no
+// window of that exact type (e.g. 'calc-suggestions' → 'calc').
+const PANEL_SUBTYPE_ROUTES = {
+    'calc-suggestions': 'calc',
+};
+ipcMain.on('editor-to-panel', (event, type, data) => {
+    const hostType = PANEL_SUBTYPE_ROUTES[type] || type;
+    const win = panelWindows.get(hostType);
+    if (win && !win.isDestroyed()) {
+        win.webContents.send('panel-update', { type, data });
+    }
 });
 
 // Get editor data (called by editor window on load)

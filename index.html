@@ -123,7 +123,7 @@
         
         .header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 51px;
             padding-top: 8px;
             -webkit-app-region: drag;
         }
@@ -1202,27 +1202,14 @@
         </div>
         
         <div class="input-section">
-            <div style="display: flex; gap: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 8px; width: 100%;">
-                <button id="modeSingle" class="mode-btn active" style="flex: 1;">Single PDF</button>
-                <button id="modeBatch" class="mode-btn" style="flex: 1;">Batch (Folder)</button>
-            </div>
-            
             <div id="singleInputGroup" class="input-group">
-                <label>Input PDF</label>
+                <label id="inputLabel">Input PDF or Batch Folder</label>
                 <div id="singleInputRow" class="input-row">
-                    <input type="text" id="inputPath" class="input-field" placeholder="Select a PDF file..." readonly>
+                    <input type="text" id="inputPath" class="input-field" placeholder="Select a PDF file or folder..." readonly>
                     <button class="browse-btn" id="browseInput">Browse</button>
                 </div>
                 <p class="output-note" id="fieldDetectionStatus" style="display: none; margin-top: 4px;"></p>
-            </div>
-            
-            <div id="batchInputGroup" class="input-group" style="display: none;">
-                <label>Input Folder</label>
-                <div id="batchInputRow" class="input-row">
-                    <input type="text" id="inputFolderPath" class="input-field" placeholder="Select a folder with PDFs..." readonly>
-                    <button class="browse-btn" id="browseInputFolder">Browse</button>
-                </div>
-                <p class="output-note" id="batchCount">0 PDFs found</p>
+                <p class="output-note" id="batchCount" style="display: none; margin-top: 4px;"></p>
             </div>
             
             <div class="input-group">
@@ -1799,7 +1786,7 @@
                     </div>
                 </div>
             </div>
-            </div><!-- End Tab 1 -->
+        </div><!-- End Tab 1 -->
             
             <!-- Tab 2: Test Fill Data -->
             <div id="tabTestFill" class="tab-content">

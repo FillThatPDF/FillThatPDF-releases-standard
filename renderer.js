@@ -31,19 +31,20 @@ const btnCopyLog = document.getElementById('btnCopyLog');
 const btnCancelProcessing = document.getElementById('btnCancelProcessing');
 const statusMessage = document.getElementById('statusMessage');
 
-// Mode Elements
-const modeSingleBtn = document.getElementById('modeSingle');
-const modeBatchBtn = document.getElementById('modeBatch');
+// Mode Elements (unified input — auto-detect file vs folder)
+const modeSingleBtn = null; // Removed: unified input auto-detects
+const modeBatchBtn = null;  // Removed: unified input auto-detects
 const fieldDetectionStatus = document.getElementById('fieldDetectionStatus');
 const singleInputGroup = document.getElementById('singleInputGroup');
-const batchInputGroup = document.getElementById('batchInputGroup');
-const inputFolderPathEl = document.getElementById('inputFolderPath');
-const browseInputFolderBtn = document.getElementById('browseInputFolder');
+const batchInputGroup = null; // Removed: unified into singleInputGroup
+const inputFolderPathEl = null; // Removed: reuse inputPathEl for folders too
+const browseInputFolderBtn = null; // Removed: single Browse button handles both
 const batchCountEl = document.getElementById('batchCount');
+const inputLabel = document.getElementById('inputLabel');
 
 // Input Row Elements for highlighting
 const singleInputRow = document.getElementById('singleInputRow');
-const batchInputRow = document.getElementById('batchInputRow');
+const batchInputRow = null; // Removed: unified into singleInputRow
 const outputInputRow = document.getElementById('outputInputRow');
 
 let inputPath = '';
@@ -113,6 +114,17 @@ function updateButtons() {
         hasInput = batchFiles.length > 0;
     }
     
+    // Update input label and status displays based on mode
+    if (currentMode === 'batch') {
+        if (inputLabel) inputLabel.textContent = 'Input Folder';
+        if (fieldDetectionStatus) fieldDetectionStatus.style.display = 'none';
+        if (batchCountEl) batchCountEl.style.display = 'block';
+    } else {
+        if (inputLabel) inputLabel.textContent = 'Input PDF or Batch Folder';
+        if (batchCountEl) batchCountEl.style.display = 'none';
+        // fieldDetectionStatus visibility managed by scanForExistingFields
+    }
+
     if (currentMode === 'batch') {
         // Batch Mode Logic
         btnBoth.style.display = 'block';
@@ -159,18 +171,11 @@ function updateButtons() {
 
     // Update Input Row Highlights
     if (singleInputRow) {
-        if (inputPath && inputPath.length > 0) {
+        if ((currentMode === 'single' && inputPath && inputPath.length > 0) ||
+            (currentMode === 'batch' && inputFolderPath && inputFolderPath.length > 0)) {
             singleInputRow.classList.add('drag-over');
         } else {
             singleInputRow.classList.remove('drag-over');
-        }
-    }
-
-    if (batchInputRow) {
-        if (inputFolderPath && inputFolderPath.length > 0) {
-            batchInputRow.classList.add('drag-over');
-        } else {
-            batchInputRow.classList.remove('drag-over');
         }
     }
 
@@ -294,25 +299,7 @@ if (btnCopyLog) {
 }
 
 if (modeSingleBtn && modeBatchBtn) {
-    modeSingleBtn.addEventListener('click', () => setMode('single'));
-    modeBatchBtn.addEventListener('click', () => {
-        // Check if bulk processing is enabled (Pro feature)
-        if (!config.features.bulkProcessing) {
-            const message = `🔒 Batch Processing - PRO Feature
-
-Batch (folder) processing is available in Fill That PDF! PRO.
-
-To process multiple PDFs at once:
-• Upgrade to Fill That PDF! PRO
-• Get unlimited batch processing
-• Plus Visual Field Editor & more!
-
-Visit fillthatpdf.com to upgrade.`;
-            alert(message);
-            return;
-        }
-        setMode('batch');
-    });
+    // Mode tabs removed — auto-detect from input selection
 }
 
 function setMode(mode) {
@@ -330,28 +317,16 @@ function setMode(mode) {
         if (fieldDetectionStatus) fieldDetectionStatus.style.display = 'none';
     }
     
-    // Reset batch state when switching
+    // Reset batch state when switching to single
     if (mode !== 'batch') {
         batchCategory = 'none';
-    }
-    
-    // UI Updates - remove active from all buttons first
-    modeSingleBtn.classList.remove('active');
-    modeBatchBtn.classList.remove('active');
-    
-    if (mode === 'single') {
-        modeSingleBtn.classList.add('active');
-        singleInputGroup.style.display = 'block';
-        batchInputGroup.style.display = 'none';
-        
-        // If a PDF is already selected, auto-scan for existing fields
-        if (inputPath && inputPath.length > 0) {
-            scanForExistingFields(inputPath);
-        }
+        batchFiles = [];
+        inputFolderPath = '';
     } else {
-        modeBatchBtn.classList.add('active');
-        singleInputGroup.style.display = 'none';
-        batchInputGroup.style.display = 'block';
+        // Reset single state when switching to batch
+        inputPath = '';
+        isPrefillMode = false;
+        prefillFieldData = null;
     }
     
     updateButtons();
@@ -613,14 +588,14 @@ if (btnCancelProcessing) {
 // Helper to process a selected folder (used by browse button and drag & drop)
 async function processSelectedFolder(folderPath) {
     inputFolderPath = folderPath;
-    inputFolderPathEl.value = folderPath;
+    inputPathEl.value = folderPath;
     
     // Scan for PDFs
     try {
         batchFiles = await ipcRenderer.invoke('scan-folder-for-pdfs', folderPath);
         
         if (batchFiles.length === 0) {
-            batchCountEl.textContent = "0 PDFs found";
+            if (batchCountEl) batchCountEl.textContent = "0 PDFs found";
             batchCategory = 'none';
             showStatus('error', 'No PDF files found in the selected folder.');
             updateButtons();
@@ -634,12 +609,12 @@ async function processSelectedFolder(folderPath) {
             alert('⚠️ Mixed Content Detected\n\nThis folder contains both blank PDFs and PDFs that already have form fields.\n\nTo process these files, please organize them into separate folders of "all blank" or "all fillable" PDFs.');
             batchFiles = [];
             inputFolderPath = '';
-            inputFolderPathEl.value = '';
-            batchCountEl.textContent = '0 PDFs found';
+            inputPathEl.value = '';
+            if (batchCountEl) batchCountEl.textContent = '0 PDFs found';
             batchCategory = 'none';
             showStatus('error', 'Mixed folder content - please organize files.');
         } else {
-            batchCountEl.textContent = `${batchFiles.length} PDFs found (${batchCategory.replace('all-', '')})`;
+            if (batchCountEl) batchCountEl.textContent = `${batchFiles.length} PDFs found (${batchCategory.replace('all-', '')})`;
             statusMessage.style.display = 'none';
         }
         
@@ -652,25 +627,47 @@ async function processSelectedFolder(folderPath) {
     }
 }
 
-// Browse for input file (Single Mode)
+// Browse for input file or folder (Unified — auto-detect)
 browseInputBtn.addEventListener('click', async () => {
-    const result = await ipcRenderer.invoke('select-input-file');
+    const result = await ipcRenderer.invoke('select-input-file-or-folder');
     if (result) {
-        inputPath = result;
-        inputPathEl.value = result;
-        updateButtons();
-        
-        // Auto-scan every PDF for existing fields
-        scanForExistingFields(result);
+        await handleSelectedInput(result);
     }
 });
 
-// Browse for input folder (Batch Mode)
+// Auto-detect whether selection is a file or folder and switch mode
+async function handleSelectedInput(selectedPath) {
+    try {
+        const stats = fs.lstatSync(selectedPath);
+        
+        if (stats.isDirectory()) {
+            // Folder selected — check Pro feature
+            if (!config.features.bulkProcessing) {
+                alert('🔒 Batch Processing - PRO Feature\n\nBatch (folder) processing is available in Fill That PDF! PRO.\n\nTo process multiple PDFs at once:\n• Upgrade to Fill That PDF! PRO\n• Get unlimited batch processing\n• Plus Visual Field Editor & more!\n\nVisit fillthatpdf.com to upgrade.');
+                return;
+            }
+            setMode('batch');
+            inputPathEl.value = selectedPath;
+            await processSelectedFolder(selectedPath);
+        } else if (selectedPath.toLowerCase().endsWith('.pdf')) {
+            // PDF file selected
+            setMode('single');
+            inputPath = selectedPath;
+            inputPathEl.value = selectedPath;
+            updateButtons();
+            scanForExistingFields(selectedPath);
+        }
+    } catch (error) {
+        console.error('Error detecting input type:', error);
+    }
+}
+
+// Browse for input folder — kept for backwards compatibility
 if (browseInputFolderBtn) {
     browseInputFolderBtn.addEventListener('click', async () => {
         const result = await ipcRenderer.invoke('select-input-folder');
         if (result) {
-            await processSelectedFolder(result);
+            await handleSelectedInput(result);
         }
     });
 }
@@ -691,7 +688,6 @@ browseOutputBtn.addEventListener('click', async () => {
 function setupDragDrop() {
     const rows = [
         { row: singleInputRow, input: inputPathEl },
-        { row: batchInputRow, input: inputFolderPathEl },
         { row: outputInputRow, input: outputPathEl }
     ];
     
@@ -716,15 +712,11 @@ function setupDragDrop() {
         ['dragleave', 'drop'].forEach(eventName => {
             item.row.addEventListener(eventName, () => {
                 // If it has content, updateButtons will maintain the class
-                // Here we just handle the "active drag" state exit
-                if (currentMode === 'single' && item.row === singleInputRow && !inputPath) {
-                    item.row.classList.remove('drag-over');
-                } else if (currentMode === 'batch' && item.row === batchInputRow && !inputFolderPath) {
+                if (item.row === singleInputRow && !inputPath && !inputFolderPath) {
                     item.row.classList.remove('drag-over');
                 } else if (item.row === outputInputRow && !outputPath) {
                     item.row.classList.remove('drag-over');
                 } else if (!inputPath && !inputFolderPath && !outputPath) {
-                    // Fallback cleanup
                     item.row.classList.remove('drag-over');
                 }
                 
@@ -1360,34 +1352,8 @@ document.addEventListener('drop', async (e) => {
     const droppedPath = files[0].path;
     
     try {
-        const stats = fs.lstatSync(droppedPath);
-        
-        if (stats.isDirectory()) {
-            // Folder dropped
-            if (currentMode === 'batch') {
-                await processSelectedFolder(droppedPath);
-            } else {
-                // If in single mode, maybe switch to batch or warn?
-                // For now, let's just warn or prompt to switch.
-                if (confirm('You dropped a folder. Would you like to switch to Batch Mode?')) {
-                    setMode('batch');
-                    await processSelectedFolder(droppedPath);
-                }
-            }
-        } else if (droppedPath.toLowerCase().endsWith('.pdf')) {
-            // PDF file dropped
-            if (currentMode === 'batch') {
-                // In batch mode, we expect a folder.
-                showStatus('error', 'Please drop a folder when in Batch Mode.');
-            } else {
-                inputPath = droppedPath;
-                inputPathEl.value = inputPath;
-                updateButtons();
-                
-                // Auto-scan every PDF for existing fields
-                scanForExistingFields(droppedPath);
-            }
-        }
+        // Auto-detect file vs folder and handle accordingly
+        await handleSelectedInput(droppedPath);
     } catch (error) {
         console.error('Drop error:', error);
     }
@@ -2161,40 +2127,58 @@ if (btnSignOut) {
         initSettingsCollapsible();
         
         updateStatsDashboard(); // Initial load of stats
-        
-        // Listen for auto-update events from main process
-        ipcRenderer.on('update-available', (event, version) => {
-            const notification = document.getElementById('updateNotification');
-            const versionEl = document.getElementById('updateVersion');
-            const link = document.getElementById('updateLink');
-            if (notification && versionEl && link) {
-                versionEl.textContent = `(v${version})`;
-                link.textContent = 'Downloading...';
-                link.removeAttribute('href');
-                link.style.cursor = 'default';
-                notification.style.display = 'flex';
-            }
-        });
-        ipcRenderer.on('update-download-progress', (event, percent) => {
-            const link = document.getElementById('updateLink');
-            if (link) link.textContent = `Downloading... ${percent}%`;
-        });
-        ipcRenderer.on('update-downloaded', (event, version) => {
-            const link = document.getElementById('updateLink');
-            if (link) {
-                link.textContent = 'Restart to Update';
-                link.style.cursor = 'pointer';
-                link.onclick = (e) => {
-                    e.preventDefault();
-                    ipcRenderer.invoke('install-update');
-                };
-            }
-        });
-        
+
     } catch (e) {
         console.error('Failed to load settings:', e);
     }
 })();
+
+// Listen for auto-update events from main process.
+// IMPORTANT: These listeners MUST be registered SYNCHRONOUSLY at script-load
+// time (not inside an async IIFE). electron-updater fires `update-available`
+// ~1-2 seconds after app startup — if the listener registers after an
+// awaited `get-settings` call, the event is dropped and the banner never
+// appears (silent auto-install on quit still worked, but the user never
+// saw the "Restart to Update" prompt). Fixed in v1.1.9.
+ipcRenderer.on('update-available', (event, version) => {
+    const notification = document.getElementById('updateNotification');
+    const versionEl = document.getElementById('updateVersion');
+    const link = document.getElementById('updateLink');
+    if (notification && versionEl && link) {
+        versionEl.textContent = `(v${version})`;
+        link.textContent = 'Downloading...';
+        link.removeAttribute('href');
+        link.style.cursor = 'default';
+        notification.style.display = 'flex';
+    }
+});
+ipcRenderer.on('update-download-progress', (event, percent) => {
+    // Defensive: make sure the banner is visible even if update-available
+    // was missed (e.g. fired before DOM was ready on very fast machines).
+    const notification = document.getElementById('updateNotification');
+    if (notification && notification.style.display !== 'flex') {
+        notification.style.display = 'flex';
+    }
+    const link = document.getElementById('updateLink');
+    if (link) link.textContent = `Downloading... ${percent}%`;
+});
+ipcRenderer.on('update-downloaded', (event, version) => {
+    // Defensive: always show the banner when an update is ready — this is
+    // the most important event to surface to the user.
+    const notification = document.getElementById('updateNotification');
+    const versionEl = document.getElementById('updateVersion');
+    if (notification) notification.style.display = 'flex';
+    if (versionEl && version) versionEl.textContent = `(v${version})`;
+    const link = document.getElementById('updateLink');
+    if (link) {
+        link.textContent = 'Restart to Update';
+        link.style.cursor = 'pointer';
+        link.onclick = (e) => {
+            e.preventDefault();
+            ipcRenderer.invoke('install-update');
+        };
+    }
+});
 
 // ===== STATS DASHBOARD =====
 
